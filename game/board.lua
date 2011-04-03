@@ -223,7 +223,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
   end
 end
 
-Entity:new(screen):border_image(G.newImage('data/gfx/fuzzy2.png'), 7, 7, 7, 7):set({w=800 - s1*2+20,h=600 - s1*2 +20}):move(s1 - 10,s1 - 10):color(0,0,0,127)
+Entity:new(screen):border_image(G.newImage('data/gfx/fuzzy2.png'), 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,250,180,190)
 
 
 
@@ -276,6 +276,7 @@ local getplayerxy = function(n, k)
   end
   return x, y
 end
+
 local player_draw = function(s)
   sx = 30/128
   G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)

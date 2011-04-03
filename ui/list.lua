@@ -1,23 +1,23 @@
-local function list_mousepress(self, x, y, b)
-  r = self._vars
-  t = self._table
-  v = self._table_value
-  if b == 'l' or b == 'wu' then
-    t[v] = next(r, t[v]) or next(r)
+local function list_mousepress(s, x, y, b)
+  local r = s._vars
+  if b == 'l' then
+    var_by_reference(s._variable, next(r, var_by_reference(s._variable)) or next(r))
   end
 end
 
 --label: list description
 --vars: list of possible vars
+--vars_names: display names of possible vars
 --variable: variable to affect
---when user click on list, new value from "vars" puts into "variable"
---косяк: lua не умеет передавать обычные переменные по ссылке, поэтому по сслыке пришлось передавать таблицу и индекс втаблице который нужно менять.
-function Entity:list(label, vars, tabl, value)
+--when user click on list, next value from "vars" puts into "variable"
+--косяк: lua не умеет передавать обычные переменные по ссылке
+function Entity:list(label, vars, vars_names, variable)
   self.text = label or ''
-  --self._vars = {}
-  self._vars = vars or {}
-  self._table = tabl --таблица передаваемая по ссылке, в которой нужно менять значение _table_value
-  self._table_value = value
+  self._vars = {}
+  for k, v in pairs(vars) do
+    self._vars[v] = vars_names[k]
+  end
+  self._variable = variable
   self._draw = ui_style.list.draw
   self._bound = Entity.bounds.rectangle
   self.w = ui_style.list.w

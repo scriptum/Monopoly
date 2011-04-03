@@ -1,3 +1,18 @@
+--получение переменной по ссылке и задание ей значения невозможны в луа, так что костыли
+var_by_reference = function(var, value)
+  if type(var) == 'table' then
+    if #var == 1 then
+      if value then _G[var[1]] = value else return _G[var[1]] end
+    elseif #var == 2 then
+      if value then _G[var[1]][var[2]] = value else return _G[var[1]][var[2]] end
+    elseif #var == 3 then
+      if value then _G[var[1]][var[2]][var[3]] = value else return _G[var[1]][var[2]][var[3]] end
+    end
+  else
+    if value then _G[var] = value else return _G[var] end
+  end
+end
+
 local easing = require("lquery.easing")
 require("lquery.string")
 require("lquery.table")
@@ -55,22 +70,22 @@ local function events(v)
     if MousePressed == true then
       if not v._mousePress or v._mousePress == false then
         v._mousePress = true
-        if v._mousepress then v._mousepress(v, mX, mY, MouseButton) end
+        if v._mousepress then __mousepress = v end
       end
     else
       if v._mousePress == true then
-        if v._click then v._click(v, mX, mY, MouseButton) end
-        if v._mouserelease then v._mouserelease(v, mX, mY) end
+        if v._click then __click = v end
+        if v._mouserelease then __mouserelease = v end
       end
       v._mousePress = false
     end
     if not v._hasMouse or v._hasMouse == false then
       v._hasMouse = true
-      if v._mouseover then v._mouseover(v, mX, mY) end
+      if v._mouseover then __mouseover = v end
     end
   else
     v._mousePress = false
-    if v._hasMouse and v._hasMouse == true then
+    if v._hasMouse and v._hasMouse == true then 
       v._hasMouse = false
       if v._mouseout then v._mouseout(v, mX, mY) end
     end
@@ -85,8 +100,11 @@ local function process_entities(ent)
     events(ent)
   end
   if ent._visible == true then
-    G.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
-    if ent._draw then ent._draw(ent) end
+    if ent._draw then 
+      G.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
+      if ent.blendMode then G.setBlendMode(ent.blendMode) else G.setBlendMode('alpha') end
+      ent._draw(ent) 
+    end
     if ent._child then 
       for k, v in pairs(ent._child) do
         process_entities(v)
@@ -132,7 +150,15 @@ function love.run()
     if love.graphics then
       love.graphics.clear()
       time = love.timer.getTime()
+      __mousepress, __click, __mouserelease, __mouseout, __mouseover = nil, nil, nil, nil, nil
       if screen then process_entities(screen) end
+      --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
+      --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
+      for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover'}) do
+        if _G['__' .. v] then
+          _G['__' .. v]['_' .. v](_G['__' .. v], mX, mY, MouseButton)
+        end
+      end
       if love.draw then love.draw() end
     end --if love.graphics
     --if love.timer then love.timer.sleep(1) end
