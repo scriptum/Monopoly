@@ -228,11 +228,12 @@ var = 0
 Entity:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable({bound={100, 500, 100, 100}})
 
 require('ui.slider')
-Entity:new(screen):move(200,200+32):slider('R', 0, 255, {'burn', 'r'})
-Entity:new(screen):move(200,200+32*2):slider('G', 0, 255, {'burn', 'g'})
-Entity:new(screen):move(200,200+32*3):slider('B', 0, 255, {'burn', 'b'})
-Entity:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {'burn', 'a'})
-Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'burn', 'blendMode'})
+local ent = 'burn'
+Entity:new(screen):move(200,200+32):slider('R', 0, 255, {ent, 'r'})
+Entity:new(screen):move(200,200+32*2):slider('G', 0, 255, {ent, 'g'})
+Entity:new(screen):move(200,200+32*3):slider('B', 0, 255, {ent, 'b'})
+Entity:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
+Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})
 
 players = {
   {
