@@ -5,7 +5,7 @@ require('ui.menu')
 require('rules.classic')
 require('data')
 require('game')
-
+-- test
 text = Entity:new(screen):draw(function(s)
   G.fontSize = 10
   G.setFont(console)
