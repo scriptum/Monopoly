@@ -223,9 +223,16 @@ for i = 1, field_width*2 + field_height*2 + 4 do
   end
 end
 
-Entity:new(screen):border_image(G.newImage('data/gfx/fuzzy2.png'), 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,250,180,190)
+burn = Entity:new(screen):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
+var = 0
+Entity:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable({bound={100, 500, 100, 100}})
 
-
+require('ui.slider')
+Entity:new(screen):move(200,200+32):slider('R', 0, 255, {'burn', 'r'})
+Entity:new(screen):move(200,200+32*2):slider('G', 0, 255, {'burn', 'g'})
+Entity:new(screen):move(200,200+32*3):slider('B', 0, 255, {'burn', 'b'})
+Entity:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {'burn', 'a'})
+Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'burn', 'blendMode'})
 
 players = {
   {

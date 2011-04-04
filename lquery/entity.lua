@@ -155,6 +155,20 @@ function Entity:draw(callback)
   return self --so we can chain methods
 end
 
+local drag_start = function(s, x, y)
+  s._drag_x = x - s.x
+  s._drag_y = y - s.y
+  _drag_object = s
+end
+local drag_end = function()
+  _drag_object = nil
+end
+function Entity:draggable(options)
+  local o = options or {}
+  if o.bound then self._drag_bound = o.bound end --[[top, right, bottom, left]]
+  if o.callback then self._drag_callback = o.callback end
+  return self:mousepress(drag_start):mouserelease(drag_end)
+end
 --delete object
 --how to remove object correctly and free memory:
 --a = a:delete()
@@ -204,6 +218,7 @@ local image_draw = function(s)
 end
 function Entity:image(image)
  if image then
+    if type(image) == 'string' then image = G.newImage(image) end
     self.image = image
     self._draw = image_draw
     self.w = image:getWidth()
@@ -233,6 +248,7 @@ local border_image_draw = function(s)
 end
 function Entity:border_image(image, top, right, bottom, left)
  if image then
+    if type(image) == 'string' then image = G.newImage(image) end
     self.image = image
     self._draw = border_image_draw
     w = image:getWidth()

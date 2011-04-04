@@ -63,28 +63,21 @@ local function animate(ent)
 end
 
 local MousePressed = false
+local MousePressedOwner = nil
 local MouseButton = nil
 --some mouse events
 local function events(v)
   if v._bound and v._bound(v, mX, mY) then
-    if MousePressed == true then
-      if not v._mousePress or v._mousePress == false then
-        v._mousePress = true
-        if v._mousepress then __mousepress = v end
+    if MousePressed == true and not MousePressedOwner then
+      if v._mousepress or v._click then 
+        __mousepress = v
       end
-    else
-      if v._mousePress == true then
-        if v._click then __click = v end
-        if v._mouserelease then __mouserelease = v end
-      end
-      v._mousePress = false
     end
     if not v._hasMouse or v._hasMouse == false then
       v._hasMouse = true
       if v._mouseover then __mouseover = v end
     end
   else
-    v._mousePress = false
     if v._hasMouse and v._hasMouse == true then 
       v._hasMouse = false
       if v._mouseout then v._mouseout(v, mX, mY) end
@@ -150,14 +143,37 @@ function love.run()
     if love.graphics then
       love.graphics.clear()
       time = love.timer.getTime()
-      __mousepress, __click, __mouserelease, __mouseout, __mouseover = nil, nil, nil, nil, nil
+      
+      if _drag_object then
+        _drag_object.x = mX - _drag_object._drag_x
+        _drag_object.y = mY - _drag_object._drag_y
+        if _drag_object._drag_bound then
+          local a = _drag_object._drag_bound
+          if _drag_object.x > a[2] then _drag_object.x = a[2] end
+          if _drag_object.x < a[4] then _drag_object.x = a[4] end
+          if _drag_object.y > a[3] then _drag_object.y = a[3] end
+          if _drag_object.y < a[1] then _drag_object.y = a[1] end
+        end
+        if _drag_object._drag_callback then _drag_object._drag_callback(_drag_object, mX, mY) end
+      end
+      
+      __mousepress, __mouseover = nil, nil
       if screen then process_entities(screen) end
       --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
       --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
-      for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover'}) do
+      for k, v in pairs({'mouseover'}) do
         if _G['__' .. v] then
           _G['__' .. v]['_' .. v](_G['__' .. v], mX, mY, MouseButton)
         end
+      end
+      if __mousepress then
+        if __mousepress._mousepress then __mousepress._mousepress(__mousepress, mX, mY, MouseButton) end
+        MousePressedOwner = __mousepress
+      end
+      if MousePressed == false and MousePressedOwner then
+        if MousePressedOwner._mouserelease then MousePressedOwner._mouserelease(v, mX, mY) end
+        if MousePressedOwner._click then MousePressedOwner._click(v, mX, mY, MouseButton) end
+        MousePressedOwner = nil
       end
       if love.draw then love.draw() end
     end --if love.graphics

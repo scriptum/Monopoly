@@ -55,6 +55,36 @@ return {
       self:stop('hover'):animate({b=255},{speed=0.6,queue='hover'})
     end
   },
+  slider = {
+    image = G.newImage('data/gfx/slider-button.png'),
+    button = {
+      quad = G.newQuad(0, 0, 32, 32, 32, 64),
+      w = 32, h=32
+    },
+    button_l = G.newQuad(0, 32, 10, 32, 32, 64),
+    button_c = G.newQuad(10, 32, 12, 32, 32, 64),
+    button_r = G.newQuad(22, 32, 10, 32, 32, 64),
+    font = G.newFont('data/fonts/ru.ttf', 25),
+    w = 400, h = 28,
+    draw = function(s)
+      if ui_style.list.font then G.setFont(ui_style.list.font) end
+      G.printf(s.text, s.x, s.y, s.w, 'left')
+      G.print(math.floor(var_by_reference (s._variable)), s.x+400, s.y)
+      G.setColor(255,255,255,255)
+      G.drawq(ui_style.slider.image, ui_style.slider.button_l, s.x+248, s.y-2)
+      G.drawq(ui_style.slider.image, ui_style.slider.button_c, s.x+248+10, s.y-2, 0, 132/12, 1)
+      G.drawq(ui_style.slider.image, ui_style.slider.button_r, s.x+400-10, s.y-2)
+    end,
+    button_draw = function(s)
+      G.drawq(ui_style.slider.image, ui_style.slider.button.quad, s.x, s.y)
+    end,
+    mouseover = function(self)
+      self:stop('hover'):animate({b=120},{queue='hover'})
+    end,
+    mouseout = function(self)
+      self:stop('hover'):animate({b=255},{speed=0.6,queue='hover'})
+    end
+  },
   menu = {
     margin = 10, --space between items
     start = 30 --top indent
