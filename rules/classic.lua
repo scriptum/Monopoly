@@ -403,6 +403,132 @@ rules_company =
   }
 }
 
+
+-- Карточки
+rules_chance = {
+ {
+  type = "chance",
+  action = cashback,
+  money = 150,
+  text = "Возврат займа\nполучите 150К"
+ },
+
+{
+type = "chance",
+action =  cashback,
+money = 100,
+text = "Вы выиграли чемпионат по шахматам\nполучите 100К"
+},
+
+ {
+  type = "chance",
+  action = cashback,
+  money = 50,
+  text = "Банковские дивиденты\nполучите 50К"
+ },
+
+ {
+  type = "chance",
+  action = cashback,
+  money = -15,
+  text = "Штраф за превышение скорости\nзаплатите 15К"
+ },
+
+ {
+  type = "chance",
+  action = cashback,
+  money = -20,
+  text = "Вождение в нетрезвом виде\nштраф 20К"
+ },
+
+ {
+  type = "chance",
+  action = cashback,
+  money = -150,
+  text = "Оплата курсов водителей\nзаплатите 150К"
+ }
+}
+
+--Казна
+rules_treasury = {
+ {
+  type = "treasury",
+  action = cashback,
+  money = 200,
+  text = "Банковская ошибка в вашу пользу\nполучите 200К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = 25,
+  text = "Выгодная продажа акций\nполучите 25К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = -50,
+  text = "Оплата страховки\nзаплатите 50К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = 25,
+  text = "Выгодная продажа акций\nполучите 25К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = 100,
+  text = "Сбор ренты\nполучите 100К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = 25,
+  text = "Возмещение налога\nполучите 25К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = 100,
+  text = "Вы получили наследство\nполучите 100К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = -50,
+  text = "Оплата услуг доктора\nзаплатите 50К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = -100,
+  text = "Оплата лечения\nзаплатите 100К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = 50,
+  text = "Выгодная продажа облигаций\nполучите 50К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = 10,
+  text = "вы заняли второе место на конкурсе красоту\nполучите 10К"
+ }
+}
+
 --предварительная загрузка картинок с компаниями в память
 rules_company_images = {}
 --load images

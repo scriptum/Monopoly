@@ -239,27 +239,32 @@ players = {
   {
     name = "RPG",
     cash = 1500,
-    pos = 1
+    pos = 1,
+    jail = 0
   },
   {
     name = "RPG",
     cash = 1500,
-    pos = 1
+    pos = 1,
+    jail = 0
   },
   {
     name = "RPG",
     cash = 1500,
-    pos = 1
+    pos = 1,
+    jail = 0
   },
   {
     name = "RPG",
     cash = 1500,
-    pos = 1
+    pos = 1,
+    jail = 0
   },
   {
     name = "RPG",
     cash = 1500,
-    pos = 1
+    pos = 1,
+    jail = 0
   }
 }
 
@@ -294,9 +299,38 @@ local player_draw = function(s)
   G.setBlendMode('alpha')
 end
 
+__i = 1
+double = 0
+
+gogo = function(s)
+ local buf = s._child[__i]
+ ds1 = math.random(1, 6)
+ ds2 = math.random(1, 6)
+ buf.pos = buf.pos + ds1 + ds2
+ local max = field_width*2 + field_height*2 + 4
+ if buf.pos > max then buf.pos = buf.pos - max end
+ local x, y = getplayerxy(buf.pos, buf.k)
+ buf:stop('main'):animate({x=x,y=y})
+ if ds1 ~= ds2 then
+  __i = __i + 1
+  if __i > 5 then __i = 1 end
+  double = 0
+ elseif double < 3 then
+  double = double + 1
+ else
+  local x, y = getplayerxy(13, buf.k)
+  buf:stop('main'):animate({x=x,y=y})
+  double = 0
+  buf.jail = 3
+  __i = __i + 1
+ end
+end
+
+player = Entity:new(board):delay({sleep=1, callback=gogo, loop=true})
+
 for k,v in pairs(players) do
   x, y = getplayerxy(1, k)
-  Entity:new(board)
+  Entity:new(player)
   :draw(player_draw)
   :set({pos = v.pos, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0})
   :mouseover(function(s)
@@ -308,5 +342,5 @@ for k,v in pairs(players) do
   end)
   :animate({blend_alpha = 90}, {loop = true, queue = 'blend', speed = 0.5})
   :animate({blend_alpha = 0}, {loop = true, queue = 'blend', speed = 0.5})
-  
 end
+
