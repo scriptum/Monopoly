@@ -337,13 +337,6 @@ for k,v in pairs(players) do
   Entity:new(player)
   :draw(player_draw)
   :set({pos = v.pos, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0})
-  :mouseover(function(s)
-    s.pos = s.pos + math.random(1, 6) + math.random(1, 6)
-    local max = field_width*2 + field_height*2 + 4
-    if s.pos > max then s.pos = s.pos - max end
-    local x, y = getplayerxy(s.pos, s.k)
-    s:stop('main'):animate({x=x,y=y})
-  end)
   :animate({blend_alpha = 90}, {loop = true, queue = 'blend', speed = 0.5})
   :animate({blend_alpha = 0}, {loop = true, queue = 'blend', speed = 0.5})
 end

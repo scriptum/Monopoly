@@ -177,7 +177,7 @@ function love.run()
       end
       if love.draw then love.draw() end
     end --if love.graphics
-    --if love.timer then love.timer.sleep(1) end
+    if love.timer then love.timer.sleep(1) end
     if love.graphics then love.graphics.present() end
 
   end

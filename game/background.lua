@@ -5,25 +5,24 @@ local getScale = function()
   local y = 0
   if(aspect > 4/3) then
     s = G.getHeight()/600
-    x = (G.getWidth()/s-800)/2
+    x = math.floor((G.getWidth()/s-800)/2)
   else
     s = G.getWidth()/800
-    y = (G.getHeight()/s-600)/2
+    y = math.floor((G.getHeight()/s-600)/2)
   end
   return s, x, y
 end
-
+screen_scale, x_screen_scale, y_screen_scale = getScale()
 screen:draw(function()
-  local s, x, y = getScale()
-  G.scale(s,s)
-  G.translate(x, y)
+  --screen_scale, x_screen_scale, y_screen_scale = getScale()
+  G.scale(screen_scale)
+  G.translate(x_screen_scale, y_screen_scale)
 end)
 
 getMouseXY = function()
-  local s, x, y = getScale()
-  return love.mouse.getX()/s - x, love.mouse.getY()/s - y
+  return love.mouse.getX()/screen_scale - x_screen_scale, love.mouse.getY()/screen_scale - y_screen_scale
 end
 
 Entity:new(screen):image(board_background)
 
-console = G.newFont('data/fonts/ru.ttf', 32)
+console = G.newFont('data/fonts/ru.ttf', math.ceil(12*getScale()))
