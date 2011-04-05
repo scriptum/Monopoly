@@ -301,11 +301,13 @@ end
 
 __i = 1
 double = 0
+__max = 5
 
 gogo = function(s)
+ 
  local buf = s._child[__i]
- ds1 = math.random(1, 6)
- ds2 = math.random(1, 6)
+ ds1 = math.random(1, 1)
+ ds2 = math.random(1, 1)
  buf.pos = buf.pos + ds1 + ds2
  local max = field_width*2 + field_height*2 + 4
  if buf.pos > max then buf.pos = buf.pos - max end
@@ -324,9 +326,10 @@ gogo = function(s)
   buf.jail = 3
   __i = __i + 1
  end
+ if __i > __max then __i = 1 end
 end
 
-player = Entity:new(board):delay({sleep=1, callback=gogo, loop=true})
+player = Entity:new(board):delay({speed=1, callback=gogo, loop=true})
 
 for k,v in pairs(players) do
   x, y = getplayerxy(1, k)
