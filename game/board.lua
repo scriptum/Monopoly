@@ -305,6 +305,7 @@ __max = 5
 
 gogo = function(s)
  local buf = s._child[__i]
+ math.randomseed(os.time())
  ds1 = math.random(1, 6)
  ds2 = math.random(1, 6)
  buf.pos = buf.pos + ds1 + ds2
