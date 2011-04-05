@@ -304,10 +304,9 @@ double = 0
 __max = 5
 
 gogo = function(s)
- 
  local buf = s._child[__i]
- ds1 = math.random(1, 1)
- ds2 = math.random(1, 1)
+ ds1 = math.random(1, 6)
+ ds2 = math.random(1, 6)
  buf.pos = buf.pos + ds1 + ds2
  local max = field_width*2 + field_height*2 + 4
  if buf.pos > max then buf.pos = buf.pos - max end
@@ -320,6 +319,7 @@ gogo = function(s)
  elseif double < 3 then
   double = double + 1
  else
+  buf.pos = 13
   local x, y = getplayerxy(13, buf.k)
   buf:stop('main'):animate({x=x,y=y})
   double = 0
