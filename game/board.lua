@@ -24,6 +24,7 @@ end
 -- искусственный интеллект
 ai = function(s)
  if not rules_company[s.pos].owner then rules_company[s.pos].owner = s.k end
+ s:stop('blend')
 end
 
 board = Entity:new(screen) --игровая доска
@@ -315,6 +316,8 @@ __max = 5
 -- Функция перемещения игрока по полю.
 gogo = function(s)
  local buf = s._child[__i]
+ buf:animate({blend_alpha = 90}, {loop = true, queue = 'blend', speed = 0.5})
+ buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend', speed = 0.5})
  math.randomseed(os.time())
  ds1 = math.random(1, 6)
  ds2 = math.random(1, 6)
@@ -347,7 +350,5 @@ for k,v in pairs(players) do
   Entity:new(player)
   :draw(player_draw)
   :set({pos = v.pos, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0})
-  :animate({blend_alpha = 90}, {loop = true, queue = 'blend', speed = 0.5})
-  :animate({blend_alpha = 0}, {loop = true, queue = 'blend', speed = 0.5})
 end
 
