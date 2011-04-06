@@ -21,6 +21,11 @@ local scaley = (s1-sep_padding*2)/16
 local alpha = 30
 end
 
+-- искусственный интеллект
+ai = function(s)
+ if not rules_company[s.pos].owner then rules_company[s.pos].owner = s.k end
+end
+
 board = Entity:new(screen) --игровая доска
 companys = Entity:new(board) --компании
 --Entity:new(screen):border_image(G.newImage('data/gfx/krig_Aqua_button.png'), 13, 15, 13, 15):move(s1,s1):set({w = 800 - s1*2, h = 600 - s1*2})
@@ -317,9 +322,7 @@ gogo = function(s)
  local max = field_width*2 + field_height*2 + 4
  if buf.pos > max then buf.pos = buf.pos - max end
  local x, y = getplayerxy(buf.pos, buf.k)
- buf:stop('main'):animate({x=x,y=y})
- -- условно покупка компании
- if not rules_company[buf.pos].owner then rules_company[buf.pos].owner = buf.k end
+ buf:stop('main'):animate({x=x,y=y},{callback=ai})
  if ds1 ~= ds2 then
   __i = __i + 1
   if __i > 5 then __i = 1 end
