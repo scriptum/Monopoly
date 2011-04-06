@@ -98,15 +98,19 @@ render.company = function(s)
   local sx = (s2 - cell_padding*2)/16
   local sy = (s1 - cell_padding*2)/16
   local sx2 = (s2 + a)/16
-  if rules_company[s.num].owner then G.setColor(rules_player_colors[rules_company[s.num].owner]) end
-  if s.side == 1 then
-    G.draw(fuzzy, x, y, 0, sx, sy)
-  elseif s.side == 2 then
-    G.draw(fuzzy, x + s2, y - cell_padding, math.pi/2, sx2, sy)
-  elseif s.side == 3 then
-    G.draw(fuzzy, x, y - s2 + cell_padding * 2, 0, sx, sy)
-  elseif s.side == 4 then
-    G.draw(fuzzy, x - cell_padding*3 + s1, y - cell_padding, math.pi/2, sx2, sy)
+  if rules_company[s.num].owner then 
+    local c = rules_player_colors[rules_company[s.num].owner]
+    c[4] = 70
+    G.setColor(c)
+    if s.side == 1 then
+      G.draw(fuzzy, x, y, 0, sx, sy)
+    elseif s.side == 2 then
+      G.draw(fuzzy, x + s2, y - cell_padding, math.pi/2, sx2, sy)
+    elseif s.side == 3 then
+      G.draw(fuzzy, x, y - s2 + cell_padding * 2, 0, sx, sy)
+    elseif s.side == 4 then
+      G.draw(fuzzy, x - cell_padding*3 + s1, y - cell_padding, math.pi/2, sx2, sy)
+    end
   end
   G.setColor(255, 255, 255)
   sx = (s2 - cell_padding * 2) / 128
