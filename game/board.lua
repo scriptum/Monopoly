@@ -98,7 +98,7 @@ render.company = function(s)
   local sx = (s2 - cell_padding*2)/16
   local sy = (s1 - cell_padding*2)/16
   local sx2 = (s2 + a)/16
-  if rules_company.owner then G.setColor(rules_player_colors[rules_company.owner]) end
+  if rules_company[s.num].owner then G.setColor(rules_player_colors[rules_company[s.num].owner]) end
   if s.side == 1 then
     G.draw(fuzzy, x, y, 0, sx, sy)
   elseif s.side == 2 then
@@ -303,6 +303,7 @@ __i = 1
 double = 0
 __max = 5
 
+-- Функция перемещения игрока по полю.
 gogo = function(s)
  local buf = s._child[__i]
  math.randomseed(os.time())
@@ -313,7 +314,8 @@ gogo = function(s)
  if buf.pos > max then buf.pos = buf.pos - max end
  local x, y = getplayerxy(buf.pos, buf.k)
  buf:stop('main'):animate({x=x,y=y})
- if not rules_company[__i].owner then rules_company.owner = buf.k end
+ -- условно покупка компании
+ if not rules_company[buf.pos].owner then rules_company[buf.pos].owner = buf.k end
  if ds1 ~= ds2 then
   __i = __i + 1
   if __i > 5 then __i = 1 end
