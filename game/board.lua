@@ -107,8 +107,9 @@ render.company = function(s)
   local sx = (s2 - cell_padding*2)/16
   local sy = (s1 - cell_padding*2)/16
   local sx2 = (s2 + a)/16
-  if rules_company[s.num].owner then 
-    local c = rules_player_colors[rules_company[s.num].owner.k]
+  local com = rules_company[s.num]
+  if com.owner then 
+    local c = rules_player_colors[com.owner.k]
     c[4] = s.owner_alpha
     G.setColor(c)
     if s.side == 1 then
@@ -126,9 +127,9 @@ render.company = function(s)
   G.draw(rules_company_images[s.num], x, y, 0, sx)
 
 
-  if rules_company[s.num].group then
+  if com.group then
     sx = (s1 - s2 - cell_padding * 2) / 64
-    local group = rules_company[s.num].group
+    local group = com.group
     if s.side == 1 then
       G.draw(rules_group_images[group], x + (s2 - sx * 64 - cell_padding*2) / 2, y + s2 + cell_padding, 0, sx)
     elseif s.side == 2 then
@@ -148,12 +149,18 @@ render.company = function(s)
     y = y - s2 - cell_padding/2
   end
   
-  --if rules_company[s.num].group == 'bank' then
-  --  txt = '$ ' .. rules_company[s.num].money[1] .. ' K * n'
+  --if com.group == 'bank' then
+  --  txt = '$ ' .. com.money[1] .. ' K * n'
   --else
-    txt = money(rules_company[s.num].money[1])
+    txt = money(com.money[1])
   --end
   Gprintf(txt, x - cell_padding, y + s2 - cell_padding * 2, s2, 'center')
+  
+  --заложено?
+  if com.level and com.level == 0 then 
+    G.setColor(255,255,255)
+    G.draw(lock, x - 4, y, 0, s2/128)
+  end
 end
 
 
