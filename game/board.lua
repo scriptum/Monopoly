@@ -99,8 +99,8 @@ render.company = function(s)
   local sy = (s1 - cell_padding*2)/16
   local sx2 = (s2 + a)/16
   if rules_company[s.num].owner then 
-    local c = rules_player_colors[rules_company[s.num].owner]
-    c[4] = 70
+    local c = rules_player_colors[rules_company[s.num].owner.k]
+    c[4] = s.owner_alpha
     G.setColor(c)
     if s.side == 1 then
       G.draw(fuzzy, x, y, 0, sx, sy)
@@ -227,17 +227,17 @@ for i = 1, field_width*2 + field_height*2 + 4 do
   end
 end
 
-burn = Entity:new(screen):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
+burn = Entity:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
 var = 0
-Entity:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable({bound={100, 500, 100, 100}})
+--Entity:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable({bound={100, 500, 100, 100}})
 
-require('ui.slider')
+--[[require('ui.slider')
 local ent = 'burn'
 Entity:new(screen):move(200,200+32):slider('R', 0, 255, {ent, 'r'})
 Entity:new(screen):move(200,200+32*2):slider('G', 0, 255, {ent, 'g'})
 Entity:new(screen):move(200,200+32*3):slider('B', 0, 255, {ent, 'b'})
 Entity:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
-Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})
+Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})]]
 
 players = {
   {
@@ -297,9 +297,13 @@ end
 local player_draw = function(s)
   sx = 30/128
   G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
+  G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx)
+  Gprint('$ ' .. s.cash .. ' K', s1+45, s1+97 + s.k*30)
+  
   G.setBlendMode('additive')
   G.setColor(255,255,255,s.blend_alpha)
   G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
+  G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx)
   G.setBlendMode('alpha')
 end
 
@@ -310,46 +314,80 @@ __max = 5
 
 -- искусственный интеллект
 ai = function(s)
- if not rules_company[s.pos].owner then rules_company[s.pos].owner = s.k end
- s:stop('blend'):set({blend_alpha = 0})
+  local b = rules_company[s.pos]
+  if not b.owner then 
+    b.owner = s
+    companys._child[s.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
+    if type(b.money) == 'table' then s.cash = s.cash - b.money[1] end
+  elseif type(b.money) == 'table' and b.money[2] and s ~= b.owner then 
+    s.cash = s.cash - b.money[2]
+    b.owner.cash = b.owner.cash + b.money[2]
+    coins:move(s.x, s.y):show():animate({x = b.owner.x, y = b.owner.y}, {speed = 1, callback=function(s) s:hide() end})
+  end
+  s:stop('blend'):set({blend_alpha = 0})
+  player:delay({callback=gogo})
+end
+
+--бросок кубиков
+roll = function()
+  math.randomseed(os.time() + time + math.random(99999))
+  ds1 = math.random(1, 6)
+  math.randomseed(os.time() + time + math.random(99999))
+  ds2 = math.random(1, 6)
 end
 
 -- Функция перемещения игрока по полю.
 gogo = function(s)
- local buf = s._child[__i]
- buf:animate({blend_alpha = 90}, {loop = true, queue = 'blend', speed = 0.5})
- buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend', speed = 0.5})
- math.randomseed(os.time())
- ds1 = math.random(1, 6)
- ds2 = math.random(1, 6)
- buf.pos = buf.pos + ds1 + ds2
- local max = field_width*2 + field_height*2 + 4
- if buf.pos > max then buf.pos = buf.pos - max end
- local x, y = getplayerxy(buf.pos, buf.k)
- buf:stop('main'):animate({x=x,y=y},{callback = ai, speed = 1})
- if ds1 ~= ds2 then
-  __i = __i + 1
-  if __i > 5 then __i = 1 end
-  double = 0
- elseif double < 3 then
-  double = double + 1
- else
-  buf.pos = 13
-  local x, y = getplayerxy(13, buf.k)
-  buf:stop('main'):animate({x=x,y=y})
-  double = 0
-  buf.jail = 3
-  __i = __i + 1
- end
- if __i > __max then __i = 1 end
+  local buf = s._child[__i]
+  buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
+  buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
+
+  for i = 1, 30 do
+   s:delay({queue = 'roll', speed = i/200, callback = roll})
+  end   
+  s:delay({queue = 'roll', speed = 0.5, callback = function(s)
+    local buf = s._child[__i]
+    buf.pos = buf.pos + ds1 + ds2
+    local max = field_width*2 + field_height*2 + 4
+    if buf.pos > max then buf.pos = buf.pos - max end
+    local x, y = getplayerxy(buf.pos, buf.k)
+    buf:stop('main'):animate({x=x,y=y},{callback = ai, speed = 1})
+    if ds1 ~= ds2 then
+    __i = __i + 1
+    if __i > 5 then __i = 1 end
+    double = 0
+    elseif double < 3 then
+    double = double + 1
+    else
+    buf.pos = 13
+    local x, y = getplayerxy(13, buf.k)
+    buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+    player:delay({callback=gogo})
+    double = 0
+    buf.jail = 3
+    __i = __i + 1
+    end
+    if __i > __max then __i = 1 end
+  end})
+
+ 
 end
 
-player = Entity:new(board):delay({speed=1, callback=gogo, loop=true})
+player = Entity:new(board):delay({callback=gogo})
 
 for k,v in pairs(players) do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)
-  :set({pos = v.pos, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0})
+  :set({pos = v.pos, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0, cash = 1500})
 end
 
+
+dice_draw = function(s)
+  G.draw(dice[ds1 or 1], s.x, s.y, 0, 0.5)
+  G.draw(dice[ds2 or 1], s.x + 66, s.y, 0, 0.5)
+end
+
+Entity:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
+
+coins = Entity:new(board):image('data/gfx/coins-icon.png'):set({sx=24/256, sy=24/256}):hide()
