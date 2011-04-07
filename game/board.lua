@@ -22,6 +22,8 @@ local alpha = 30
 end
 
 board = Entity:new(screen) --игровая доска
+--центральный прямоугольник
+burn = Entity:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
 companys = Entity:new(board) --компании
 --Entity:new(screen):border_image(G.newImage('data/gfx/krig_Aqua_button.png'), 13, 15, 13, 15):move(s1,s1):set({w = 800 - s1*2, h = 600 - s1*2})
 
@@ -156,11 +158,37 @@ render.company = function(s)
   --end
   Gprintf(txt, x - cell_padding, y + s2 - cell_padding * 2, s2, 'center')
   
+  G.setColor(255,255,255)
   --заложено?
   if com.level and com.level == 0 then 
-    G.setColor(255,255,255)
     G.draw(lock, x - 4, y, 0, s2/128)
+  elseif com.level and com.level > 2 then
+    --акции
+    local lvl = com.level - 2
+    local img = action
+    local offset_y = 0
+    sx = 16/32
+    if lvl == 5 then 
+      img = all_actions
+      lvl = 1
+      sx = 16/32
+      offset_y = -2
+    end
+    offset = s2/2 - cell_padding - 10 - lvl*10/2 - 3
+    for i = 1, lvl do 
+      if s.side == 1 then
+        G.draw(img, x + offset + i*10, y + s1 - 8 + offset_y, 0, sx)
+      elseif s.side == 2 then
+        G.draw(img, x + s2 - s1 - 8, y + offset + i*10 + 8, 0, sx)
+      elseif s.side == 3 then
+        G.draw(img, x + offset + i*10, y-5+ offset_y, 0, sx)
+      elseif s.side == 4 then
+        G.draw(img, x + s1 - 12, y + offset + i*10 + 8 , 0, sx)
+      end
+      
+    end
   end
+  
 end
 
 
@@ -243,7 +271,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
   end
 end
 
-burn = Entity:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
+
 --var = 0
 --Entity:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable({bound={100, 500, 100, 100}})
 
