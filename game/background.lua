@@ -23,6 +23,6 @@ getMouseXY = function()
   return love.mouse.getX()/screen_scale - x_screen_scale, love.mouse.getY()/screen_scale - y_screen_scale
 end
 
-Entity:new(screen):image(board_background)
+Entity:new(screen):image(board_background):set({sx = 800/1024, sy = 600/1024})
 
 console = G.newFont('data/fonts/ru.ttf', math.ceil(12*getScale()))

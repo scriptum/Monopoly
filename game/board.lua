@@ -93,7 +93,7 @@ end
 
 --ф-я формата денег
 local money = function(m)
-  if m > 1000 then
+  if m >= 1000 then
     return '$ ' .. m/1000 .. ' M'
   else
     return '$ ' .. m .. ' K'
@@ -169,7 +169,7 @@ render.big_cell = function(s)
   else
     y = 600 - s1 + cell_padding * 2
   end
-  G.draw(rules_company_images[s.num], x, y, 0, (s1 - cell_padding * 4) / 256)
+  G.draw(rules_company_images[s.num], x, y, 0, (s1 - cell_padding * 4) / 128)
 end
 
 --ф-я рендеринга казны и шанса
@@ -248,6 +248,7 @@ Entity:new(screen):move(200,200+32*3):slider('B', 0, 255, {ent, 'b'})
 Entity:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
 Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})]]
 
+--получить позицию игрока основываясь на номере клетке и самого игрока (нужно для смещения)
 local getplayerxy = function(n, k)
   side = companys._child[n].side
   x, y = get_xy(companys._child[n].pos, side)
@@ -270,8 +271,9 @@ local getplayerxy = function(n, k)
   return x, y
 end
 
+--функция рендеринга игрока
 local player_draw = function(s)
-  sx = 30/128
+  sx = 30/64
   G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
   G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx)
   Gprint(money(s.cash), s1+45, s1+97 + s.k*30)
