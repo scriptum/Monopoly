@@ -90,6 +90,15 @@ local get_xy = function(i, side)
   return x, y
 end
 
+
+--ф-я формата денег
+local money = function(m)
+  if m > 1000 then
+    return '$ ' .. m/1000 .. ' M'
+  else
+    return '$ ' .. m .. ' K'
+  end
+end
 render = {}
 --ф-я рендеринга для нормальной компании
 render.company = function(s)
@@ -142,7 +151,7 @@ render.company = function(s)
   --if rules_company[s.num].group == 'bank' then
   --  txt = '$ ' .. rules_company[s.num].money[1] .. ' K * n'
   --else
-    txt = '$ ' .. rules_company[s.num].money[1] .. ' K'
+    txt = money(rules_company[s.num].money[1])
   --end
   Gprintf(txt, x - cell_padding, y + s2 - cell_padding * 2, s2, 'center')
 end
@@ -193,7 +202,7 @@ render.nalog = function(s)
   G.setColor(0,0,0)
   G.setFont(console)
   G.fontSize = 15
-  Gprintf(rules_company[s.num].name .. '\n$ ' .. rules_company[s.num].money .. ' K', x, y, s1, 'center')
+  Gprintf(rules_company[s.num].name .. '\n' .. money(rules_company[s.num].money), x, y, s1, 'center')
   --G.rectangle('line', x,y,s2- cell_padding * 2,12)
 end
 
@@ -228,7 +237,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
 end
 
 burn = Entity:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
-var = 0
+--var = 0
 --Entity:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable({bound={100, 500, 100, 100}})
 
 --[[require('ui.slider')
@@ -238,39 +247,6 @@ Entity:new(screen):move(200,200+32*2):slider('G', 0, 255, {ent, 'g'})
 Entity:new(screen):move(200,200+32*3):slider('B', 0, 255, {ent, 'b'})
 Entity:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
 Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})]]
-
-players = {
-  {
-    name = "RPG",
-    cash = 1500,
-    pos = 1,
-    jail = 0
-  },
-  {
-    name = "RPG",
-    cash = 1500,
-    pos = 1,
-    jail = 0
-  },
-  {
-    name = "RPG",
-    cash = 1500,
-    pos = 1,
-    jail = 0
-  },
-  {
-    name = "RPG",
-    cash = 1500,
-    pos = 1,
-    jail = 0
-  },
-  {
-    name = "RPG",
-    cash = 1500,
-    pos = 1,
-    jail = 0
-  }
-}
 
 local getplayerxy = function(n, k)
   side = companys._child[n].side
@@ -298,7 +274,7 @@ local player_draw = function(s)
   sx = 30/128
   G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
   G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx)
-  Gprint('$ ' .. s.cash .. ' K', s1+45, s1+97 + s.k*30)
+  Gprint(money(s.cash), s1+45, s1+97 + s.k*30)
   
   G.setBlendMode('additive')
   G.setColor(255,255,255,s.blend_alpha)
@@ -369,20 +345,18 @@ gogo = function(s)
     end
     if __i > __max then __i = 1 end
   end})
-
- 
 end
 
 player = Entity:new(board):delay({callback=gogo})
 
-for k,v in pairs(players) do
+for k = 1, 5 do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)
-  :set({pos = v.pos, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0, cash = 1500})
 end
 
-
+--кости
 dice_draw = function(s)
   G.draw(dice[ds1 or 1], s.x, s.y, 0, 0.5)
   G.draw(dice[ds2 or 1], s.x + 66, s.y, 0, 0.5)
@@ -390,4 +364,5 @@ end
 
 Entity:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
 
+--анимация передачи денех
 coins = Entity:new(board):image('data/gfx/coins-icon.png'):set({sx=24/256, sy=24/256}):hide()
