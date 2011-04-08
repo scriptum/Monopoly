@@ -60,9 +60,9 @@ end
 
 -- Ёкшн тюрьмы
 action_jail = function(player)
--- player.pos = 13
--- local x, y = getplayerxy(13, player.k)
--- player:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+ player.pos = 13
+ local x, y = getplayerxy(13, player.k)
+ player:stop('main'):animate({x=x,y=y})
 end
 
 --группы, одна группа означает как монополию так и просто клетки одного типа

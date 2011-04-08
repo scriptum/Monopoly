@@ -285,7 +285,7 @@ Entity:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
 Entity:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})]]
 
 --получить позицию игрока основываясь на номере клетке и самого игрока (нужно для смещения)
-local getplayerxy = function(n, k)
+getplayerxy = function(n, k)
   side = companys._child[n].side
   x, y = get_xy(companys._child[n].pos, side)
   if side == 1 then
@@ -396,7 +396,7 @@ gogo = function(s)
   for i = 1, 2 do
    s:delay({queue = 'roll', speed = i/200, callback = roll})
   end   
-  s:delay({queue = 'roll', speed = 0, callback = function(s)
+  s:delay({queue = 'roll', speed = 1, callback = function(s)
     local buf = s._child[__i]
     buf.pos = buf.pos + ds1 + ds2
     
@@ -408,9 +408,9 @@ gogo = function(s)
     local x, y = getplayerxy(buf.pos, buf.k)
     buf:stop('main'):animate({x=x,y=y},{callback = function(s)
     local cell = rules_company[s.pos]
-    if cell.action then cell.action(buf) end
-    ai(buf)
-    end, speed = 0.1})
+    if cell.action then cell.action(s) end
+    ai(s)
+    end, speed = 0.5}):stop('blend'):set({blend_alpha = 0})
     if ds1 ~= ds2 then
     __i = __i + 1
     if __i > 5 then __i = 1 end
@@ -421,7 +421,7 @@ gogo = function(s)
     buf.pos = 13
     local x, y = getplayerxy(13, buf.k)
     buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
-    player:delay({callback=gogo}):stop('blend'):set({blend_alpha = 0})
+    player:delay({callback=gogo})
     double = 0
     buf.jail = 3
     __i = __i + 1
