@@ -410,7 +410,7 @@ gogo = function(s)
     local cell = rules_company[s.pos]
     if cell.action then cell.action(buf) end
     ai(buf)
-    end, speed = 0.1}):stop('blend'):set({blend_alpha = 0})
+    end, speed = 0.1})
     if ds1 ~= ds2 then
     __i = __i + 1
     if __i > 5 then __i = 1 end
@@ -421,7 +421,7 @@ gogo = function(s)
     buf.pos = 13
     local x, y = getplayerxy(13, buf.k)
     buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
-    player:delay({callback=gogo})
+    player:delay({callback=gogo}):stop('blend'):set({blend_alpha = 0})
     double = 0
     buf.jail = 3
     __i = __i + 1
