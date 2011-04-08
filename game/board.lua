@@ -344,6 +344,15 @@ end
 
 -- искусственный интеллект
 ai = function(s)
+ if s.cash < 0 then
+  for k,v in pairs(rules_company) do
+   if v.owner == s.owner and v.type == "company" and v.level then
+    v.level = 0
+    s.cash = s.cash + v.money[2]/2
+    if s.cash >= cash then break end
+   end
+  end
+ end
   local b = rules_company[s.pos]
   
   if not b.owner and b.type == "company" and s.cash > b.money[1] then 
@@ -383,7 +392,7 @@ gogo = function(s)
     local cell = rules_company[s.pos]
     if cell.action then cell.action(buf) end
     ai(buf)
-    end, speed = 1})
+    end, speed = 0.1})
     if ds1 ~= ds2 then
     __i = __i + 1
     if __i > 5 then __i = 1 end
