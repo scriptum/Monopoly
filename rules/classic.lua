@@ -21,7 +21,7 @@ action_company = function(player)
  local money = rules_company[player.pos].money
  local cell = rules_company[player.pos]
  local cash
- if cell.owner and cell.owner ~= player and level then
+ if cell.owner and cell.owner ~= player and level > 0 then
   if level == 1 then
    cash = money[2]
   elseif level == 2 then

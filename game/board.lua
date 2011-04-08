@@ -346,7 +346,7 @@ end
 ai = function(pl)
  if pl.cash < 0 then
   for k,v in pairs(rules_company) do
-   if v.owner == pl and v.type == "company" and v.level then
+   if v.owner == pl and v.type == "company" and v.level > 0 then
     v.level = 0
     pl.cash = pl.cash + v.money[1]/2
     if pl.cash >= 0 then break end
@@ -381,7 +381,7 @@ gogo = function(s)
   for i = 1, 2 do
    s:delay({queue = 'roll', speed = i/200, callback = roll})
   end   
-  s:delay({queue = 'roll', speed = 0.5, callback = function(s)
+  s:delay({queue = 'roll', speed = 0, callback = function(s)
     local buf = s._child[__i]
     buf.pos = buf.pos + ds1 + ds2
     
