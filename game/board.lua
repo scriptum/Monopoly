@@ -343,24 +343,24 @@ end
 
 
 -- искусственный интеллект
-ai = function(s)
- if s.cash < 0 then
+ai = function(pl)
+ if pl.cash < 0 then
   for k,v in pairs(rules_company) do
-   if v.owner == s.owner and v.type == "company" and v.level then
+   if v.owner == pl and v.type == "company" and v.level then
     v.level = 0
-    s.cash = s.cash + v.money[2]/2
-    if s.cash >= cash then break end
+    pl.cash = pl.cash + v.money[1]/2
+    if pl.cash >= 0 then break end
    end
   end
  end
-  local b = rules_company[s.pos]
+  local b = rules_company[pl.pos]
   
-  if not b.owner and b.type == "company" and s.cash > b.money[1] then 
-    b.owner = s
-    companys._child[s.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
-    if type(b.money) == 'table' then s.cash = s.cash - b.money[1] end
+  if not b.owner and b.type == "company" and pl.cash > b.money[1] then 
+    b.owner = pl
+    companys._child[pl.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
+    if type(b.money) == 'table' then pl.cash = pl.cash - b.money[1] end
   end
-  s:stop('blend'):set({blend_alpha = 0})
+  player:stop('blend'):set({blend_alpha = 0})
   player:delay({callback=gogo})
 end
 
@@ -418,7 +418,7 @@ for k = 1, 5 do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0, cash = 500})
 end
 
 --кости
