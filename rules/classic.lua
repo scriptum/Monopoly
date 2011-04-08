@@ -35,6 +35,12 @@ action_company = function(player)
  end
 end
 
+-- Налог
+action_nalog = function(player)
+player.cash = player.cash - rules_company[player.pos].money
+end
+
+
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
 {
@@ -247,7 +253,8 @@ rules_company =
     name = "Налог",
     group = "nalog",
     image = "vopros.png",
-    money = 150
+    money = 150,
+    action = action_nalog
   },
 
   {
