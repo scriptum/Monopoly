@@ -347,7 +347,7 @@ ai = function(pl)
  if pl.cash < 0 then
   for k,v in pairs(rules_company) do
    if v.owner == pl and v.type == "company" and v.level > 0 then
-    if v.group == "oil" and v.level > 3
+    if v.group == "oil" and v.level > 3 then
      v.level = v.level - 1
     else     
      v.level = 0
