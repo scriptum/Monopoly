@@ -54,6 +54,7 @@ action_oil = function(player)
   end
   player.cash = player.cash - cash
   cell.owner.cash = cell.owner.cash + cash
+  coins:move(player.x, player.y):show():animate({x = cell.owner.x, y = cell.owner.y}, {speed = 1, callback=function(s) s:hide() end})
  end
 end
 
