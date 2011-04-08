@@ -246,6 +246,7 @@ local side = 1
 local big_cell = 1 --старт тюрьма парковка и таможня
 --сколько компаний + 4 клетки по углам
 for i = 1, field_width*2 + field_height*2 + 4 do
+ if rules_company[i].type == "company" then rules_company[i].level = 1 end
   if i == 1 or 
      i == 2 + field_width or 
      i == 3 + field_width + field_height or
@@ -323,19 +324,32 @@ end
 __i = 1
 double = 0
 __max = 5
+--[[
+cashback = function(s, cash)
+ if s.cash > cash then
+  return s.cash - cash
+ else 
+  for k,v pairs(rules_company) do
+   if v.owner == s.owner then
+    v.level = 0
+    s.cash = s.cash + v.money[1]/2
+    if s.cash >= cash then break end
+   end
+  end
+ end
+end
+]]--
+
 
 
 -- искусственный интеллект
 ai = function(s)
   local b = rules_company[s.pos]
-  if not b.owner then 
+  
+  if not b.owner and b.type == "company" and s.cash > b.money[1] then 
     b.owner = s
     companys._child[s.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
     if type(b.money) == 'table' then s.cash = s.cash - b.money[1] end
-  elseif type(b.money) == 'table' and b.money[2] and s ~= b.owner then 
-    s.cash = s.cash - b.money[2]
-    b.owner.cash = b.owner.cash + b.money[2]
-    coins:move(s.x, s.y):show():animate({x = b.owner.x, y = b.owner.y}, {speed = 1, callback=function(s) s:hide() end})
   end
   s:stop('blend'):set({blend_alpha = 0})
   player:delay({callback=gogo})
@@ -355,16 +369,21 @@ gogo = function(s)
   buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
   buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
 
-  for i = 1, 30 do
+  for i = 1, 2 do
    s:delay({queue = 'roll', speed = i/200, callback = roll})
   end   
   s:delay({queue = 'roll', speed = 0.5, callback = function(s)
     local buf = s._child[__i]
     buf.pos = buf.pos + ds1 + ds2
+    
     local max = field_width*2 + field_height*2 + 4
     if buf.pos > max then buf.pos = buf.pos - max end
     local x, y = getplayerxy(buf.pos, buf.k)
-    buf:stop('main'):animate({x=x,y=y},{callback = ai, speed = 1})
+    buf:stop('main'):animate({x=x,y=y},{callback = function(s)
+    local cell = rules_company[s.pos]
+    if cell.action then cell.action(buf) end
+    ai(buf)
+    end, speed = 1})
     if ds1 ~= ds2 then
     __i = __i + 1
     if __i > 5 then __i = 1 end

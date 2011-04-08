@@ -15,6 +15,27 @@ rules_player_colors = {
 {255,255,0}
 }
 
+-- Ёкшн обычных компаний
+action_company = function(player)
+ local level = rules_company[player.pos].level
+ local money = rules_company[player.pos].money
+ local cell = rules_company[player.pos]
+ local cash
+ print("Level = "..level)
+ if cell.owner and cell.owner ~= player and level then
+  print("If")
+  if level == 1 then
+   cash = money[2]
+  elseif level == 2 then
+   cash = money[2] * 2
+  else
+   cash = money[level]
+  end
+  player.cash = player.cash - cash
+  cell.owner.cash = cell.owner.cash + cash
+  coins:move(player.x, player.y):show():animate({x = cell.owner.x, y = cell.owner.y}, {speed = 1, callback=function(s) s:hide() end})
+ end
+end
 
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
@@ -87,6 +108,7 @@ rules_group =
 }
 
 --список клеток с компани€ми, шансом, казной, стартом, таможней, тюрьмой и парковкой
+
 rules_company =
 {
   {
@@ -102,7 +124,7 @@ rules_company =
     image = "mcdonalds-logo.png",           --картинка лого
     group = "food",                         --группа - монополи€
     money = {60, 2, 10, 30, 90, 160, 250},  --цены: стоимость, доход: без акций, с 1,2,3,4,5 акци€ми
-    
+    action = action_company
   },
 
   {
@@ -120,7 +142,7 @@ rules_company =
     image = "danone.png",
     group = "food",
     money = {60, 2, 10, 30, 90, 160, 250},
-    
+    action = action_company
   },
 
   {
@@ -129,7 +151,7 @@ rules_company =
     image = "cocacola.png",
     group = "food",
     money = {80, 4, 20, 60, 180, 320, 450},
-    
+    action = action_company
   },
 
   {
@@ -159,7 +181,7 @@ rules_company =
     image = "YahooLogo.png",
     group = "inet",
     money = {100, 6, 30, 90, 270, 400, 550},
-    
+    action = action_company
   },
 
   {
@@ -168,7 +190,7 @@ rules_company =
     image = "yandex.png",
     group = "inet",
     money = {100, 6, 30, 90, 270, 400, 550},
-    
+    action = action_company
   },
 
   {
@@ -186,7 +208,7 @@ rules_company =
     image = "google-logo.png",
     group = "inet",
     money = {120, 8, 40, 100, 300, 450, 600},
-    
+    action = action_company
   },
   
   {
@@ -202,7 +224,7 @@ rules_company =
     image = "logo-leroy-merlin.png",
     group = "market",
     money = {140, 10, 50, 150, 450, 625, 750},
-    
+    action = action_company
   },
 
   {
@@ -211,7 +233,7 @@ rules_company =
     image = "logo-auchan.png",
     group = "market",
     money = {140, 10, 50, 150, 450, 625, 750},
-    
+    action = action_company
   },
 
   {
@@ -220,7 +242,7 @@ rules_company =
     image = "megafon.png",
     group = "mobile",
     money = {180, 14, 70, 200, 550, 750, 950},
-    
+    action = action_company
   },
 
   {
@@ -236,7 +258,7 @@ rules_company =
     image = "Beeline.png",
     group = "mobile",
     money = {180, 14, 70, 200, 550, 750, 950},
-    
+    action = action_company
   },
 
   {
@@ -245,7 +267,7 @@ rules_company =
     image = "mts.png",
     group = "mobile",
     money = {200, 16, 80, 220, 600, 800, 1000},
-    
+    action = action_company
   },
 
   {
@@ -263,7 +285,7 @@ rules_company =
     image = "Puma-logo.png",
     group = "sport",
     money = {220, 18, 90, 250, 700, 825, 1050},
-    
+    action = action_company
   },
   
   {
@@ -281,7 +303,7 @@ rules_company =
     image = "nike.png",
     group = "sport",
     money = {220, 18, 90, 250, 700, 825, 1050},
-    
+    action = action_company
   },
 
 
@@ -291,7 +313,7 @@ rules_company =
     image = "adidas.png",
     group = "sport",
     money = {240, 20, 100, 300, 750, 925, 1100},
-    
+    action = action_company
   },
 
   {
@@ -321,7 +343,7 @@ rules_company =
     image = "Ford_logo.png",
     group = "auto",
     money = {260, 22, 110, 330, 800, 975, 1150},
-    
+    action = action_company
   },
 
   {
@@ -330,7 +352,7 @@ rules_company =
     image = "Nissan_logo.png",
     group = "auto",
     money = {260, 22, 110, 330, 800, 975, 1150},
-    
+    action = action_company
   },
 
   {
@@ -348,7 +370,7 @@ rules_company =
     image = "hyundai.png",
     group = "auto",
     money = {280, 24, 120, 360, 850, 1150, 1200},
-    
+    action = action_company
   },
 
   {
@@ -364,7 +386,7 @@ rules_company =
     image = "Omega.png",
     group = "clock",
     money = {320, 28, 150, 450, 100, 1200, 1400},
-    
+    action = action_company
   },
 
   {
@@ -373,7 +395,7 @@ rules_company =
     image = "Rolex_logo.png",
     group = "clock",
     money = {320, 28, 150, 450, 100, 1200, 1400},
-    
+    action = action_company
   },
 
   {
@@ -382,7 +404,7 @@ rules_company =
     image = "ibm_logo.png",
     group = "it",
     money = {350, 35, 175, 500, 1100, 1300, 1500},
-    
+    action = action_company
   },
 
   {
@@ -398,7 +420,7 @@ rules_company =
     image = "Intel-logo.png",
     group = "it",
     money = {350, 35, 175, 500, 1100, 1300, 1500},
-    
+    action = action_company
   },
 
   {
@@ -407,7 +429,7 @@ rules_company =
     image = "Apple-logo.png",
     group = "it",
     money = {400, 50, 200, 600, 1400, 1700, 2000},
-    
+    action = action_company
   }
 }
 
