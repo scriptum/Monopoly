@@ -62,7 +62,7 @@ end
 action_jail = function(player)
  player.pos = 13
  local x, y = getplayerxy(13, player.k)
- player:stop('main'):animate({x=x,y=y})
+ player:stop('main'):animate({x=x}):animate({y=y})
 end
 
 --группы, одна группа означает как монополию так и просто клетки одного типа
