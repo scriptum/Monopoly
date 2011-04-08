@@ -40,6 +40,22 @@ action_nalog = function(player)
 player.cash = player.cash - rules_company[player.pos].money
 end
 
+-- Экш нефтяных компаний
+action_oil = function(player)
+ local level = rules_company[player.pos].level
+ local money = rules_company[player.pos].money
+ local cell = rules_company[player.pos]
+ local cash
+ if cell.owner and cell.owner ~= player and level > 0 then
+  if level == 1 then
+   cash = 25
+  else
+   cash = 25 * 2 ^ (level - 2)
+  end
+  player.cash = player.cash - cash
+  cell.owner.cash = cell.owner.cash + cash
+ end
+end
 
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
@@ -137,7 +153,7 @@ rules_company =
     image = "Shell.png",
     group = "oil",
     money = {200},
-    
+    action = action_oil
   },
 
   {
@@ -203,7 +219,7 @@ rules_company =
     image = "lukoil.png",
     group = "oil",
     money = {200},
-    
+    action = action_oil
   },
 
   {
@@ -299,7 +315,7 @@ rules_company =
     image = "BP_Logo.png",
     group = "oil",
     money = {200},
-    
+    action = action_oil
   },
 
   {
@@ -366,7 +382,7 @@ rules_company =
     image = "logo-tatneft.png",
     group = "oil",
     money = {200},
-    
+    action = action_oil
   },
 
   {
@@ -416,7 +432,8 @@ rules_company =
     name = "Налог",
     group = "nalog",
     image = "vopros.png",
-    money = 150
+    money = 150,
+    action = action_nalog
   },
 
   {
