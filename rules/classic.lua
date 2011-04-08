@@ -58,6 +58,13 @@ action_oil = function(player)
  end
 end
 
+-- Ёкшн тюрьмы
+action_jail = function(player)
+-- player.pos = 13
+-- local x, y = getplayerxy(13, player.k)
+-- player:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+end
+
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
 {
@@ -399,7 +406,8 @@ rules_company =
     name = "Customs",
     type = "big",
     image = "customs.png",
-    group = "big"
+    group = "big",
+    action = action_jail
   },
 
   {

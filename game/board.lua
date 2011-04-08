@@ -401,7 +401,10 @@ gogo = function(s)
     buf.pos = buf.pos + ds1 + ds2
     
     local max = field_width*2 + field_height*2 + 4
-    if buf.pos > max then buf.pos = buf.pos - max end
+    if buf.pos > max then
+     buf.pos = buf.pos - max
+     buf.cash = buf.cash + 200
+    end
     local x, y = getplayerxy(buf.pos, buf.k)
     buf:stop('main'):animate({x=x,y=y},{callback = function(s)
     local cell = rules_company[s.pos]
