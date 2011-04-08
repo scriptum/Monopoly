@@ -399,7 +399,6 @@ gogo = function(s)
   s:delay({queue = 'roll', speed = 1, callback = function(s)
     local buf = s._child[__i]
     buf.pos = buf.pos + ds1 + ds2
-    
     local max = field_width*2 + field_height*2 + 4
     if buf.pos > max then
      buf.pos = buf.pos - max
@@ -407,24 +406,25 @@ gogo = function(s)
     end
     local x, y = getplayerxy(buf.pos, buf.k)
     buf:stop('main'):animate({x=x,y=y},{callback = function(s)
-    local cell = rules_company[s.pos]
-    if cell.action then cell.action(s) end
-    ai(s)
-    end, speed = 0.5}):stop('blend'):set({blend_alpha = 0})
+     local cell = rules_company[s.pos]
+     if cell.action then cell.action(s) end
+     ai(s)
+     s:stop('blend'):set({blend_alpha = 0})
+    end, speed = 0.5})
     if ds1 ~= ds2 then
-    __i = __i + 1
-    if __i > 5 then __i = 1 end
-    double = 0
+     __i = __i + 1
+     if __i > 5 then __i = 1 end
+     double = 0
     elseif double < 3 then
-    double = double + 1
+     double = double + 1
     else
-    buf.pos = 13
-    local x, y = getplayerxy(13, buf.k)
-    buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
-    player:delay({callback=gogo})
-    double = 0
-    buf.jail = 3
-    __i = __i + 1
+     buf.pos = 13
+     local x, y = getplayerxy(13, buf.k)
+     buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+     player:delay({callback=gogo})
+     double = 0
+     buf.jail = 3
+     __i = __i + 1
     end
     if __i > __max then __i = 1 end
   end})
