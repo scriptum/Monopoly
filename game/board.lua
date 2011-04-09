@@ -102,13 +102,10 @@ local money = function(m)
 end
 render = {}
 
-local draw_fuzzy = function(x, y, sx, sy, side, color)
+local draw_fuzzy = function(x, y, sx, sy, side)
   local sx = s2/16
   local sy = s1/16
   local sx2 = (s2 + a)/16
-  --x = x - cell_padding
-  --y = y - cell_padding
-  G.setColor(color)
   if side == 1 then 
     x = x - cell_padding
     G.draw(fuzzy, x, y, 0, sx, sy)
@@ -135,7 +132,8 @@ render.company = function(s)
   if com.owner then 
     local c = rules_player_colors[com.owner.k]
     c[4] = s.owner_alpha
-    draw_fuzzy(x, y, sx, sy, s.side, c)
+    G.setColor(c)
+    draw_fuzzy(x, y, sx, sy, s.side)
   end
   G.setColor(255, 255, 255)
   sx = (s2 - cell_padding * 2) / 128
@@ -191,7 +189,8 @@ render.company = function(s)
   
   --заложено?
   if com.level and com.level == 0 then 
-    draw_fuzzy(_x, _y, (s2 - cell_padding*2)/16, sy, s.side, {0, 0, 0, 185})
+    G.setColor(0,0,0,185)
+    draw_fuzzy(_x, _y, (s2 - cell_padding*2)/16, sy, s.side)
     G.setColor(255,255,255)
     if s.side == 3 then y = y + s1 - s2 end
     G.draw(lock, x - 4, y, 0, s2/128)
