@@ -85,6 +85,22 @@ action_jail = function(player)
  player:stop('main'):animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
 end
 
+-- Экш шанса
+cashback_chance = function(player)
+ math.randomseed(os.time() + time + math.random(99999))
+ local chance = math.random(1, #rules_chance)
+ player.cash = player.cash + rules_chance[chance].money
+-- print("Chance: "..rules_chance[chance].money)
+end
+
+-- Экш казны
+cashback_treasury = function(player)
+ math.randomseed(os.time() + time + math.random(99999))
+ local treasury = math.random(1, #rules_treasury)
+ player.cash = player.cash + rules_treasury[treasury].money
+-- print("Treasury: "..rules_chance[treasury].money)
+end
+
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
 {
@@ -205,7 +221,8 @@ rules_company =
   {
     name = "Казна",
     group = "treasury",
-    image = "treasury.png"
+    image = "treasury.png",
+    action = cashback_treasury
   },
 
   {
@@ -220,7 +237,8 @@ rules_company =
   {
     name = "Шанс",
     group = "chance",
-    image = "vopros.png"
+    image = "vopros.png",
+    action = cashback_chance
   },
 
   {
@@ -368,7 +386,8 @@ rules_company =
   {
     name = "Казна",
     group = "treasury",
-    image = "treasury.png"
+    image = "treasury.png",
+    action = cashback_treasury
   },
 
   {
@@ -383,7 +402,8 @@ rules_company =
   {
     name = "Шанс",
     group = "chance",
-    image = "vopros.png"
+    image = "vopros.png",
+    action = cashback_chance
   },
 
   {
