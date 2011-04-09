@@ -8,3 +8,8 @@ for i = 1,6 do
 end
 action = G.newImage('data/gfx/blue_icons/document.png')
 all_actions = G.newImage('data/gfx/blue_icons/briefcase.png')
+
+sound_dice = {}
+for i = 1,6 do
+	sound_dice[i] = A.newSource('data/sfx/dice' .. i .. '.ogg', 'static')
+end

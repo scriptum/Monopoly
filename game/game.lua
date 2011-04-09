@@ -106,7 +106,16 @@ gogo = function(s)
   buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
   buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
 
-  for i = 1, 2 do
+  --звук костей
+  local i = math.random(1,6)
+  sound_dice[i]:setPitch(0.8 + math.random()/3)
+  A.play(sound_dice[i])
+  local j = i 
+  while i == j do j = math.random(1,6) end
+  sound_dice[j]:setPitch(0.8 + math.random()/3)
+  A.play(sound_dice[j])
+  
+  for i = 1, 19 do
    s:delay({queue = 'roll', speed = i/200, callback = roll})
   end   
   s:delay({queue = 'roll', speed = 1, callback = function(s)

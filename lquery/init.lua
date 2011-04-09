@@ -19,6 +19,8 @@ require("lquery.table")
 require("lquery.entity")
 
 G = love.graphics --graphics
+A = love.audio --audio
+
 getMouseXY = function()
   return love.mouse.getX(), love.mouse.getY()
 end

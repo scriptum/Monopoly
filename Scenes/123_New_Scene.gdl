@@ -1,0 +1,30 @@
+{ GluonEngine::GameObject(New Scene)
+    enabled bool(true)
+    position vector3d(0;0;0)
+    scale vector3d(1;1;1)
+    orientation quaternion(0;0;0;1)
+    { GluonEngine::GameObject(Camera)
+        enabled bool(true)
+        position vector3d(0;0;50)
+        scale vector3d(1;1;1)
+        orientation quaternion(0;0;0;1)
+        { GluonEngine::CameraControllerComponent(GluonObject)
+            enabled bool(true)
+            active bool(true)
+            visibleArea size2d(100;100)
+            nearPlane float(1)
+            farPlane float(100)
+        }
+    }
+    { GluonEngine::GameObject(Sprite)
+        enabled bool(true)
+        position vector3d(0;0;0)
+        scale vector3d(1;1;1)
+        orientation quaternion(0;0;0;1)
+        { GluonEngine::SpriteRendererComponent(GluonObject)
+            enabled bool(true)
+            size size2d(1;1)
+            color rgba(255;255;255;255)
+        }
+    }
+}

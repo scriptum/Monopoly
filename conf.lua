@@ -7,7 +7,6 @@ function love.conf(t)
   t.screen.fullscreen = false -- Enable fullscreen (boolean)
   --t.screen.fsaa = 4
   t.screen.vsync = false       -- Enable vertical sync (boolean)
-  t.modules.sound = false   
   t.modules.joystick = false 
   t.modules.physics = false  
 end
