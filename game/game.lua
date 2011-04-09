@@ -44,27 +44,17 @@ end
 
 -- ѕересчет монополий
 conversion_monopoly = function(pl, company)
-  local oils = {}
-  local bank = {}
-    if company.group == "oil" then
+  local oils_bank = {}
+    if company.group == "oil" or company.group == "bank" then
      for k,v in pairs(rules_company) do
-      if v.owner == pl and v.group == "oil" and v.level > 0 then
-       table.insert(oils, v)
+      if v.owner == pl and company.group == v.group and v.level > 0 then
+       table.insert(oils_bank, v)
       end
      end
-    for k,v in pairs(oils) do
-     v.level = #oils + 2
+    for k,v in pairs(oils_bank) do
+     v.level = #oils_bank + 2
     end
-    elseif company.group == "bank" then
-     for k,v in pairs(rules_company) do
-      if v.owner == pl and v.group == "bank" and v.level > 0 then
-       table.insert(bank, v)
-      end
-     end
-     for k,v in pairs(bank) do
-      v.level = #bank + 2
-     end 
-    end
+   end
 end
 
 -- искусственный интеллект
