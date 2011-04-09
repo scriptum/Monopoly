@@ -36,7 +36,6 @@ local sep_draw_ver = function(x, y, sx) --рисует разделитель (вертикальный)
   G.draw(sep, x - sx, y, 0, sx, scaley)
 end
 
-
 local sep_draw_hor = function(x, y, sx) --рисует разделитель (горизонтальный)
   G.setBlendMode('additive')
   G.setColor(255,255,255,alpha)
@@ -58,12 +57,13 @@ local sep_draw = function(s) --рисует разделители
   end
   G.setBlendMode('alpha')
 end
+
 --объект - разделители
 Entity:new(board):draw(sep_draw)
 
-
 local cell_padding = 4 --отступ внутри €чейки
 
+--получает смещение в зависимости от позции компании
 get_xy = function(i, side)
   if side == 1 then
     x = s1 - s2 + cell_padding + s2 * i
@@ -92,7 +92,6 @@ get_xy = function(i, side)
   return x, y
 end
 
-
 --ф-€ формата денег
 local money = function(m)
   if m >= 1000 then
@@ -102,27 +101,41 @@ local money = function(m)
   end
 end
 render = {}
+
+local draw_fuzzy = function(x, y, sx, sy, side, color)
+  local sx = s2/16
+  local sy = s1/16
+  local sx2 = (s2 + a)/16
+  --x = x - cell_padding
+  --y = y - cell_padding
+  G.setColor(color)
+  if side == 1 then 
+    x = x - cell_padding
+    G.draw(fuzzy, x, y, 0, sx, sy)
+  elseif side == 2 then
+    G.draw(fuzzy, x + s2, y - cell_padding, math.pi/2, sx2, sy)
+  elseif side == 3 then 
+    x = x - cell_padding
+    y = y - cell_padding*2
+    G.draw(fuzzy, x, y - s2 + cell_padding * 2, 0, sx, sy)
+  elseif side == 4 then 
+    x = x + cell_padding*2
+    G.draw(fuzzy, x - cell_padding*3 + s1, y - cell_padding, math.pi/2, sx2, sy)
+  end
+end
+
 --ф-€ рендеринга дл€ нормальной компании
 render.company = function(s)
   local i = s.pos
   local x, y = get_xy(i, s.side)
+  local _x, _y = x, y
   local sx = (s2 - cell_padding*2)/16
   local sy = (s1 - cell_padding*2)/16
-  local sx2 = (s2 + a)/16
   local com = rules_company[s.num]
   if com.owner then 
     local c = rules_player_colors[com.owner.k]
     c[4] = s.owner_alpha
-    G.setColor(c)
-    if s.side == 1 then
-      G.draw(fuzzy, x, y, 0, sx, sy)
-    elseif s.side == 2 then
-      G.draw(fuzzy, x + s2, y - cell_padding, math.pi/2, sx2, sy)
-    elseif s.side == 3 then
-      G.draw(fuzzy, x, y - s2 + cell_padding * 2, 0, sx, sy)
-    elseif s.side == 4 then
-      G.draw(fuzzy, x - cell_padding*3 + s1, y - cell_padding, math.pi/2, sx2, sy)
-    end
+    draw_fuzzy(x, y, sx, sy, s.side, c)
   end
   G.setColor(255, 255, 255)
   sx = (s2 - cell_padding * 2) / 128
@@ -154,15 +167,36 @@ render.company = function(s)
   --if com.group == 'bank' then
   --  txt = '$ ' .. com.money[1] .. ' K * n'
   --else
-    txt = money(com.money[1])
-  --end
-  Gprintf(txt, x - cell_padding, y + s2 - cell_padding * 2, s2, 'center')
+  if com.level > 0 then 
+    if not com.owner then 
+      txt = money(com.money[1])
+    elseif com.group == 'bank' then 
+      if com.level == 3 then
+        txt = '$ 4 K*N'
+      else
+        txt = '$ 10 K*N'
+      end
+    elseif com.group == 'oil' then
+      txt = money(25 * 2^(com.level - 3))
+    elseif com.level == 1 then
+      txt = money(com.money[2])
+    elseif com.level == 2 then
+      txt = money(com.money[2]*2)
+    else
+      txt = money(com.money[com.level])
+    end
+    Gprintf(txt, x - cell_padding, y + s2 - cell_padding * 2, s2, 'center')
+  end
   
-  G.setColor(255,255,255)
+  
   --заложено?
   if com.level and com.level == 0 then 
+    draw_fuzzy(_x, _y, (s2 - cell_padding*2)/16, sy, s.side, {0, 0, 0, 185})
+    G.setColor(255,255,255)
+    if s.side == 3 then y = y + s1 - s2 end
     G.draw(lock, x - 4, y, 0, s2/128)
   elseif com.level and com.level > 2 then
+    G.setColor(255,255,255)
     --акции
     local lvl = com.level - 2
     local img = action
