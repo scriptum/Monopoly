@@ -49,7 +49,7 @@ ai = function(pl)
  if pl.cash < 0 then
   for k,v in pairs(rules_company) do
    if v.owner == pl and v.type == "company" and v.level > 0 then
-    if v.group == "oil" and v.level > 3 then
+    if v.group == "oil" or v.group == "bank" and v.level > 3 then
      v.level = v.level - 1
      for k1,v1 in pairs(rules_company) do
       if v1.owner == pl and v1.group == v.group and v ~= v1 then
