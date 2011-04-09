@@ -360,6 +360,7 @@ ai = function(pl)
   local b = rules_company[pl.pos]
 
   local oils = {}
+  local bank = {}
   if not b.owner and b.type == "company" and pl.cash > b.money[1] then 
     b.owner = pl
     if b.group == "oil" then
@@ -371,7 +372,17 @@ ai = function(pl)
     for k,v in pairs(oils) do
      v.level = #oils + 2
     end
+    elseif b.group == "bank" then
+     for k,v in pairs(rules_company) do
+      if v.owner == pl and v.group == "bank" then
+       table.insert(bank, v)
+     end
+    end
+    for k,v in pairs(bank) do
+     v.level = #bank + 2
+    end 
   end
+
     companys._child[pl.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
     if type(b.money) == 'table' then pl.cash = pl.cash - b.money[1] end
   end

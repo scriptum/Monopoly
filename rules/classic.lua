@@ -47,13 +47,33 @@ action_oil = function(player)
  local cell = rules_company[player.pos]
  local cash
  if cell.owner and cell.owner ~= player and level > 0 then
-  if level == 1 then
+  if level == 3 then
    cash = 25
   else
-   cash = 25 * 2 ^ (level - 2)
+   cash = 25 * 2 ^ (level - 3)
   end
   player.cash = player.cash - cash
   cell.owner.cash = cell.owner.cash + cash
+--  print("pay from oil: "..cash)
+  coins:move(player.x, player.y):show():animate({x = cell.owner.x, y = cell.owner.y}, {speed = 1, callback=function(s) s:hide() end})
+ end
+end
+
+-- Ёкш банковских компаний
+action_bank = function(player)
+ local level = rules_company[player.pos].level
+ local money = rules_company[player.pos].money
+ local cell = rules_company[player.pos]
+ local cash
+ if cell.owner and cell.owner ~= player and level > 0 then
+  if level == 3 then
+   cash = (ds1 + ds2) * 4
+  else
+   cash = (ds1 + ds2) * 10
+  end
+  player.cash = player.cash - cash
+  cell.owner.cash = cell.owner.cash + cash
+--  print("pay from bank: "..cash)
   coins:move(player.x, player.y):show():animate({x = cell.owner.x, y = cell.owner.y}, {speed = 1, callback=function(s) s:hide() end})
  end
 end
@@ -62,7 +82,7 @@ end
 action_jail = function(player)
  player.pos = 13
  local x, y = getplayerxy(13, player.k)
- player:stop('main'):animate({x=x}, speed=0.5):animate({y=y}, speed=0.5)
+ player:stop('main'):animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
 end
 
 --группы, одна группа означает как монополию так и просто клетки одного типа
@@ -194,7 +214,7 @@ rules_company =
     image = "logo_sberbank.png",
     group = "bank",
     money = {150},
-    
+    action = action_bank
   },
 
   {
@@ -357,7 +377,7 @@ rules_company =
     image = "vtb_logo.png",
     group = "bank",
     money = {150},
-    
+    action = action_bank
   },
 
   {
