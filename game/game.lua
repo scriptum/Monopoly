@@ -42,56 +42,49 @@ cashback = function(s, cash)
 end
 ]]--
 
-
+-- ѕересчет монополий
+conversion_monopoly = function(pl, company)
+  local oils = {}
+  local bank = {}
+    if company.group == "oil" then
+     for k,v in pairs(rules_company) do
+      if v.owner == pl and v.group == "oil" and v.level > 0 then
+       table.insert(oils, v)
+      end
+     end
+    for k,v in pairs(oils) do
+     v.level = #oils + 2
+    end
+    elseif company.group == "bank" then
+     for k,v in pairs(rules_company) do
+      if v.owner == pl and v.group == "bank" and v.level > 0 then
+       table.insert(bank, v)
+      end
+     end
+     for k,v in pairs(bank) do
+      v.level = #bank + 2
+     end 
+    end
+end
 
 -- искусственный интеллект
 ai = function(pl)
  if pl.cash < 0 then
   for k,v in pairs(rules_company) do
-   if v.owner == pl and v.type == "company" and v.level > 0 then
-    if v.group == "oil" or v.group == "bank" and v.level > 3 then
-     v.level = v.level - 1
-     for k1,v1 in pairs(rules_company) do
-      if v1.owner == pl and v1.group == v.group and v ~= v1 and v.level > 3 then
-       v1.level = v1.level - 1
-      end
-     end
-    else     
-     v.level = 0
-    end    
+   if v.owner == pl and v.type == "company" and v.level > 0 then    
+    v.level = 0
+    conversion_monopoly(pl, v)  
     pl.cash = pl.cash + v.money[1]/2
     if pl.cash >= 0 then break end
    end
   end
  end
   local b = rules_company[pl.pos]
-
-  local oils = {}
-  local bank = {}
   if not b.owner and b.type == "company" and pl.cash > b.money[1] then 
     b.owner = pl
-    if b.group == "oil" then
-     for k,v in pairs(rules_company) do
-      if v.owner == pl and v.group == "oil" then
-       table.insert(oils, v)
-     end
-    end
-    for k,v in pairs(oils) do
-     v.level = #oils + 2
-    end
-    elseif b.group == "bank" then
-     for k,v in pairs(rules_company) do
-      if v.owner == pl and v.group == "bank" then
-       table.insert(bank, v)
-     end
-    end
-    for k,v in pairs(bank) do
-     v.level = #bank + 2
-    end 
-  end
-
+    conversion_monopoly(pl, b)
     companys._child[pl.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
-    if type(b.money) == 'table' then pl.cash = pl.cash - b.money[1] end
+    pl.cash = pl.cash - b.money[1]
   end
   player:stop('blend'):set({blend_alpha = 0})
   player:delay({callback=gogo})
@@ -163,7 +156,7 @@ for k = 1, 2 do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0, cash = 500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, blend_alpha = 0, cash = 1500})
 end
 
 
