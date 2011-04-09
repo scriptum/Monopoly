@@ -139,13 +139,13 @@ gogo = function(s)
      buf.jail = 3
      __i = __i + 1
     end
-    if __i > __max then __i = 1 end
+    if __i > #player._child then __i = 1 end
   end})
 end
 
 player = Entity:new(board):delay({callback=gogo})
 
-for k = 1, 5 do
+for k = 1, 2 do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)

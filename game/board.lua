@@ -208,6 +208,11 @@ render.company = function(s)
       sx = 16/32
       offset_y = -2
     end
+    --~ if com.group == 'oil' then 
+      --~ img = rules_group_images.oil 
+      --~ sx = 16/64 
+      --~ G.setBlendMode('multiplicative')
+    --~ end
     offset = s2/2 - cell_padding - 10 - lvl*10/2 - 3
     for i = 1, lvl do 
       if s.side == 1 then
