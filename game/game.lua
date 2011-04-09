@@ -170,3 +170,12 @@ end
 
 --анимация передачи денех
 coins = Entity:new(board):image('data/gfx/coins-icon.png'):set({sx=24/256, sy=24/256}):hide()
+
+function love.keyreleased( key, unicode )
+   if key == "1" then
+      player._child[1].cash = player._child[1].cash - 100
+   end
+   if key == "2" then
+      player._child[2].cash = player._child[2].cash - 100
+   end
+end
