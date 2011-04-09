@@ -45,6 +45,9 @@ end
 -- Пересчет монополий
 conversion_monopoly = function(pl, company)
   local oils_bank = {}
+  local group  = 0
+  local comp = {}
+    -- если нефтяная компания или банк - считаем количество компаний
     if company.group == "oil" or company.group == "bank" then
      for k,v in pairs(rules_company) do
       if v.owner == pl and company.group == v.group and v.level > 0 then
@@ -53,6 +56,31 @@ conversion_monopoly = function(pl, company)
      end
     for k,v in pairs(oils_bank) do
      v.level = #oils_bank + 2
+    end
+   -- просчет монополий для всех остальных компаний
+   else
+    for k,v in pairs(rules_company) do
+      if company.group == v.group then
+       group = group + 1
+       if v.owner == pl and v.level > 0 then
+        table.insert(comp, v)
+       end
+      end
+     end
+    -- если все компании в группе - ставим левел 2 (если левел меньше двух)
+    if group == #comp then
+     for k,v in pairs(comp) do
+      if v.level < 2 then
+       v.level = 2
+      end
+     end
+    -- Если мы монополию не собрали - ставим левел 1 если компания не заложена
+    else
+     for k,v in pairs(comp) do
+      if v.level > 0 then
+       v.level = 1
+      end
+     end
     end
    end
 end
