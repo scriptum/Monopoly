@@ -52,7 +52,7 @@ ai = function(pl)
     if v.group == "oil" or v.group == "bank" and v.level > 3 then
      v.level = v.level - 1
      for k1,v1 in pairs(rules_company) do
-      if v1.owner == pl and v1.group == v.group and v ~= v1 then
+      if v1.owner == pl and v1.group == v.group and v ~= v1 and v.level > 3 then
        v1.level = v1.level - 1
       end
      end
