@@ -269,14 +269,14 @@ render.nalog = function(s)
     x = 800 - s1
     y = s1 + s.pos * s2
   else
-    x = cell_padding
+    x = 0
     y = 600 - s1 - 16*2 - s.pos * s2
   end
   G.setColor(0,0,0)
   G.setFont(console)
   G.fontSize = 15
   Gprintf(rules_company[s.num].name .. '\n' .. money(rules_company[s.num].money), x, y, s1, 'center')
-  --G.rectangle('line', x,y,s2- cell_padding * 2,12)
+  --G.rectangle('line', x,y,s1, s2)
 end
 
 local c = 1
@@ -343,3 +343,4 @@ dice_draw = function(s)
 end
 
 Entity:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
+

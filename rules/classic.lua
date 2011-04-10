@@ -28,16 +28,14 @@ action_company = function(player)
    cash = money[2] * 2
   else
    cash = money[level]
-  end
-  player.cash = player.cash - cash
-  cell.owner.cash = cell.owner.cash + cash
-  coins:move(player.x, player.y):show():animate({x = cell.owner.x, y = cell.owner.y}, {speed = 1, callback=function(s) s:hide() end})
+  end  
+  money_transfer(cash, player, cell.owner)
  end
 end
 
 -- Налог
 action_nalog = function(player)
-player.cash = player.cash - rules_company[player.pos].money
+  money_transfer(-rules_company[player.pos].money, player)
 end
 
 -- Экш нефтяных компаний
@@ -52,10 +50,8 @@ action_oil = function(player)
   else
    cash = 25 * 2 ^ (level - 3)
   end
-  player.cash = player.cash - cash
-  cell.owner.cash = cell.owner.cash + cash
 --  print("pay from oil: "..cash)
-  coins:move(player.x, player.y):show():animate({x = cell.owner.x, y = cell.owner.y}, {speed = 1, callback=function(s) s:hide() end})
+  money_transfer(cash, player, cell.owner)
  end
 end
 
@@ -71,10 +67,8 @@ action_bank = function(player)
   else
    cash = (ds1 + ds2) * 10
   end
-  player.cash = player.cash - cash
-  cell.owner.cash = cell.owner.cash + cash
 --  print("pay from bank: "..cash)
-  coins:move(player.x, player.y):show():animate({x = cell.owner.x, y = cell.owner.y}, {speed = 1, callback=function(s) s:hide() end})
+  money_transfer(cash, player, cell.owner)
  end
 end
 
@@ -89,7 +83,7 @@ end
 cashback_chance = function(player)
  math.randomseed(os.time() + time + math.random(99999))
  local chance = math.random(1, #rules_chance)
- player.cash = player.cash + rules_chance[chance].money
+ money_transfer(rules_chance[chance].money, player)
 -- print("Chance: "..rules_chance[chance].money)
 end
 
@@ -97,7 +91,7 @@ end
 cashback_treasury = function(player)
  math.randomseed(os.time() + time + math.random(99999))
  local treasury = math.random(1, #rules_treasury)
- player.cash = player.cash + rules_treasury[treasury].money
+ money_transfer(rules_treasury[treasury].money, player)
 -- print("Treasury: "..rules_chance[treasury].money)
 end
 
