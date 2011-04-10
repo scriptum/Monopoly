@@ -245,7 +245,7 @@ render.chance = function(s)
   G.setColor(0,0,0)
   G.setFont(console)
   G.fontSize = 15
-  Gprintf(rules_company[s.num].name, x, y, s2+10, 'center')
+  Gprintf(rules_company[s.num].name, x, y, s2+6, 'center')
   --G.rectangle('line', x,y,s2- cell_padding * 2,12)
 end
 
