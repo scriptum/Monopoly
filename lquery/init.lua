@@ -142,8 +142,8 @@ function love.run()
       end
     end
     mX, mY = getMouseXY()
-    if love.graphics then
-      love.graphics.clear()
+    if G then
+      G.clear()
       time = love.timer.getTime()
       
       if _drag_object then
@@ -178,9 +178,9 @@ function love.run()
         MousePressedOwner = nil
       end
       if love.draw then love.draw() end
-    end --if love.graphics
+    end --if G
     if love.timer then love.timer.sleep(1) end
-    if love.graphics then love.graphics.present() end
+    if G then G.present() end
 
   end
 end
