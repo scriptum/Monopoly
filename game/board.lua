@@ -1,32 +1,20 @@
 field_width = 11 --компаний по горизонтали
 field_height = 6 --компаний по вертикали
 
-local a = 12
-local s2 = (200+field_height*a)/5
-local s1 = (800-field_width*s2)/2
-local sep_padding = 5
-local scaley = (s1-sep_padding*2)/16
-local alpha = 30
-j = 1
-function love.keypressed(key, unicode)
-   if key == 'b' then
-      j = j + 0.1
-   elseif key == 'a' then
-      j = j - 0.1
-   end
-   local s2 = (200+6*a)/5
-local s1 = (800-11*s2)/2
-local sep_padding = 5
-local scaley = (s1-sep_padding*2)/16
-local alpha = 30
-end
+local a = 12 --добавочный параметр для высоты боковых компаний
+local s2 = (200+field_height*a)/5 --расчет ширины клетки компании
+local s1 = (800-field_width*s2)/2 --расчет высоты клетки компании
+
+
 
 board = Entity:new(screen) --игровая доска
 --центральный прямоугольник
 burn = Entity:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
 companys = Entity:new(board) --компании
---Entity:new(screen):border_image(G.newImage('data/gfx/krig_Aqua_button.png'), 13, 15, 13, 15):move(s1,s1):set({w = 800 - s1*2, h = 600 - s1*2})
 
+local alpha = 30 --альфа канал для разделителя
+local sep_padding = 5 --отступы для разделителя
+local scaley = (s1-sep_padding*2)/16 -- масштаб для разделителя
 local sep_draw_ver = function(x, y, sx) --рисует разделитель (вертикальный)
   G.setBlendMode('additive')
   G.setColor(255,255,255,alpha)
@@ -100,8 +88,10 @@ local money = function(m)
     return '$ ' .. m .. ' K'
   end
 end
-render = {}
 
+render = {} --массив с функциями рендеринга клеток, для каждого типа своя
+
+--рисование полупрозрачного прямоугольника, означающего что клетка куплена
 local draw_fuzzy = function(x, y, sx, sy, side)
   local sx = s2/16
   local sy = s1/16
@@ -162,9 +152,6 @@ render.company = function(s)
     y = y - s2 - cell_padding/2
   end
   
-  --if com.group == 'bank' then
-  --  txt = '$ ' .. com.money[1] .. ' K * n'
-  --else
   if com.level > 0 then 
     if not com.owner then 
       txt = money(com.money[1])
@@ -344,3 +331,21 @@ end
 
 Entity:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
 
+--анимация передачи денех
+coins = Entity:new(board):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
+money_transfer = function(money, from, to)
+  coins:move(from.x, from.y):show()
+  if to then 
+    from.cash = from.cash - money
+    to.cash = to.cash + money
+    coins:animate({x = to.x, y = to.y}, {speed = 1, callback=function(s) s:hide() end})
+  else
+    from.cash = from.cash + money
+    if money < 0 then
+      coins:animate({y = from.y - 24, a = 10}, {speed = 0.8, callback=function(s) s:hide() s.a = 255 end})
+    else
+      coins.y = from.y - 24
+      coins:animate({y = from.y, a = 10}, {speed = 0.7, callback=function(s) s:hide() s.a = 255 end})
+    end
+  end
+end

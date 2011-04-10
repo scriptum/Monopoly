@@ -13,3 +13,4 @@ sound_dice = {}
 for i = 1,6 do
 	sound_dice[i] = A.newSource('data/sfx/dice' .. i .. '.ogg', 'static')
 end
+--sound_coin = A.newSource('data/sfx/coin.ogg', 'static')
