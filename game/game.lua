@@ -48,34 +48,34 @@ conversion_monopoly = function(pl, company)
   local group  = 0
   local comp = {}
     -- если нефтяная компания или банк - считаем количество компаний
-    if company.group == "oil" or company.group == "bank" then
-     for k,v in pairs(rules_company) do
-      if v.owner == pl and company.group == v.group and v.level > 0 then
-       table.insert(oils_bank, v)
+  if company.group == "oil" or company.group == "bank" then
+    for k,v in pairs(rules_company) do
+    if v.owner == pl and company.group == v.group and v.level > 0 then
+	table.insert(oils_bank, v)
       end
-     end
+    end
     for k,v in pairs(oils_bank) do
-     v.level = #oils_bank + 2
+      v.level = #oils_bank + 2
     end
    -- просчет монополий для всех остальных компаний
-   else
-    for k,v in pairs(rules_company) do
-      if company.group == v.group then
-       group = group + 1
-       if v.owner == pl and v.level > 0 then
-        table.insert(comp, v)
-       end
-      end
-     end
+    else
+      for k,v in pairs(rules_company) do
+	if company.group == v.group then
+	  group = group + 1
+	  if v.owner == pl and v.level > 0 then
+	    table.insert(comp, v)
+	  end
+	end
+    end
     -- если все компании в группе - ставим левел 2 (если левел меньше двух)
     if group == #comp then
-     for k,v in pairs(comp) do
-      if v.level < 2 then
-       v.level = 2
+      for k,v in pairs(comp) do
+	if v.level < 2 then
+	  v.level = 2
+	end
       end
-     end
     end
-   end
+  end
 end
 
 -- покупка компании
@@ -91,48 +91,66 @@ end
 
 -- Залог компании
 pledge_company = function(player, company)
- local comp = {}
- local group = 0
- if company.owner == player and company.type == "company" and company.level > 0 then
-  if company.group == "oil" or company.group == "bank" then
-   company.level = 0
-  else
-   if company.level > 2 then
-    company.level = company.level - 1
-    money_transfer(rules_group[company.group].upgrade, player)
-   elseif company.level == 1 then
-    company.level = 0
-    money_transfer(company.money[1]/2, player)
-   else
-     for k,v in pairs(rules_company) do
-      if company.group == v.group then
-       group = group + 1
-       if v.level == 2 then table.insert(comp, v) end
+  local comp = {}
+  local group = 0
+  if company.owner == player and company.type == "company" and company.level > 0 then
+    if company.group == "oil" or company.group == "bank" then
+      company.level = 0
+    else
+      if company.level > 2 then
+	company.level = company.level - 1
+	money_transfer(rules_group[company.group].upgrade, player)
+      elseif company.level == 1 then
+	company.level = 0
+	money_transfer(company.money[1]/2, player)
+      else
+	for k,v in pairs(rules_company) do
+	  if company.group == v.group then
+	    group = group + 1
+	    if v.level == 2 then table.insert(comp, v) end
+	  end
+	end
+	if group == #comp then
+	  company.level = 0
+	  --print("pledge_company: "..company.name.." cash: "..company.money[1]/2)
+	  money_transfer(company.money[1]/2, player)
+	  for k,v in pairs(comp) do
+	    if v.level > 1 then v.level = 1 end
+	  end
+	end
       end
-      if group == #comp then
-       company.level = 0
-       money_transfer(company.money[1]/2, player)
-       for k,v in pairs(comp) do
-        if v.level > 1 then v.level = 1 end
-       end
-      end
-     end
-   end
-  end
+    end
   conversion_monopoly(player, company)
- end
+  end
+end
+
+-- Выкуп компаний
+buyout_company = function(player, company)
+  if company.owner == player and company.type == "company" and company.level == 0 and player.cash > company.money[1] then
+    company.level = 1
+    conversion_monopoly(player, company)
+    money_transfer(company.money[1] * (-1), player)
+  end
 end
 
 -- искусственный интеллект
 ai = function(pl)
- if pl.cash < 0 then
-  for k,v in pairs(rules_company) do  
-   pledge_company(pl, v)
-   conversion_monopoly(pl, v)  
-   if pl.cash >= 0 then break end
+  if pl.cash < 0 then
+    for k,v in pairs(rules_company) do  
+      pledge_company(pl, v)
+      conversion_monopoly(pl, v)  
+      if pl.cash >= 0 then break end
+    end
   end
- end
   buy_company(pl, rules_company[pl.pos])
+  for k,v in pairs(rules_company) do
+    if v.owner == player and v.level == 0 and player.cash > v.money[1] then
+      buyout_company(player, v)
+      print("bayout!")
+    else
+      break
+    end
+  end
   player:stop('blend'):set({blend_alpha = 0})
   player:delay({callback=gogo})
 end
@@ -211,7 +229,10 @@ function love.keyreleased( key, unicode )
    if key == "1" then
       player._child[1].cash = player._child[1].cash - 100
    end
+     if key == "q" then
+      player._child[1].cash = player._child[1].cash + 100
+   end
    if key == "2" then
-      player._child[2].cash = player._child[2].cash - 100
+      player._child[2].cash = player._child[2].cash - 1000
    end
 end
