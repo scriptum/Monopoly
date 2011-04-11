@@ -449,7 +449,7 @@ rules_company =
     type = "company",
     image = "Omega.png",
     group = "clock",
-    money = {320, 28, 150, 450, 100, 1200, 1400},
+    money = {320, 28, 150, 450, 1000, 1200, 1400},
     action = action_company
   },
 
@@ -458,7 +458,7 @@ rules_company =
     type = "company",
     image = "Rolex_logo.png",
     group = "clock",
-    money = {320, 28, 150, 450, 100, 1200, 1400},
+    money = {320, 28, 150, 450, 1000, 1200, 1400},
     action = action_company
   },
 
