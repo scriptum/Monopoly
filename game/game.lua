@@ -90,7 +90,7 @@ buy_company = function(player, company)
 end
 
 -- Залог компании
-pledge_company = function(player, company)
+mortgage_company = function(player, company)
   local comp = {}
   local group = 0
   if company.owner == player and company.type == "company" and company.level > 0 then
@@ -133,25 +133,29 @@ buyout_company = function(player, company)
   end
 end
 
+-- Прокачка компаний
+buybons_company = function(player, company)
+  if company.owner == player and company.level >= 2 and company.level < 7 and company.group ~= "oil" and 
+	    company.group ~= "bank" and player.cash > rules_group[company.group].upgrade then
+    company.level = company.level + 1
+    money_transfer(rules_group[company.group].upgrade * (-1), player)
+  end
+end
+
 -- искусственный интеллект
 ai = function(pl)
+-- если денег меньше нуля - закладываем компании
   if pl.cash < 0 then
     for k,v in pairs(rules_company) do  
-      pledge_company(pl, v)
-      conversion_monopoly(pl, v)  
+      mortgage_company(pl, v)
       if pl.cash >= 0 then break end
     end
   end
   buy_company(pl, rules_company[pl.pos])
-  for k,v in pairs(rules_company) do
-    if v.owner == player and v.level == 0 and player.cash > v.money[1] then
-      buyout_company(player, v)
-      print("bayout!")
-    else
-      break
-    end
-  end
-  player:stop('blend'):set({blend_alpha = 0})
+-- выкуп компаний
+  for k,v in pairs(rules_company) do buyout_company(pl, v) end
+-- прокачка компаний
+  for k,v in pairs(rules_company) do buybons_company(pl, v) end
   player:delay({callback=gogo})
 end
 
