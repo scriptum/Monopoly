@@ -74,36 +74,65 @@ conversion_monopoly = function(pl, company)
        v.level = 2
       end
      end
-    -- Если мы монополию не собрали - ставим левел 1 если компания не заложена
-    else
-     for k,v in pairs(comp) do
-      if v.level > 0 then
-       v.level = 1
-      end
-     end
     end
    end
+end
+
+-- покупка компании
+buy_company = function(player, company)
+  if not company.owner and company.type == "company" and player.cash > company.money[1] then
+    company.owner = player
+    conversion_monopoly(player, company)
+    companys._child[player.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
+    money_transfer(company.money[1] * (-1), player)
+    return true
+  end
+end
+
+-- Залог компании
+pledge_company = function(player, company)
+ local comp = {}
+ local group = 0
+ if company.owner == player and company.type == "company" and company.level > 0 then
+  if company.group == "oil" or company.group == "bank" then
+   company.level = 0
+  else
+   if company.level > 2 then
+    company.level = company.level - 1
+    money_transfer(rules_group[company.group].upgrade, player)
+   elseif company.level == 1 then
+    company.level = 0
+    money_transfer(company.money[1]/2, player)
+   else
+     for k,v in pairs(rules_company) do
+      if company.group == v.group then
+       group = group + 1
+       if v.level == 2 then table.insert(comp, v) end
+      end
+      if group == #comp then
+       company.level = 0
+       money_transfer(company.money[1]/2, player)
+       for k,v in pairs(comp) do
+        if v.level > 1 then v.level = 1 end
+       end
+      end
+     end
+   end
+  end
+  conversion_monopoly(player, company)
+ end
 end
 
 -- искусственный интеллект
 ai = function(pl)
  if pl.cash < 0 then
-  for k,v in pairs(rules_company) do
-   if v.owner == pl and v.type == "company" and v.level > 0 then    
-    v.level = 0
-    conversion_monopoly(pl, v)  
-    pl.cash = pl.cash + v.money[1]/2
-    if pl.cash >= 0 then break end
-   end
+  for k,v in pairs(rules_company) do  
+   pledge_company(pl, v)
+   conversion_monopoly(pl, v)  
+   if pl.cash >= 0 then break end
   end
  end
-  local b = rules_company[pl.pos]
-  if not b.owner and b.type == "company" and pl.cash > b.money[1] then 
-    b.owner = pl
-    conversion_monopoly(pl, b)
-    companys._child[pl.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
-    pl.cash = pl.cash - b.money[1]
-  end
+  buy_company(pl, rules_company[pl.pos])
   player:stop('blend'):set({blend_alpha = 0})
   player:delay({callback=gogo})
 end
