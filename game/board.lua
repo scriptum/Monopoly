@@ -339,6 +339,7 @@ money_transfer = function(money, from, to)
     from.cash = from.cash - money
     to.cash = to.cash + money
     coins:animate({x = to.x + 3, y = to.y}, {speed = 1.2, callback=function(s) s:hide() end})
+    player:delay(1.2)
   else
     from.cash = from.cash + money
     if money < 0 then
@@ -347,5 +348,6 @@ money_transfer = function(money, from, to)
       coins.y = from.y - 24
       coins:animate({y = from.y, a = 30}, {speed = 1, callback=function(s) s:hide() s.a = 255 end})
     end
+    player:delay(1)
   end
 end
