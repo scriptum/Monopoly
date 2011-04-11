@@ -156,7 +156,7 @@ ai = function(pl)
   for k,v in pairs(rules_company) do buyout_company(pl, v) end
 -- прокачка компаний
   for k,v in pairs(rules_company) do buybons_company(pl, v) end
-  player:delay({callback=gogo})
+  
 end
 
 --бросок кубиков
@@ -199,6 +199,7 @@ gogo = function(s)
      if cell.action then cell.action(s) end
      ai(s)
      s:stop('blend'):set({blend_alpha = 0})
+     player:delay({callback=gogo})
     end, speed = 0.5})
     if ds1 ~= ds2 then
      __i = __i + 1
