@@ -83,7 +83,7 @@ buy_company = function(player, company)
   if not company.owner and company.type == "company" and player.cash > company.money[1] then
     company.owner = player
     conversion_monopoly(player, company)
-    companys._child[player.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 120})
+    companys._child[player.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
     money_transfer(company.money[1] * (-1), player)
     return true
   end
