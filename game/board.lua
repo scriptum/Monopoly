@@ -334,6 +334,7 @@ Entity:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
 --анимация передачи денех
 coins = Entity:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
 money_transfer = function(money, from, to)
+  A.play(sound_coin)
   coins:move(from.x + 3, from.y):show()
   if to then 
     from.cash = from.cash - money
