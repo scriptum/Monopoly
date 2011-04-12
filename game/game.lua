@@ -1,3 +1,5 @@
+fast_play = 1 -- быстрая игра
+
 --получить позицию игрока основываясь на номере клетке и самого игрока (нужно для смещения)
 getplayerxy = function(n, k)
   side = companys._child[n].side
@@ -90,19 +92,20 @@ buy_company = function(player, company)
 end
 
 -- Залог компании
-mortgage_company = function(player, company)
+mortgage_company = function(pl, company)
   local comp = {}
   local group = 0
-  if company.owner == player and company.type == "company" and company.level > 0 then
+  if company.owner == pl and company.type == "company" and company.level > 0 then
     if company.group == "oil" or company.group == "bank" then
-      company.level = 0
+      player:delay({speed = 0, cb = function() company.level = 0 end})
+      money_transfer(company.money[1]/2, pl)
     else
       if company.level > 2 then
-	company.level = company.level - 1
-	money_transfer(rules_group[company.group].upgrade, player)
+	player:delay({speed = 0, cb = function() company.level = company.level - 1 end})
+	money_transfer(rules_group[company.group].upgrade, pl)
       elseif company.level == 1 then
-	company.level = 0
-	money_transfer(company.money[1]/2, player)
+	player:delay({speed = 0, cb = function() company.level = 0 end})
+	money_transfer(company.money[1]/2, pl)
       else
 	for k,v in pairs(rules_company) do
 	  if company.group == v.group then
@@ -111,34 +114,33 @@ mortgage_company = function(player, company)
 	  end
 	end
 	if group == #comp then
-	  company.level = 0
+	  player:delay({speed = 0, cb = function() company.level = 0 end})
 	  --print("pledge_company: "..company.name.." cash: "..company.money[1]/2)
-	  money_transfer(company.money[1]/2, player)
+	  money_transfer(company.money[1]/2, pl)
 	  for k,v in pairs(comp) do
 	    if v.level > 1 then v.level = 1 end
 	  end
 	end
       end
     end
-  conversion_monopoly(player, company)
+  conversion_monopoly(pl, company)
   end
 end
 
 -- Выкуп компаний
-buyout_company = function(player, company)
-  if company.owner == player and company.type == "company" and company.level == 0 and player.cash > company.money[1] then
-    company.level = 1
-    conversion_monopoly(player, company)
-    money_transfer(company.money[1] * (-1), player)
+buyout_company = function(pl, company)
+  if company.owner == pl and company.type == "company" and company.level == 0 and pl.cash > company.money[1] then
+    player:delay({speed = 0, cb = function() company.level = 1 conversion_monopoly(pl, company) end})
+    money_transfer(company.money[1]*(-1), pl)
   end
 end
 
 -- Прокачка компаний
-buybons_company = function(player, company)
-  if company.owner == player and company.level >= 2 and company.level < 7 and company.group ~= "oil" and 
-	    company.group ~= "bank" and player.cash > rules_group[company.group].upgrade then
-    company.level = company.level + 1
-    money_transfer(rules_group[company.group].upgrade * (-1), player)
+buybons_company = function(pl, company)
+  if company.owner == pl and company.level >= 2 and company.level < 7 and company.group ~= "oil" and 
+	    company.group ~= "bank" and pl.cash > rules_group[company.group].upgrade then
+    player:delay({speed = 0, cb = function() company.level = company.level + 1 end})
+    money_transfer(rules_group[company.group].upgrade * (-1), pl)
   end
 end
 
@@ -172,20 +174,24 @@ gogo = function(s)
   local buf = s._child[__i]
   buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
   buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
-
-  --звук костей
-  local i = math.random(1,6)
-  sound_dice[i]:setPitch(0.8 + math.random()/3)
-  A.play(sound_dice[i])
-  local j = i 
-  while i == j do j = math.random(1,6) end
-  sound_dice[j]:setPitch(0.8 + math.random()/3)
-  A.play(sound_dice[j])
   
-  for i = 1, 19 do
-   s:delay({queue = 'roll', speed = i/200, callback = roll})
-  end   
-  s:delay({queue = 'roll', speed = 1, callback = function(s)
+  if fast_play == 1 then
+    s:delay({queue = 'roll', speed = 0, callback = roll})
+  else
+    --звук костей
+    local i = math.random(1,6)
+    sound_dice[i]:setPitch(0.8 + math.random()/3)
+    A.play(sound_dice[i])
+    local j = i 
+    while i == j do j = math.random(1,6) end
+    sound_dice[j]:setPitch(0.8 + math.random()/3)
+    A.play(sound_dice[j])
+    for i = 1, 19 do
+      s:delay({queue = 'roll', speed = i/200, callback = roll})
+    end
+  end
+   
+  s:delay({queue = 'roll', speed = 1*(1-fast_play), callback = function(s)
     local buf = s._child[__i]
     buf.pos = buf.pos + ds1 + ds2
     local max = field_width*2 + field_height*2 + 4
@@ -200,7 +206,7 @@ gogo = function(s)
      ai(s)
      s:stop('blend'):set({blend_alpha = 0})
      player:delay({callback=gogo})
-    end, speed = 0.5})
+    end, speed = 1*(1-fast_play)})
     if ds1 ~= ds2 then
      __i = __i + 1
      if __i > 5 then __i = 1 end
@@ -239,5 +245,12 @@ function love.keyreleased( key, unicode )
    end
    if key == "2" then
       player._child[2].cash = player._child[2].cash - 1000
+   end
+   if key == "f" then 
+     if fast_play == 1 then
+       fast_play = 0
+     else
+       fast_play = 1
+     end
    end
 end
