@@ -175,10 +175,10 @@ render.company = function(s)
   
   
   --заложено?
-  if com.level and com.level == 0 then 
-    G.setColor(0,0,0,185)
+  if s.mortgage_alpha > 0 then 
+    G.setColor(0,0,0,185*s.mortgage_alpha/255)
     draw_fuzzy(_x, _y, (s2 - cell_padding*2)/16, sy, s.side)
-    G.setColor(255,255,255)
+    G.setColor(255,255,255,s.mortgage_alpha)
     if s.side == 3 then y = y + s1 - s2 end
     G.draw(lock, x - 4, y, 0, s2/128)
   elseif com.level and com.level > 2 then
@@ -291,7 +291,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
       side = side + 1
     end
     Entity:new(companys)
-    :set({pos = c, side = side, num = i})
+    :set({pos = c, side = side, num = i, mortgage_alpha = 0})
     :draw(render[rules_group[rules_company[i].group].draw])
     c = c + 1
   end
