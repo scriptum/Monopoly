@@ -82,10 +82,12 @@ end
 
 -- покупка компании
 buy_company = function(player, company)
-  if not company.owner and company.type == "company" and player.cash > company.money[1] then
-    company.owner = player
-    conversion_monopoly(player, company)
-    companys._child[player.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+  if not company.owner and company.type == "company" and player.cash > company.money[1] then 
+    player:delay({speed = 0, cb = function() 
+      company.owner = player
+      conversion_monopoly(player, company)
+      companys._child[player.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+    end})
     money_transfer(company.money[1] * (-1), player)
     return true
   end
@@ -114,12 +116,13 @@ mortgage_company = function(pl, company, num)
 	  end
 	end
 	if group == #comp then
-	  player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) for k,v in pairs(comp) do
-	    if v.level > 1 then v.level = 1 end
-	  end end})
+	  player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) 
+	    for k,v in pairs(comp) do
+	      if v.level > 1 then v.level = 1 end
+	    end 
+	  end})
 	  --print("pledge_company: "..company.name.." cash: "..company.money[1]/2)
 	  money_transfer(company.money[1]/2, pl)
-	  
 	end
       end
     end
@@ -198,12 +201,17 @@ gogo = function(s)
     local buf = s._child[__i]
     buf.pos = buf.pos + ds1 + ds2
     local max = field_width*2 + field_height*2 + 4
+    local add_money = false
     if buf.pos > max then
      buf.pos = buf.pos - max
-     buf.cash = buf.cash + 200
+     add_money = true
+     
     end
     local x, y = getplayerxy(buf.pos, buf.k)
     buf:stop('main'):animate({x=x,y=y},{callback = function(s)
+     if add_money == true then
+       money_transfer(200, buf)
+     end
      local cell = rules_company[s.pos]
      if cell.action then cell.action(s) end
      ai(s)
