@@ -101,7 +101,7 @@ mortgage_company = function(pl, company, num)
       money_transfer(company.money[1]/2, pl)
     else
       if company.level > 2 then
-	player:delay({speed = 0, cb = function() company.level = company.level - 1 companys._child[num]:animate({mortgage_alpha = 255}) end})
+	player:delay({speed = 0, cb = function() company.level = company.level - 1 end})
 	money_transfer(rules_group[company.group].upgrade, pl)
       elseif company.level == 1 then
 	player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) end})
