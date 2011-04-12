@@ -172,14 +172,12 @@ rules_company =
   {
     name = "Start",
     type = "big",
-    image = "start.png",
     group = "big"
   },
 
   {
     name = "McDonald's",                    --название компании
     type = "company",                       --тип (это под вопросом)
-    image = "mcdonalds-logo.png",           --картинка лого
     group = "food",                         --группа - монополия
     money = {60, 2, 10, 30, 90, 160, 250},  --цены: стоимость, доход: без акций, с 1,2,3,4,5 акциями
     action = action_company
@@ -188,7 +186,6 @@ rules_company =
   {
     name = "Shell",
     type = "company",
-    image = "Shell.png",
     group = "oil",
     money = {200},
     action = action_oil
@@ -197,7 +194,6 @@ rules_company =
   {
     name = "Danone",
     type = "company",
-    image = "danone.png",
     group = "food",
     money = {60, 2, 10, 30, 90, 160, 250},
     action = action_company
@@ -206,7 +202,6 @@ rules_company =
   {
     name = "Coca-Cola",
     type = "company",
-    image = "cocacola.png",
     group = "food",
     money = {80, 4, 20, 60, 180, 320, 450},
     action = action_company
@@ -215,14 +210,12 @@ rules_company =
   {
     name = "Казна",
     group = "treasury",
-    image = "treasury.png",
     action = cashback_treasury
   },
 
   {
     name = "Сбербанк",
     type = "company",
-    image = "logo_sberbank.png",
     group = "bank",
     money = {150},
     action = action_bank
@@ -231,14 +224,12 @@ rules_company =
   {
     name = "Шанс",
     group = "chance",
-    image = "vopros.png",
     action = cashback_chance
   },
 
   {
     name = "Yahoo!",
     type = "company",
-    image = "YahooLogo.png",
     group = "inet",
     money = {100, 6, 30, 90, 270, 400, 550},
     action = action_company
@@ -247,7 +238,6 @@ rules_company =
   {
     name = "Yandex",
     type = "company",
-    image = "yandex.png",
     group = "inet",
     money = {100, 6, 30, 90, 270, 400, 550},
     action = action_company
@@ -256,7 +246,6 @@ rules_company =
   {
     name = "Лукойл",
     type = "company",
-    image = "lukoil.png",
     group = "oil",
     money = {200},
     action = action_oil
@@ -265,7 +254,6 @@ rules_company =
   {
     name = "Google",
     type = "company",
-    image = "google-logo.png",
     group = "inet",
     money = {120, 8, 40, 100, 300, 450, 600},
     action = action_company
@@ -274,14 +262,12 @@ rules_company =
   {
     name = "Jail",
     type = "big",
-    image = "jail.png",
     group = "big"
   },
   
   {
     name = "Leroy Merlin",
     type = "company",
-    image = "logo-leroy-merlin.png",
     group = "market",
     money = {140, 10, 50, 150, 450, 625, 750},
     action = action_company
@@ -290,7 +276,6 @@ rules_company =
   {
     name = "АШАН",
     type = "company",
-    image = "logo-auchan.png",
     group = "market",
     money = {140, 10, 50, 150, 450, 625, 750},
     action = action_company
@@ -299,7 +284,6 @@ rules_company =
   {
     name = "Мегафон",
     type = "company",
-    image = "megafon.png",
     group = "mobile",
     money = {180, 14, 70, 200, 550, 750, 950},
     action = action_company
@@ -308,7 +292,6 @@ rules_company =
   {
     name = "Налог",
     group = "nalog",
-    image = "vopros.png",
     money = 150,
     action = action_nalog
   },
@@ -316,7 +299,6 @@ rules_company =
   {
     name = "Билайн",
     type = "company",
-    image = "Beeline.png",
     group = "mobile",
     money = {180, 14, 70, 200, 550, 750, 950},
     action = action_company
@@ -325,7 +307,6 @@ rules_company =
   {
     name = "МТС",
     type = "company",
-    image = "mts.png",
     group = "mobile",
     money = {200, 16, 80, 220, 600, 800, 1000},
     action = action_company
@@ -334,7 +315,6 @@ rules_company =
   {
     name = "Island",
     type = "big",
-    image = "island.png",
     group = "big"
   },
 
@@ -343,7 +323,6 @@ rules_company =
   {
     name = "Puma",
     type = "company",
-    image = "Puma-logo.png",
     group = "sport",
     money = {220, 18, 90, 250, 700, 825, 1050},
     action = action_company
@@ -352,7 +331,6 @@ rules_company =
   {
     name = "BP",
     type = "company",
-    image = "BP_Logo.png",
     group = "oil",
     money = {200},
     action = action_oil
@@ -361,7 +339,6 @@ rules_company =
   {
     name = "Nike",
     type = "company",
-    image = "nike.png",
     group = "sport",
     money = {220, 18, 90, 250, 700, 825, 1050},
     action = action_company
@@ -371,7 +348,6 @@ rules_company =
   {
     name = "Adidas",
     type = "company",
-    image = "adidas.png",
     group = "sport",
     money = {240, 20, 100, 300, 750, 925, 1100},
     action = action_company
@@ -380,14 +356,12 @@ rules_company =
   {
     name = "Казна",
     group = "treasury",
-    image = "treasury.png",
     action = cashback_treasury
   },
 
   {
     name = "ВТБ",
     type = "company",
-    image = "vtb_logo.png",
     group = "bank",
     money = {150},
     action = action_bank
@@ -396,14 +370,12 @@ rules_company =
   {
     name = "Шанс",
     group = "chance",
-    image = "vopros.png",
     action = cashback_chance
   },
 
   {
     name = "Ford",
     type = "company",
-    image = "Ford_logo.png",
     group = "auto",
     money = {260, 22, 110, 330, 800, 975, 1150},
     action = action_company
@@ -412,7 +384,6 @@ rules_company =
   {
     name = "Nissan",
     type = "company",
-    image = "Nissan_logo.png",
     group = "auto",
     money = {260, 22, 110, 330, 800, 975, 1150},
     action = action_company
@@ -421,7 +392,6 @@ rules_company =
   {
     name = "Татнефть",
     type = "company",
-    image = "logo-tatneft.png",
     group = "oil",
     money = {200},
     action = action_oil
@@ -430,7 +400,6 @@ rules_company =
   {
     name = "Hyundai",
     type = "company",
-    image = "hyundai.png",
     group = "auto",
     money = {280, 24, 120, 360, 850, 1150, 1200},
     action = action_company
@@ -439,7 +408,6 @@ rules_company =
   {
     name = "Customs",
     type = "big",
-    image = "customs.png",
     group = "big",
     action = action_jail
   },
@@ -447,7 +415,6 @@ rules_company =
   {
     name = "Omega",
     type = "company",
-    image = "Omega.png",
     group = "clock",
     money = {320, 28, 150, 450, 1000, 1200, 1400},
     action = action_company
@@ -456,7 +423,6 @@ rules_company =
   {
     name = "Rolex",
     type = "company",
-    image = "Rolex_logo.png",
     group = "clock",
     money = {320, 28, 150, 450, 1000, 1200, 1400},
     action = action_company
@@ -465,7 +431,6 @@ rules_company =
   {
     name = "IBM",
     type = "company",
-    image = "ibm_logo.png",
     group = "it",
     money = {350, 35, 175, 500, 1100, 1300, 1500},
     action = action_company
@@ -474,7 +439,6 @@ rules_company =
   {
     name = "Налог",
     group = "nalog",
-    image = "vopros.png",
     money = 150,
     action = action_nalog
   },
@@ -482,7 +446,6 @@ rules_company =
   {
     name = "Intel",
     type = "company",
-    image = "Intel-logo.png",
     group = "it",
     money = {350, 35, 175, 500, 1100, 1300, 1500},
     action = action_company
