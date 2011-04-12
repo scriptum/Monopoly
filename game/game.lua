@@ -81,14 +81,14 @@ conversion_monopoly = function(pl, company)
 end
 
 -- покупка компании
-buy_company = function(player, company)
-  if not company.owner and company.type == "company" and player.cash > company.money[1] then 
+buy_company = function(pl, company)
+  if not company.owner and company.type == "company" and pl.cash > company.money[1] then 
     player:delay({speed = 0, cb = function() 
-      company.owner = player
-      conversion_monopoly(player, company)
-      companys._child[player.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+      company.owner = pl
+      conversion_monopoly(pl, company)
+      companys._child[pl.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
     end})
-    money_transfer(company.money[1] * (-1), player)
+    money_transfer(company.money[1] * (-1), pl)
     return true
   end
 end
