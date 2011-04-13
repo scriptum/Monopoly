@@ -157,12 +157,12 @@ render.company = function(s)
       txt = money(com.money[1])
     elseif com.group == 'bank' then 
       if com.level == 3 then
-        txt = '$ 4 K*N'
+        txt = '$ '.. com.money[2] ..' K*N'
       else
-        txt = '$ 10 K*N'
+        txt = '$ '.. com.money[3] ..' K*N'
       end
     elseif com.group == 'oil' then
-      txt = money(25 * 2^(com.level - 3))
+      txt = money(com.money[2] * 2^(com.level - 3))
     elseif com.level == 1 then
       txt = money(com.money[2])
     elseif com.level == 2 then
