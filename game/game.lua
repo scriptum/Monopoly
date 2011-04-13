@@ -205,6 +205,7 @@ gogo = function(s)
 	buf.jail = buf.jail - 1
       elseif buf.jail == 2 then
 	buf.jail = buf.jail - 1
+	money_transfer(-50, buf)
 	buf.cash = buf.cash - 50
       else
 	buf.jail = 0
