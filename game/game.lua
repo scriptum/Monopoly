@@ -150,14 +150,27 @@ buybons_company = function(pl, company)
   end
 end
 
+-- Вылет из игры
+gameout = function(pl)
+  for k,v in pairs(rules_company) do
+    if v.owner == pl then
+      v.owner = nil
+      v.level = 1
+    end
+  end
+  pl.ingame = 0
+end
 -- искусственный интеллект
 ai = function(pl)
 -- если денег меньше нуля - закладываем компании
+  local ingame = 0
   if pl.cash < 0 then
-    for k,v in pairs(rules_company) do  
+    for k,v in pairs(rules_company) do
+      if v.owner == pl and v.level > 0 then ingame = 1 end
       mortgage_company(pl, v, k)
       if pl.cash >= 0 then break end
     end
+    if ingame > 0 then gameout(pl) end
   end
   buy_company(pl, rules_company[pl.pos])
 -- выкуп компаний
@@ -257,7 +270,7 @@ for k = 1, 3 do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = 1, blend_alpha = 0, cash = 1500})
 end
 
 
