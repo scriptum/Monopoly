@@ -197,58 +197,57 @@ gogo = function(s)
     end
   end
 
-  if buf.jail > 0 then 
-    if ds1 == ds2 then
-      buf.jail = 0    
-    elseif buf.jail > 2 then
-      buf.jail = buf.jail - 1
-    elseif buf.jail == 2 then
-      buf.jail = buf.jail - 1
-      buf.cash = buf.cash - 50
-    else
-      buf.jail = 0
-    end
-  end
-
-  if buf.jail == 0 then
-    s:delay({queue = 'roll', speed = 1*(1-fast_play), callback = function(s)
-      local buf = s._child[__i]
-      buf.pos = buf.pos + ds1 + ds2
-      local max = field_width*2 + field_height*2 + 4
-      local add_money = false
-      if buf.pos > max then
-	buf.pos = buf.pos - max
-	add_money = true
-      end
-      local x, y = getplayerxy(buf.pos, buf.k)
-      buf:stop('main'):animate({x=x,y=y},{callback = function(s)
-	if add_money == true then
-	  money_transfer(200, buf)
-	end
-	local cell = rules_company[s.pos]
-	if cell.action then cell.action(s) end
-	ai(s)
-	s:stop('blend'):set({blend_alpha = 0})
-	player:delay({callback=gogo})
-	end, speed = 1*(1-fast_play)})
-      if ds1 ~= ds2 then
-	__i = __i + 1
-      if __i > 5 then __i = 1 end
-      double = 0
-      elseif double < 3 then
-	double = double + 1
+  s:delay({queue = 'roll', speed = 1*(1-fast_play), callback = function(s)
+    if buf.jail > 0 then
+      if ds1 == ds2 then
+	buf.jail = 0
+      elseif buf.jail > 2 then
+	buf.jail = buf.jail - 1
+      elseif buf.jail == 2 then
+	buf.jail = buf.jail - 1
+	buf.cash = buf.cash - 50
       else
-	buf.pos = 13
-	local x, y = getplayerxy(13, buf.k)
-	buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
-	player:delay({callback=gogo})
-	double = 0
-	buf.jail = 4
-	__i = __i + 1
+	buf.jail = 0
       end
-      if __i > #player._child then __i = 1 end
-      end})
     end
+    local buf = s._child[__i]
+    if buf.jail == 0 then
+      buf.pos = buf.pos + ds1 + ds2
+    end
+    local max = field_width*2 + field_height*2 + 4
+    local add_money = false
+    if buf.pos > max then
+      buf.pos = buf.pos - max
+      add_money = true
+    end
+    local x, y = getplayerxy(buf.pos, buf.k)
+    buf:stop('main'):animate({x=x,y=y},{callback = function(s)
+      if add_money == true then
+	money_transfer(200, buf)
+      end
+      local cell = rules_company[s.pos]
+      if cell.action then cell.action(s) end
+      ai(s)
+      s:stop('blend'):set({blend_alpha = 0})
+      player:delay({callback=gogo})
+    end, speed = 1*(1-fast_play)})
+    if ds1 ~= ds2 then
+      __i = __i + 1
+    if __i > 5 then __i = 1 end
+    double = 0
+    elseif double < 3 then
+      double = double + 1
+    else
+      buf.pos = 13
+      local x, y = getplayerxy(13, buf.k)
+      buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+      player:delay({callback=gogo})
+      double = 0
+      buf.jail = 4
+      __i = __i + 1
+    end
+    if __i > #player._child then __i = 1 end
+  end})
 end
 
 player = Entity:new(board):delay({callback=gogo})
