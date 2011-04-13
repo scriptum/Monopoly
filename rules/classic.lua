@@ -46,9 +46,9 @@ action_oil = function(player)
  local cash
  if cell.owner and cell.owner ~= player and level > 0 then
   if level == 3 then
-   cash = 25
+   cash = money[2]
   else
-   cash = 25 * 2 ^ (level - 3)
+   cash = money[2] * 2 ^ (level - 3)
   end
 --  print("pay from oil: "..cash)
   money_transfer(cash, player, cell.owner)
@@ -63,9 +63,9 @@ action_bank = function(player)
  local cash
  if cell.owner and cell.owner ~= player and level > 0 then
   if level == 3 then
-   cash = (ds1 + ds2) * 4
+   cash = (ds1 + ds2) * money[2]
   else
-   cash = (ds1 + ds2) * 10
+   cash = (ds1 + ds2) * money[3]
   end
 --  print("pay from bank: "..cash)
   money_transfer(cash, player, cell.owner)
@@ -188,7 +188,7 @@ rules_company =
     name = "Shell",
     type = "company",
     group = "oil",
-    money = {200},
+    money = {200, 50},
     action = action_oil
   },
 
@@ -218,7 +218,7 @@ rules_company =
     name = "Сбербанк",
     type = "company",
     group = "bank",
-    money = {150},
+    money = {150, 7, 20},
     action = action_bank
   },
 
@@ -248,7 +248,7 @@ rules_company =
     name = "Лукойл",
     type = "company",
     group = "oil",
-    money = {200},
+    money = {200, 50},
     action = action_oil
   },
 
@@ -333,7 +333,7 @@ rules_company =
     name = "BP",
     type = "company",
     group = "oil",
-    money = {200},
+    money = {200, 50},
     action = action_oil
   },
 
@@ -364,7 +364,7 @@ rules_company =
     name = "ВТБ",
     type = "company",
     group = "bank",
-    money = {150},
+    money = {150, 7, 20},
     action = action_bank
   },
 
@@ -394,7 +394,7 @@ rules_company =
     name = "Татнефть",
     type = "company",
     group = "oil",
-    money = {200},
+    money = {200, 50},
     action = action_oil
   },
 
