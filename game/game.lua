@@ -23,26 +23,9 @@ getplayerxy = function(n, k)
   return x, y
 end
 
-
-
 __i = 1
 double = 0
 __max = 5
---[[
-cashback = function(s, cash)
- if s.cash > cash then
-  return s.cash - cash
- else 
-  for k,v pairs(rules_company) do
-   if v.owner == s.owner then
-    v.level = 0
-    s.cash = s.cash + v.money[1]/2
-    if s.cash >= cash then break end
-   end
-  end
- end
-end
-]]--
 
 -- ѕересчет монополий
 conversion_monopoly = function(pl, company)
@@ -158,8 +141,9 @@ gameout = function(pl)
       v.level = 1
     end
   end
-  pl.ingame = 0
+  pl.ingame = false
 end
+
 -- искусственный интеллект
 ai = function(pl)
 -- если денег меньше нул€ - закладываем компании
@@ -270,7 +254,7 @@ for k = 1, 3 do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = 1, blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
 end
 
 
