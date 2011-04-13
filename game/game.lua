@@ -239,7 +239,7 @@ end
 
 player = Entity:new(board):delay({callback=gogo})
 
-for k = 1, 2 do
+for k = 1, 3 do
   x, y = getplayerxy(1, k)
   Entity:new(player)
   :draw(player_draw)
