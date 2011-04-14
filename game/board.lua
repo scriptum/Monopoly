@@ -337,7 +337,7 @@ Entity:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
 --анимация передачи денех
 coins = Entity:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
 money_transfer = function(money, from, to)
-  local speed = (1-fast_play)
+  local speed = 1
   if to then 
     from.cash = from.cash - money
     to.cash = to.cash + money
@@ -345,7 +345,7 @@ money_transfer = function(money, from, to)
     from.cash = from.cash + money
   end
   player:delay({speed = 0, cb = function() 
-    if fast_play == 0 then
+    if lquery_fx == true then
       A.play(sound_coin)
     end
     coins:move(from.x + 3, from.y):show()

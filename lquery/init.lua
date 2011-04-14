@@ -12,7 +12,7 @@ var_by_reference = function(var, value)
     if value then _G[var] = value else return _G[var] end
   end
 end
-
+lquery_fx = true
 local easing = require("lquery.easing")
 require("lquery.string")
 require("lquery.table")
@@ -43,7 +43,7 @@ local function animate(ent)
         end
       end
       
-      if aq.lasttime + aq.speed <= time then
+      if aq.lasttime + aq.speed <= time or lquery_fx == false then
         for k, v in pairs(aq._keys) do
           ent[k] = v
         end
@@ -57,7 +57,7 @@ local function animate(ent)
         if aq.callback then aq.callback(ent) end
       else
         for k, v in pairs(aq._keys) do
-          if ent[k] then ent[k] = easing[aq.easing](time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed) end
+          if ent[k] and type(ent[k]) == 'number' then ent[k] = easing[aq.easing](time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed) end
         end
       end --if aq.lasttime + vv.speed <= time
     end --if j[1]

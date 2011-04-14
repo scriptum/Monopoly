@@ -1,5 +1,3 @@
-fast_play = 1 -- быстрая игра
-
 --получить позицию игрока основываясь на номере клетке и самого игрока (нужно для смещения)
 getplayerxy = function(n, k)
   side = companys._child[n].side
@@ -118,7 +116,7 @@ buyout_company = function(pl, company, num)
     player:delay({speed = 0, cb = function() 
       company.level = 1 
       conversion_monopoly(pl, company) 
-      companys._child[num]:animate({mortgage_alpha = 0})
+      companys._child[num]:animate({mortgage_alpha = 0, cb = function(s)s.mortgage_alpha=0 end})
     end})
     money_transfer(company.money[1]*(-1), pl)
   end
@@ -208,9 +206,7 @@ gogo = function(s)
     buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
     buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
       
-    if fast_play == 1 then
-      s:delay({queue = 'roll', speed = 0, callback = roll})
-    else
+    if lquery_fx == true then
       --звук костей
       local i = math.random(1,6)
       sound_dice[i]:setPitch(0.8 + math.random()/3)
@@ -222,9 +218,11 @@ gogo = function(s)
       for i = 1, 19 do
 	s:delay({queue = 'roll', speed = i/200, callback = roll})
       end
+    else
+      s:delay({queue = 'roll', speed = 0, callback = roll})
     end
 
-    s:delay({queue = 'roll', speed = 1*(1-fast_play), callback = function(s)
+    s:delay({queue = 'roll', speed = 1, callback = function(s)
       if buf.jail > 0 then
 	if ds1 == ds2 then
 	  buf.jail = 0
@@ -258,7 +256,7 @@ gogo = function(s)
 	ai(s)
 	s:stop('blend'):set({blend_alpha = 0})
 	player:delay({callback=gogo})
-      end, speed = 1*(1-fast_play)})
+      end, speed = 1})
       if ds1 ~= ds2 then
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
@@ -300,10 +298,10 @@ function love.keyreleased( key, unicode )
       player._child[2].cash = player._child[2].cash - 1000
    end
    if key == "f" then 
-     if fast_play == 1 then
-       fast_play = 0
+     if lquery_fx == true then
+       lquery_fx = false
      else
-       fast_play = 1
+       lquery_fx = true
      end
    end
 end
