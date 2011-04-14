@@ -133,33 +133,55 @@ buybons_company = function(pl, company)
   end
 end
 
+--[[
 -- Вылет из игры
 gameout = function(pl)
   for k,v in pairs(rules_company) do
     if v.owner == pl then
       v.owner = nil
       v.level = 1
-      v.mortgage_alpha = 0
+      companys._child[k].mortgage_alpha = 0
     end
   end
   pl.ingame = false
-end
+end]]
 
 -- искусственный интеллект
 ai = function(pl)
 -- если денег меньше нуля - закладываем компании
-  local ingame = false
   if pl.cash < 0 then
     for k,v in pairs(rules_company) do
       mortgage_company(pl, v, k)
       if pl.cash >= 0 then break end
     end
-    -- проверка на возможность залога оставшихся компаний
-    for k,v in pairs(rules_company) do
-      if v.owner == pl and v.level > 0 then ingame = true end
-    end
-    if ingame == false and pl.cash < 0 then gameout(pl) end
   end
+
+  -- проверка на возможность залога оставшихся компаний
+  player:delay({speed = 0, cb = function()
+    if pl.cash < 0 then
+      local ingame = false
+      for k,v in pairs(rules_company) do
+	if v.owner == pl and v.level > 0 then
+	  ingame = true
+	  break
+	end
+      end
+      if ingame == false then
+	for k,v in pairs(rules_company) do
+	  if v.owner == pl then
+	    v.owner = nil
+	    v.level = 1
+	    companys._child[k].mortgage_alpha = 0
+	  end
+	end
+	pl.ingame = false
+	pl.pos = 1
+	local x, y = getplayerxy(1, pl.k)
+	pl:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+      end
+    end
+  end})
+
   buy_company(pl, rules_company[pl.pos])
 -- выкуп компаний
   for k,v in pairs(rules_company) do buyout_company(pl, v, k) end
