@@ -201,7 +201,8 @@ gogo = function(s)
   if buf.ingame == false then
     __i = __i + 1
     if __i > #player._child then __i = 1 end
-    player:delay({callback=gogo})
+    --player:delay({callback=gogo})
+    gogo(s)
   else
     buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
     buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
