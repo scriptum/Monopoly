@@ -336,8 +336,8 @@ Entity:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
 
 --анимация передачи денех
 coins = Entity:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
+money_transfer_param = {speed = 1, cb = function(s) s:hide() s.a = 255 end}
 money_transfer = function(money, from, to)
-  local speed = 1
   if to then 
     from.cash = from.cash - money
     to.cash = to.cash + money
@@ -350,16 +350,16 @@ money_transfer = function(money, from, to)
     end
     coins:move(from.x + 3, from.y):show()
     if to then
-      coins:animate({x = to.x + 3, y = to.y}, {speed = speed, callback=function(s) s:hide() end})
+      coins:animate({x = to.x + 3, y = to.y}, money_transfer_param)
     else
       if money < 0 then
-        coins:animate({y = from.y - 24, a = 30}, {speed = speed, callback=function(s) s:hide() s.a = 255 end})
+        coins:animate({y = from.y - 24, a = 30}, money_transfer_param)
       else
         coins.y = from.y - 24
-        coins:animate({y = from.y, a = 30}, {speed = speed, callback=function(s) s:hide() s.a = 255 end})
+        coins:animate({y = from.y, a = 30}, money_transfer_param)
       end
       
     end
   end})
-  player:delay(speed)
+  player:delay(1)
 end

@@ -163,10 +163,8 @@ function love.run()
       if screen then process_entities(screen) end
       --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
       --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
-      for k, v in pairs({'mouseover'}) do
-        if _G['__' .. v] then
-          _G['__' .. v]['_' .. v](_G['__' .. v], mX, mY, MouseButton)
-        end
+      if __mouseover then
+        if __mouseover._mouseover then __mouseover._mouseover(__mouseover, mX, mY, MouseButton) end
       end
       if __mousepress then
         if __mousepress._mousepress then __mousepress._mousepress(__mousepress, mX, mY, MouseButton) end
