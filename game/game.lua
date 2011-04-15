@@ -144,27 +144,51 @@ gameout = function(pl)
   pl.ingame = false
 end]]
 
--- искусственный интеллект
-ai = function(pl)
--- если денег меньше нуля - закладываем компании
+comp = 0
+-- Функция залога компаний для AI
+mortgage_ai = function(pl)
   if pl.cash < 0 then
     for k,v in pairs(rules_company) do
       mortgage_company(pl, v, k)
       if pl.cash >= 0 then break end
     end
+    if pl.cash < 0 then
+      print("if")
+      player:delay({speed=0, cb = function()
+	for k,v in pairs(rules_company) do
+	  if v.owner == pl and v.level > 0 then
+	    comp = 1
+	    break
+	  end
+	end
+	print(comp)
+	if comp == 1 then
+	  comp = 0
+	  mortgage_ai(pl)
+	end
+      end})
+    end
+  end
+end
+
+-- искусственный интеллект
+ai = function(pl)
+-- если денег меньше нуля - закладываем компании
+  if pl.cash < 0 then
+    mortgage_ai(pl)
   end
 
   -- проверка на возможность залога оставшихся компаний
   player:delay({speed = 0, cb = function()
     if pl.cash < 0 then
-      local ingame = false
+--[[      local ingame = false
       for k,v in pairs(rules_company) do
 	if v.owner == pl and v.level > 0 then
 	  ingame = true
 	  break
 	end
       end
-      if ingame == false then
+      if ingame == false then]]
 	for k,v in pairs(rules_company) do
 	  if v.owner == pl then
 	    v.owner = nil
@@ -176,7 +200,7 @@ ai = function(pl)
 	pl.pos = 1
 	local x, y = getplayerxy(1, pl.k)
 	pl:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
-      end
+--      end
     end
   end})
 
@@ -262,7 +286,7 @@ gogo = function(s)
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
 	double = 0
-      elseif double < 3 then
+      elseif double < 3 and buf.jail == 0 then
 	double = double + 1
       else
 	buf.pos = 13
@@ -290,13 +314,16 @@ end
 
 function love.keyreleased( key, unicode )
    if key == "1" then
-      player._child[1].cash = player._child[1].cash - 100
+      player._child[1].cash = player._child[1].cash - 1000
    end
      if key == "q" then
       player._child[1].cash = player._child[1].cash + 100
    end
    if key == "2" then
       player._child[2].cash = player._child[2].cash - 1000
+   end
+   if key == "3" then
+      player._child[3].cash = player._child[3].cash - 1000
    end
    if key == "f" then 
      if lquery_fx == true then
