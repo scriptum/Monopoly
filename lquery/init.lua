@@ -12,7 +12,10 @@ var_by_reference = function(var, value)
     if value then _G[var] = value else return _G[var] end
   end
 end
+
 lquery_fx = true
+lquery_hooks = {}
+
 local easing = require("lquery.easing")
 require("lquery.string")
 require("lquery.table")
@@ -64,12 +67,15 @@ local function animate(ent)
   end --for
 end
 
-local MousePressed = false
-local MousePressedOwner = nil
-local MouseButton = nil
+MousePressed = false
+MousePressedOwner = nil
+MouseButton = nil
 --some mouse events
 local function events(v)
   if v._bound and v._bound(v, mX, mY) then
+    if v._mousemove then 
+      __mousemove = v
+    end
     if MousePressed == true and not MousePressedOwner then
       if v._mousepress or v._click then 
         __mousepress = v
@@ -146,26 +152,19 @@ function love.run()
       G.clear()
       time = love.timer.getTime()
       
-      if _drag_object then
-        _drag_object.x = mX - _drag_object._drag_x
-        _drag_object.y = mY - _drag_object._drag_y
-        if _drag_object._drag_bound then
-          local a = _drag_object._drag_bound
-          if _drag_object.x > a[2] then _drag_object.x = a[2] end
-          if _drag_object.x < a[4] then _drag_object.x = a[4] end
-          if _drag_object.y > a[3] then _drag_object.y = a[3] end
-          if _drag_object.y < a[1] then _drag_object.y = a[1] end
-        end
-        if _drag_object._drag_callback then _drag_object._drag_callback(_drag_object, mX, mY) end
-        --print(_drag_object._drag_callback)
+      for _, v in pairs(lquery_hooks) do
+        v()
       end
-      
+
       __mousepress, __mouseover = nil, nil
       if screen then process_entities(screen) end
       --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
       --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
+      if __mousemove then
+        __mousemove._mousemove(__mousemove, mX, mY, MouseButton)
+      end
       if __mouseover then
-        if __mouseover._mouseover then __mouseover._mouseover(__mouseover, mX, mY, MouseButton) end
+        __mouseover._mouseover(__mouseover, mX, mY, MouseButton)
       end
       if __mousepress then
         if __mousepress._mousepress then __mousepress._mousepress(__mousepress, mX, mY, MouseButton) end
@@ -177,8 +176,7 @@ function love.run()
         MousePressedOwner = nil
       end
       if love.draw then love.draw() end
+      G.present()
     end --if G
-    if love.timer then love.timer.sleep(1) end
-    if G then G.present() end
   end
 end

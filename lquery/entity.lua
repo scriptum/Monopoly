@@ -145,7 +145,7 @@ end
 
 --до сих пор охреневаю как я это сделал. Куча методов в пяти строчках кода
 --callbacks
-for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout', 'mousewheel'}) do
+for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout', 'mousewheel', 'mousemove'}) do
   Entity[v] = function (self, callback)
     if callback then
       if not self._bound then self._bound = Entity.bounds.rectangle end
@@ -155,8 +155,6 @@ for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout
     return self
   end
 end
-
-
 
 function Entity:draw(callback)
   if callback then self._draw = callback end
@@ -168,15 +166,33 @@ local drag_start = function(s, x, y)
   s._drag_y = y - s.y
   _drag_object = s
 end
-local drag_end = function()
+local drag_end = function(s)
   _drag_object = nil
 end
+table.insert(lquery_hooks, function()
+  local s = _drag_object
+  if s then
+    s.x = mX - s._drag_x
+    s.y = mY - s._drag_y
+    if s._drag_bound then
+      local a = s._drag_bound
+      if s.x > a[2] then s.x = a[2] end
+      if s.x < a[4] then s.x = a[4] end
+      if s.y > a[3] then s.y = a[3] end
+      if s.y < a[1] then s.y = a[1] end
+    end
+    if s._drag_callback then s._drag_callback(s, x, y) end
+    --print(MousePressed, MouseButton)
+  end
+end)
 function Entity:draggable(options)
   local o = options or {}
   if o.bound then self._drag_bound = o.bound end --[[top, right, bottom, left]]
   if o.callback then self._drag_callback = o.callback end
   return self:mousepress(drag_start):mouserelease(drag_end)
 end
+
+
 --delete object
 --how to remove object correctly and free memory:
 --a = a:delete()

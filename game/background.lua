@@ -26,3 +26,5 @@ end
 Entity:new(screen):image(board_background):set({sx = 800/1024, sy = 600/1024})
 
 console = G.newImageFont('data/gfx/font.png', " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#$=[]\"אבגדהו¸זחטיךכלםמןנסעףפץצקרשתûü‎‏ÿÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕ×ÖØÙÚÛÜÝÞ‗")
+
+small = G.newFont('data/fonts/ru.ttf',14)
