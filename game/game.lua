@@ -278,11 +278,11 @@ gogo = function(s)
   end
 end
 
-player = Entity:new(board):delay({callback=gogo})
+player = E:new(board):delay({callback=gogo})
 
 for k = 1, 3 do
   x, y = getplayerxy(1, k)
-  Entity:new(player)
+  E:new(player)
   :draw(player_draw)
   :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
 end

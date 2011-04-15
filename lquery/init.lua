@@ -157,6 +157,7 @@ function love.run()
           if _drag_object.y < a[1] then _drag_object.y = a[1] end
         end
         if _drag_object._drag_callback then _drag_object._drag_callback(_drag_object, mX, mY) end
+        --print(_drag_object._drag_callback)
       end
       
       __mousepress, __mouseover = nil, nil
@@ -179,6 +180,5 @@ function love.run()
     end --if G
     if love.timer then love.timer.sleep(1) end
     if G then G.present() end
-
   end
 end

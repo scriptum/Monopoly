@@ -1,4 +1,5 @@
 Entity = {} --Any object: box, circle, character etc
+E = Entity --short name
 function Entity:new(parent)  -- constructor
   local object = {
     x = 0,   --x coord
@@ -35,21 +36,21 @@ function Entity:scale(sx, sy)
 end
 --Sets radius of entity
 function Entity:radius(R)
-  self.R = R
+  self.R = R or self.R or 0
   return self --so we can chain methods
 end
 --Sets width and height of entity
 function Entity:size(w, h)
-  self.w = w or 0
-  self.h = h or 0
+  self.w = w or self.w or 0
+  self.h = h or self.h or 0
   return self --so we can chain methods
 end
 --Sets color of entity
 function Entity:color(r, g, b, a)
-  self.r = r or 255
-  self.g = g or 255
-  self.b = b or 255
-  self.a = a or 255
+  self.r = r or self.r or 255
+  self.g = g or self.g or 255
+  self.b = b or self.b or 255
+  self.a = a or self.a or 255
   return self --so we can chain methods
 end
 --hide entity (stop processing events and drawing) children will be hidden too
@@ -78,9 +79,16 @@ end
 function Entity:animate(keys, options)
   if keys then
     if not self._animQueue then self._animQueue = {} end
-    if not options then options = {} end
-    if type(options) == "number" then
+    if not options then 
+      options = {}
+    elseif type(options) == "number" then
       options = {speed = options}
+    elseif type(options) == "function" then
+      options = {cb = options}
+    elseif type(options) == "string" then
+      options = {easing = options}
+    elseif type(options) == "boolean" then
+      options = {loop = options}
     end
     local queue = options.queue or "main" --you can manage with some queues
     if not self._animQueue[queue] then self._animQueue[queue] = {} end
@@ -90,7 +98,7 @@ function Entity:animate(keys, options)
       speed = (options.speed or 0.3),
       lasttime = nil, 
       easing = options.easing or 'swing', --swing or linear
-      loop = options.loop or 'false',
+      loop = options.loop or false,
       callback = options.callback or options.cb
     })
   end
