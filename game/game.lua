@@ -22,7 +22,7 @@ getplayerxy = function(n, k)
 end
 
 __i = 1
-double = 0
+double = 1
 __max = 5
 
 -- Пересчет монополий
@@ -292,18 +292,18 @@ gogo = function(s)
 	ai(s)
 	s:stop('blend'):set({blend_alpha = 0})
       end, speed = 1})
-      if ds1 ~= ds2 then
+      if ds1 ~= ds2 or buf.pos == 31 then
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
-	double = 0
-      elseif double < 3 and buf.jail == 0 then
+	double = 1
+      elseif double < 3 then
 	double = double + 1
       else
 	buf.pos = 13
 	local x, y = getplayerxy(13, buf.k)
 	buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
 	player:delay({callback=gogo})
-	double = 0
+	double = 1
 	buf.jail = 4
 	__i = __i + 1
       end
