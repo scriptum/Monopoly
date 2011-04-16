@@ -82,13 +82,16 @@ mortgage_company = function(pl, company, num)
     if company.group == "oil" or company.group == "bank" then
       player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) end})
       money_transfer(company.money[1]/2, pl)
+      return true
     else
       if company.level > 2 then
 	player:delay({speed = 0, cb = function() company.level = company.level - 1 conversion_monopoly(pl, company) end})
 	money_transfer(rules_group[company.group].upgrade, pl)
+	return true
       elseif company.level == 1 then
 	player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) end})
 	money_transfer(company.money[1]/2, pl)
+	return true
       else
 	for k,v in pairs(rules_company) do
 	  if company.group == v.group then
@@ -104,10 +107,12 @@ mortgage_company = function(pl, company, num)
 	  end})
 	  --print("pledge_company: "..company.name.." cash: "..company.money[1]/2)
 	  money_transfer(company.money[1]/2, pl)
+	  return true
 	end
       end
     end
   end
+  return false
 end
 
 -- Выкуп компаний
@@ -142,7 +147,7 @@ gameout = function(pl)
     end
   end
   pl.ingame = false
-end]]
+end
 
 comp = 0
 -- Функция залога компаний для AI
@@ -169,13 +174,18 @@ mortgage_ai = function(pl)
       end})
     end
   end
-end
+end]]
 
 -- искусственный интеллект
 ai = function(pl)
 -- если денег меньше нуля - закладываем компании
   if pl.cash < 0 then
-    mortgage_ai(pl)
+    for k,v in pairs(rules_company) do
+      if mortgage_company(pl, v, k) == true then
+	player:delay({speed = 0, cb = function() ai(pl) end})
+	return
+      end
+    end
   end
 
   -- проверка на возможность залога оставшихся компаний
