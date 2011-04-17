@@ -124,7 +124,9 @@ buyout_company = function(pl, company, num)
       companys._child[num]:animate({mortgage_alpha = 0, cb = function(s)s.mortgage_alpha=0 end})
     end})
     money_transfer(company.money[1]*(-1), pl)
+    return true
   end
+  return false
 end
 
 -- Прокачка компаний
@@ -133,7 +135,9 @@ buybons_company = function(pl, company)
 	    company.group ~= "bank" and pl.cash > rules_group[company.group].upgrade then
     player:delay({speed = 0, cb = function() company.level = company.level + 1 end})
     money_transfer(rules_group[company.group].upgrade * (-1), pl)
+    return true
   end
+  return false
 end
 
 --[[
@@ -181,6 +185,12 @@ ai = function(pl)
 -- если денег меньше нуля - закладываем компании
   if pl.cash < 0 then
     for k,v in pairs(rules_company) do
+      if v.owner == pl and v.level == 1 and mortgage_company(pl, v, k) == true then
+	player:delay({speed = 0, cb = function() ai(pl) end})
+	return
+      end
+    end
+    for k,v in pairs(rules_company) do
       if mortgage_company(pl, v, k) == true then
 	player:delay({speed = 0, cb = function() ai(pl) end})
 	return
@@ -191,34 +201,43 @@ ai = function(pl)
   -- проверка на возможность залога оставшихся компаний
   player:delay({speed = 0, cb = function()
     if pl.cash < 0 then
---[[      local ingame = false
       for k,v in pairs(rules_company) do
-	if v.owner == pl and v.level > 0 then
-	  ingame = true
-	  break
+	if v.owner == pl then
+	  v.owner = nil
+	  v.level = 1
+	  companys._child[k].mortgage_alpha = 0
 	end
       end
-      if ingame == false then]]
-	for k,v in pairs(rules_company) do
-	  if v.owner == pl then
-	    v.owner = nil
-	    v.level = 1
-	    companys._child[k].mortgage_alpha = 0
-	  end
-	end
-	pl.ingame = false
-	pl.pos = 1
-	local x, y = getplayerxy(1, pl.k)
-	pl:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
---      end
+      pl.ingame = false
+      pl.pos = 1
+      local x, y = getplayerxy(1, pl.k)
+      pl:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
     end
   end})
 
-  buy_company(pl, rules_company[pl.pos])
+  if rules_company[pl.pos].type == "company" and not rules_company[pl.pos].owner and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
+    buy_company(pl, rules_company[pl.pos])
+  end
+
 -- выкуп компаний
-  for k,v in pairs(rules_company) do buyout_company(pl, v, k) end
+  for k,v in pairs(rules_company) do
+    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
+      if buyout_company(pl, v, k) == true then
+	player:delay({speed = 0, cb = function() ai(pl) end})
+	return
+      end
+    end
+  end
+
 -- прокачка компаний
-  for k,v in pairs(rules_company) do buybons_company(pl, v) end
+  for k,v in pairs(rules_company) do
+    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_group[rules_company[pl.pos].group].upgrade + 200) then
+      if buybons_company(pl, v) == true then
+	player:delay({speed = 0, cb = function() ai(pl) end})
+	return
+      end
+    end
+  end
   player:delay({callback=gogo})
 end
 
