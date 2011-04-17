@@ -215,9 +215,9 @@ ai = function(pl)
     end
   end})
 
-  if rules_company[pl.pos].type == "company" and not rules_company[pl.pos].owner and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
+--  if rules_company[pl.pos].type == "company" and not rules_company[pl.pos].owner and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
     buy_company(pl, rules_company[pl.pos])
-  end
+--  end
 
 -- выкуп компаний
   for k,v in pairs(rules_company) do
