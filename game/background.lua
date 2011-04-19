@@ -23,7 +23,15 @@ getMouseXY = function()
   return love.mouse.getX()/screen_scale - x_screen_scale, love.mouse.getY()/screen_scale - y_screen_scale
 end
 
-Entity:new(screen):image(board_background):set({sx = 800/1024, sy = 600/1024})
+--Entity:new(screen):image(board_background):set({sx = 800/1024, sy = 600/1024})
+
+
+floorquad = love.graphics.newQuad(0, 0, 800, 600, board_background:getWidth(), board_background:getHeight())
+board_background:setWrap("repeat", "repeat")
+
+Entity:new(screen):draw(function(s)
+  G.drawq(board_background, floorquad, 0, 0)
+end)
 
 console = G.newImageFont('data/gfx/font.png', " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#$=[]\"àáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕ×ÖØÙÚÛÜİŞß")
 

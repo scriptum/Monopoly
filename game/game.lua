@@ -231,7 +231,7 @@ ai = function(pl)
 
 -- прокачка компаний
   for k,v in pairs(rules_company) do
-    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_group[rules_company[pl.pos].group].upgrade + 200) then
+    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_group[rules_company[pl.pos].group].upgrade) then
       if buybons_company(pl, v) == true then
 	player:delay({speed = 0, cb = function() ai(pl) end})
 	return
