@@ -7,7 +7,7 @@ local s1 = (800-field_width*s2)/2 --расчет высоты клетки компании
 
 board = E:new(screen) --игровая доска
 --центральный прямоугольник
-burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,235,160,199)
+burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,246,208,199)
 companys = E:new(board) --компании
 
 local alpha = 30 --альфа канал для разделителя
@@ -297,13 +297,13 @@ end
 --var = 0
 --E:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable()
 
---[[require('ui.slider')
-local ent = 'burn'
-E:new(screen):move(200,200+32):slider('R', 0, 255, {ent, 'r'})
-E:new(screen):move(200,200+32*2):slider('G', 0, 255, {ent, 'g'})
-E:new(screen):move(200,200+32*3):slider('B', 0, 255, {ent, 'b'})
-E:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
-E:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})]]
+--~ require('ui.slider')
+--~ local ent = 'burn'
+--~ E:new(screen):move(200,200+32):slider('R', 0, 255, {ent, 'r'})
+--~ E:new(screen):move(200,200+32*2):slider('G', 0, 255, {ent, 'g'})
+--~ E:new(screen):move(200,200+32*3):slider('B', 0, 255, {ent, 'b'})
+--~ E:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
+--~ E:new(screen):move(200,200+32*5):list('Blend', {'alpha', 'additive', 'multiplicative', 'subtractive'}, {'alpha', 'additive', 'multiplicative', 'subtractive'}, {ent, 'blendMode'})
 
 --функция рендеринга игрока
 player_draw = function(s)
