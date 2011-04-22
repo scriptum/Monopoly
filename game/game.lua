@@ -248,6 +248,11 @@ roll = function()
   math.randomseed(os.time() + time + math.random(99999))
   ds2 = math.random(1, 6)
 end
+statistics = {
+0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0}
 
 -- Функция перемещения игрока по полю.
 gogo = function(s)
@@ -310,6 +315,7 @@ gogo = function(s)
 	if cell.action then cell.action(s) end
 	ai(s)
 	s:stop('blend'):set({blend_alpha = 0})
+	statistics[s.pos] = statistics[s.pos] + 1
       end, speed = 1})
       if ds1 ~= ds2 or buf.pos == 31 then
 	__i = __i + 1
@@ -333,7 +339,7 @@ end
 
 player = E:new(board):delay({callback=gogo})
 
-for k = 1, 3 do
+for k = 1, 5 do
   x, y = getplayerxy(1, k)
   E:new(player)
   :draw(player_draw)
@@ -361,4 +367,7 @@ function love.keyreleased( key, unicode )
        lquery_fx = true
      end
    end
+end
+function love.quit()
+  table_print(statistics)
 end
