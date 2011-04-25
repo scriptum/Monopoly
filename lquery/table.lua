@@ -29,3 +29,11 @@ function table.copy(t)
   end
   return t2
 end
+
+--find element in array, returns numeric index. returns -1 if not found
+function table.find(array, value)
+  for k, v in ipairs(array) do
+    if v == value then return k end
+  end
+  return -1
+end

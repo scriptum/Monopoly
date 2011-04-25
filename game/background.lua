@@ -1,4 +1,4 @@
-local getScale = function()
+getScale = function()
   local aspect = G.getWidth()/G.getHeight()
   local s = 1
   local x = 0

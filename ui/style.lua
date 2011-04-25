@@ -46,7 +46,7 @@ return {
     draw = function(s)
       if ui_style.list.font then G.setFont(ui_style.list.font) end
       G.printf(s.text, s.x, s.y, s.w, 'left')
-      G.printf(s._vars[var_by_reference(s._variable)], s.x, s.y, s.w, 'right')
+      G.printf(s._vars_names[s._pos], s.x, s.y, s.w, 'right')
     end,
     mouseover = function(self)
       self:stop('hover'):animate({b=120},{queue='hover'})
