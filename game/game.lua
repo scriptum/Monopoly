@@ -367,7 +367,11 @@ function love.keyreleased( key, unicode )
        lquery_fx = true
      end
    end
+   if key == "escape" then
+     gamemenu:toggle()
+     board_gui:toggle()
+   end
 end
 function love.quit()
-  table_print(statistics)
+  --table_print(statistics)
 end

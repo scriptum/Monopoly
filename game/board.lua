@@ -293,6 +293,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
   end
 end
 
+board_gui = E:new(board)
 
 --var = 0
 --E:new(screen):image('data/gfx/krig_Aqua_button.png'):move(100,100):draggable()
@@ -308,14 +309,14 @@ end
 --функция рендеринга игрока
 player_draw = function(s)
   sx = 30/64
-  G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx)
+  if gamemenu._visible == false then G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx) end
   if s.ingame == true then 
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx) 
-    Gprint(money(s.cash), s1+45, s1+97 + s.k*30)
+    if gamemenu._visible == false then Gprint(money(s.cash), s1+45, s1+97 + s.k*30) end
     G.setBlendMode('additive')
     G.setColor(255,255,255,s.blend_alpha)
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
-    G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx)
+    if gamemenu._visible == false then G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx) end
     G.setBlendMode('alpha')
   else
     Gprint('Банкрот', s1+45, s1+97 + s.k*30)
@@ -328,7 +329,7 @@ dice_draw = function(s)
   G.draw(dice[ds2 or 1], s.x + 66, s.y, 0, 0.5)
 end
 
-E:new(board):draw(dice_draw):move(s1 + 10, s1 + 10)
+E:new(board_gui):draw(dice_draw):move(s1 + 10, s1 + 10)
 
 --анимация передачи денех
 coins = E:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()

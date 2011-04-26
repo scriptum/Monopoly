@@ -63,6 +63,11 @@ function Entity:show()
   self._visible = true
   return self --so we can chain methods
 end
+--toggle entity
+function Entity:toggle()
+  self._visible = not self._visible
+  return self --so we can chain methods
+end
 --append child
 function Entity:append(child)
   if not self._child then self._child = {} end
