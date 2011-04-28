@@ -11,3 +11,8 @@ function Entity:menu(items)
   end
   return self
 end
+
+function Entity:menutoggle(menu)
+  self:toggle()
+  menu:toggle()
+end

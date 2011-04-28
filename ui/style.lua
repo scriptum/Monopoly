@@ -87,6 +87,6 @@ return {
   },
   menu = {
     margin = 10, --space between items
-    start = 30 --top indent
+    start = 120 --top indent
   }
 }
