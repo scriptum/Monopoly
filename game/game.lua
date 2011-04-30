@@ -372,6 +372,3 @@ function love.keyreleased( key, unicode )
      board_gui:toggle()
    end
 end
-function love.quit()
-  --table_print(statistics)
-end

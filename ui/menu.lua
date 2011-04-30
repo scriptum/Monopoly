@@ -6,7 +6,7 @@ function Entity:menu(items)
   for k, v in pairs(items) do
     temp = Entity:new(self):button(v.text, v.action)
     if v.offset then y = y + v.offset end
-    temp:move(G.getWidth()/2-temp.w/2, y)
+    temp:move(400-temp.w/2, y)
     y = y + temp.h + margin
   end
   return self

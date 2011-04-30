@@ -23,7 +23,7 @@ require("lquery.entity")
 
 G = love.graphics --graphics
 A = love.audio --audio
-
+F = love.filesystem --files
 getMouseXY = function()
   return love.mouse.getX(), love.mouse.getY()
 end
