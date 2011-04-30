@@ -244,9 +244,9 @@ end
 --бросок кубиков
 roll = function()
   math.randomseed(os.time() + time + math.random(99999))
-  ds1 = math.random(1, 6)
+  ds1 = math.random(1, 1)
   math.randomseed(os.time() + time + math.random(99999))
-  ds2 = math.random(1, 6)
+  ds2 = math.random(1, 1)
 end
 statistics = {
 0,0,0,0,0,0,0,0,0,0,
@@ -317,7 +317,7 @@ gogo = function(s)
 	s:stop('blend'):set({blend_alpha = 0})
 	statistics[s.pos] = statistics[s.pos] + 1
       end, speed = 1})
-      if ds1 ~= ds2 or buf.pos == 31 then
+      if ds1 ~= ds2 or buf.pos == 32 then
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
 	double = 1
@@ -343,7 +343,7 @@ for k = 1, 5 do
   x, y = getplayerxy(1, k)
   E:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
+  :set({pos = 30, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
 end
 
 
