@@ -69,7 +69,7 @@ return {
     draw = function(s)
       if ui_style.list.font then G.setFont(ui_style.list.font) end
       G.printf(s.text, s.x, s.y, s.w, 'left')
-      G.print(math.floor(var_by_reference (s._variable)), s.x+400, s.y)
+      --G.print(math.floor(var_by_reference (s._variable)), s.x+400, s.y)
       G.setColor(255,255,255,255)
       G.drawq(ui_style.slider.image, ui_style.slider.button_l, s.x+248, s.y-2)
       G.drawq(ui_style.slider.image, ui_style.slider.button_c, s.x+248+10, s.y-2, 0, 132/12, 1)

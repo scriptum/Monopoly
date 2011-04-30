@@ -1,4 +1,4 @@
-
+require('ui.slider')
 
 gamemenu = E:new(screen):hide()
 menuvsettings = E:new(gamemenu):hide()
@@ -23,6 +23,8 @@ local apply = E:new(menuvsettings):move(130, 400):button('Apply', function(s)
 		screen_scale, x_screen_scale, y_screen_scale = getScale() --rescale screen
 	end
 end)
+E:new(menuvsettings):move(200, 250):slider('Sound volume', 0, 100, {'gameoptions', 'volume'}, function(v)A.setVolume(v/100)end)
+
 
 local function mainsettings() menumain:menutoggle(menuvsettings) end
 E:new(menuvsettings):move(414, 400):button('Back', mainsettings)
@@ -30,8 +32,8 @@ E:new(menuvsettings):move(414, 400):button('Back', mainsettings)
 menumain = E:new(gamemenu):menu({
 	{text = 'Singleplayer', action = nil},
 	{text = 'Multiplayer', action = nil},
-	{text = 'Audio settings', action = nil},
-	{text = 'Video settings', action = mainsettings},
+	--{text = 'Audio settings', action = nil},
+	{text = 'Settings', action = mainsettings},
 	{text = 'Quit', action = function() love.event.push('q') end}
 })
 
