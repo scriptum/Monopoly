@@ -244,9 +244,9 @@ end
 --бросок кубиков
 roll = function()
   math.randomseed(os.time() + time + math.random(99999))
-  ds1 = math.random(1, 1)
+  ds1 = math.random(1, 6)
   math.randomseed(os.time() + time + math.random(99999))
-  ds2 = math.random(1, 1)
+  ds2 = math.random(1, 6)
 end
 statistics = {
 0,0,0,0,0,0,0,0,0,0,
@@ -343,7 +343,7 @@ for k = 1, 5 do
   x, y = getplayerxy(1, k)
   E:new(player)
   :draw(player_draw)
-  :set({pos = 30, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
 end
 
 
