@@ -16,10 +16,10 @@ end
 lquery_fx = true
 lquery_hooks = {}
 
-local easing = require("lquery.easing")
-require("lquery.string")
-require("lquery.table")
-require("lquery.entity")
+local easing = require("lib.lquery.easing")
+require("lib.lquery.string")
+require("lib.lquery.table")
+require("lib.lquery.entity")
 
 G = love.graphics --graphics
 A = love.audio --audio

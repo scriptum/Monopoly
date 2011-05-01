@@ -4,7 +4,7 @@
 cw = 56 --расчет ширины клетки компании
 ch = (800-cw*field_width)/2 --расчет высоты клетки компании
 local a = (600-ch*2)/field_height - cw --добавочный параметр дл€ высоты боковых компаний
-cell_padding = 3 --отступ внутри €чейки
+cell_padding = 2 --отступ внутри €чейки
 font_size = 10
 board = E:new(screen) --игрова€ доска
 --центральный пр€моугольник
@@ -243,7 +243,7 @@ render.chance = function(s)
   G.setColor(0,0,0)
   G.setFont(console)
   G.fontSize = 15
-  Gprintf(rules_company[s.num].name, x, y, cw+6, 'center')
+  Gprintf(rules_company[s.num].name, x - cell_padding, y, cw+6, 'center')
   --G.rectangle('line', x,y,cw- cell_padding * 2,12)
 end
 
@@ -320,8 +320,8 @@ player_draw = function(s)
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
     if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*30, 0, sx) end
     G.setBlendMode('alpha')
-  else
-    Gprint('Ѕанкрот', ch+45, ch+97 + s.k*30)
+  elseif gamemenu._visible == false then 
+    Gprint('Bankrupt', ch+45, ch+97 + s.k*30)
   end
 end
 
@@ -396,7 +396,6 @@ G.draw(s.fb, s.x, s.y, 0, 1/screen_scale)
 end):mousepress(drag_start):mouserelease(drag_end)
 rag_upd(frame)
 ]]
-require('ui.slider')
 E:new(board_gui):move(200, 400):slider('Cell width', 50, 60, {'cw'}, 
 function(v) 
   ch = (800-cw*field_width)/2 

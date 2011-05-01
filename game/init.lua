@@ -1,6 +1,5 @@
 require('game.start')
 require('game.background')
-require('game.serialize')
 require('game.scaled_font')
 require('game.board')
 require('game.game')

@@ -1,5 +1,3 @@
-require('ui.slider')
-
 gamemenu = E:new(screen):hide()
 menuvsettings = E:new(gamemenu):hide()
 local modes = G.getModes()
@@ -11,7 +9,6 @@ end
 
 local screenlist = E:new(menuvsettings):move(200, 150):list('Screen resolution', dislay_modes, dislay_modes, {'gameoptions', 'mode'})
 local screenmode = E:new(menuvsettings):move(200, 200):list('Screen mode', {true, false}, {'fullscreen', 'windowed'}, {'gameoptions', 'fullscreen'})
-require('ui.button')
 local apply = E:new(menuvsettings):move(130, 400):button('Apply', function(s) 
 	local p = screenlist._pos
 	local mode = screenlist._vars[p]

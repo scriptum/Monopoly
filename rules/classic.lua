@@ -212,7 +212,7 @@ rules_company =
   },
 
   {
-    name = "Казна",
+    name = "Chest",
     group = "treasury",
     action = cashback_treasury
   },
@@ -226,7 +226,7 @@ rules_company =
   },
 
   {
-    name = "Шанс",
+    name = "Chance",
     group = "chance",
     action = cashback_chance
   },
@@ -294,7 +294,7 @@ rules_company =
   },
 
   {
-    name = "Налог",
+    name = "Tax",
     group = "nalog",
     money = 150,
     action = action_nalog
@@ -358,7 +358,7 @@ rules_company =
   },
 
   {
-    name = "Казна",
+    name = "Chest",
     group = "treasury",
     action = cashback_treasury
   },
@@ -372,7 +372,7 @@ rules_company =
   },
 
   {
-    name = "Шанс",
+    name = "Chance",
     group = "chance",
     action = cashback_chance
   },
@@ -441,7 +441,7 @@ rules_company =
   },
 
   {
-    name = "Налог",
+    name = "Tax",
     group = "nalog",
     money = 150,
     action = action_nalog
@@ -511,7 +511,7 @@ text = "Вы выиграли чемпионат по шахматам\nполучите 100К"
  }
 }
 
---Казна
+--Chest
 rules_treasury = {
  {
   type = "treasury",
@@ -595,7 +595,7 @@ rules_treasury = {
 rules_company_images = {}
 --load images
 for k, v in pairs(rules_company) do
-  table.insert(rules_company_images, G.newImage('data/gfx/logos/'..k..'.png'))
+  table.insert(rules_company_images, G.newImage('data/gfx/eng/'..k..'.png'))
 end
 
 --предварительная загрузка картинок с группами в память
