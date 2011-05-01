@@ -239,6 +239,7 @@ ai = function(pl)
     end
   end
   player:delay({callback=gogo})
+  player:delay({speed = 0, cb = function()pl:stop('blend'):set({blend_alpha = 0})end})
 end
 
 --бросок кубиков
@@ -257,14 +258,17 @@ statistics = {
 -- Функция перемещения игрока по полю.
 gogo = function(s)
   local buf = s._child[__i]
-  if buf.ingame == false then
+  if buf.ingame == false or (buf.jail == 4 and double > 1) then 
+    double = 1
     __i = __i + 1
     if __i > #player._child then __i = 1 end
     --player:delay({callback=gogo})
     gogo(s)
-  else
-    buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
-    buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
+  else 
+    player:delay({speed = 0, cb = function()
+      buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
+      buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
+    end})
       
     if lquery_fx == true then
       --звук костей
@@ -316,10 +320,9 @@ gogo = function(s)
 	local cell = rules_company[s.pos]
 	if cell.action then cell.action(s) end
 	ai(s)
-	s:stop('blend'):set({blend_alpha = 0})
 	statistics[s.pos] = statistics[s.pos] + 1
       end, speed = 1})
-      if ds1 ~= ds2 or buf.pos == 32 or fromjail == true then
+      if ds1 ~= ds2 or fromjail == true then
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
 	double = 1

@@ -22,4 +22,9 @@ local music = {}
 for i = 1,7 do
 	table.insert(music, 'data/music/' .. i .. '.ogg')
 end
-TEsound.playLooping(music, 'music', 0, 0.9)
+math.randomseed(os.time() + math.random(99999))
+table.shuffle(music)
+TEsound.playLooping(music, 'music', nil, 0.9)
+function love.update()
+TEsound.cleanup()
+end
