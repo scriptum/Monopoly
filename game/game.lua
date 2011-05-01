@@ -283,9 +283,11 @@ gogo = function(s)
     end
 
     s:delay({queue = 'roll', speed = 1, callback = function(s)
+      local fromjail = false
       if buf.jail > 0 then
 	if ds1 == ds2 then
 	  buf.jail = 0
+	  fromjail = true
 	elseif buf.jail > 2 then
 	  buf.jail = buf.jail - 1
 	elseif buf.jail == 2 then
@@ -317,7 +319,7 @@ gogo = function(s)
 	s:stop('blend'):set({blend_alpha = 0})
 	statistics[s.pos] = statistics[s.pos] + 1
       end, speed = 1})
-      if ds1 ~= ds2 or buf.pos == 32 then
+      if ds1 ~= ds2 or buf.pos == 32 or fromjail == true then
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
 	double = 1
@@ -332,6 +334,7 @@ gogo = function(s)
 	buf.jail = 4
 	__i = __i + 1
       end
+      fromjail = false
       if __i > #player._child then __i = 1 end
     end})
   end
