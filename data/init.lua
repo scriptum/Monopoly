@@ -14,3 +14,9 @@ for i = 1,6 do
 	sound_dice[i] = A.newSource('data/sfx/dice' .. i .. '.ogg', 'static')
 end
 sound_coin = A.newSource('data/sfx/coin.ogg', 'static')
+
+local music = {}
+for i = 1,7 do
+	table.insert(music, 'data/music/' .. i .. '.ogg')
+end
+TEsound.playLooping(music, 'music', nil, 0.9)
