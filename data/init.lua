@@ -19,7 +19,7 @@ sound_coin = A.newSource('data/sfx/coin.ogg', 'static')
 sound_jail = A.newSource('data/sfx/door_close.ogg', 'static')
 sound_jail:setVolume(0.5)
 local music = {}
-for i = 1,7 do
+for i = 1,6 do
 	table.insert(music, 'data/music/' .. i .. '.ogg')
 end
 math.randomseed(os.time() + math.random(99999))

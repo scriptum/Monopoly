@@ -75,14 +75,14 @@ action_bank = function(player)
  end
 end
 
--- Ёкшн налога
+-- Ёкшн таможни
 action_jail = function(pl)
- pl.pos = 13
- pl.jail = 4
- local x, y = getplayerxy(13, player.k)
- pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
- player:delay(1)
- A.play(sound_jail)
+  pl.pos = 13
+  pl.jail = 4
+  local x, y = getplayerxy(13, pl.k)
+  pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
+  player:delay(1)
+  if lquery_fx == true then A.play(sound_jail) end
 end
 
 -- Ёкшн тюрьмы
@@ -273,7 +273,7 @@ rules_company =
   {
     name = "Jail",
     type = "big",
-    group = "big"
+    group = "big",
     action = action_jail_value
   },
   
