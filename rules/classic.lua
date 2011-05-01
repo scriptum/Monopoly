@@ -76,11 +76,12 @@ action_bank = function(player)
 end
 
 -- Ёкшн налога
-action_jail = function(player)
- player.pos = 13
- player.jail = 4
+action_jail = function(pl)
+ pl.pos = 13
+ pl.jail = 4
  local x, y = getplayerxy(13, player.k)
- player:stop('main'):animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
+ pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
+ player:delay(1)
  A.play(sound_jail)
 end
 
