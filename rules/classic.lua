@@ -75,12 +75,17 @@ action_bank = function(player)
  end
 end
 
--- Ёкшн тюрьмы
+-- Ёкшн налога
 action_jail = function(player)
  player.pos = 13
  player.jail = 4
  local x, y = getplayerxy(13, player.k)
  player:stop('main'):animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
+end
+
+-- Ёкшн тюрьмы
+action_jail_value = function(player)
+ if math.random(1, 5) == 1 then action_jail(player) end
 end
 
 -- Ёкш шанса
@@ -266,7 +271,8 @@ rules_company =
   {
     name = "Jail",
     type = "big",
-    group = "big"
+    group = "big",
+    action = action_jail_value
   },
   
   {
