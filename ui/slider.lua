@@ -1,5 +1,5 @@
 local function slider_drag_callback(s, x, y)
-  local v = (s.x - s._parent.x-248+7)/(150-17)*(s._max - s._min)
+  local v = (s.x - s._parent.x-248+7)/(150-17)*(s._max - s._min) + s._min
   var_by_reference(s._parent._variable, v)
   if(s._callback) then s._callback(v) end
 end
@@ -26,7 +26,7 @@ function Entity:slider(label, min, max, variable, callback)
     _max = max,
     _callback = callback
    })
-  :move(self.x+248-7+(150-17)*var_by_reference(variable)/(max-min), self.y-2)
+  :move(self.x+248-7+(150-17)*(var_by_reference(variable) - min)/(max-min), self.y-2)
   :draw(ui_style.slider.button_draw)
   :draggable({
     bound = {self.y-2, self.x+399+7-32, self.y-2, self.x+248-7},

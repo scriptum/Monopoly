@@ -324,8 +324,8 @@ gogo = function(s)
       elseif double < 3 then
 	double = double + 1
       else
-	buf.pos = 13
-	local x, y = getplayerxy(13, buf.k)
+	buf.pos = cell_jail
+	local x, y = getplayerxy(cell_jail, buf.k)
 	buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
 	player:delay({callback=gogo})
 	double = 1

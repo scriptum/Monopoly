@@ -1,18 +1,19 @@
-field_width = 11 --компаний по горизонтали
-field_height = 6 --компаний по вертикали
 
-local a = 12 --добавочный параметр дл€ высоты боковых компаний
-local s2 = (200+field_height*a)/5 --расчет ширины клетки компании
-local s1 = (800-field_width*s2)/2 --расчет высоты клетки компании
 
+
+cw = 56 --расчет ширины клетки компании
+ch = (800-cw*field_width)/2 --расчет высоты клетки компании
+local a = (600-ch*2)/field_height - cw --добавочный параметр дл€ высоты боковых компаний
+cell_padding = 3 --отступ внутри €чейки
+font_size = 10
 board = E:new(screen) --игрова€ доска
 --центральный пр€моугольник
-burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - s1*2+10,h=600 - s1*2 +10, blendMode = 'subtractive'}):move(s1 - 5,s1 - 5):color(255,246,208,199)
+burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - ch*2+10,h=600 - ch*2 +10, blendMode = 'subtractive'}):move(ch - 5,ch - 5):color(255,246,208,199)
 companys = E:new(board) --компании
 
 local alpha = 30 --альфа канал дл€ разделител€
 local sep_padding = 5 --отступы дл€ разделител€
-local scaley = (s1-sep_padding*2)/16 -- масштаб дл€ разделител€
+scaley = (ch-sep_padding*2)/16 -- масштаб дл€ разделител€
 local sep_draw_ver = function(x, y, sx) --рисует разделитель (вертикальный)
   G.setBlendMode('additive')
   G.setColor(255,255,255,alpha)
@@ -33,13 +34,13 @@ end
 
 local sep_draw = function(s) --рисует разделители
   local sx = 800/G.getWidth()
-  for i = 1, 12 do --верх и низ
-    sep_draw_ver(s1-s2+s2*i,sep_padding, sx)
-    sep_draw_ver(s1-s2+s2*i,600+sep_padding-s1, sx)
+  for i = 1, field_width + 1 do --верх и низ
+    sep_draw_ver(ch-cw+cw*i,sep_padding, sx)
+    sep_draw_ver(ch-cw+cw*i,600+sep_padding-ch, sx)
   end
-  for i = 1, 7 do --лево и право
-    sep_draw_hor(800-sep_padding,s1-s2-a+(s2+a)*i, sx)
-    sep_draw_hor(s1-sep_padding,s1-s2-a+(s2+a)*i, sx)
+  for i = 1, field_height + 1 do --лево и право
+    sep_draw_hor(800-sep_padding,ch-cw-a+(cw+a)*i, sx)
+    sep_draw_hor(ch-sep_padding,ch-cw-a+(cw+a)*i, sx)
   end
   G.setBlendMode('alpha')
 end
@@ -47,32 +48,31 @@ end
 --объект - разделители
 E:new(board):draw(sep_draw)
 
-local cell_padding = 4 --отступ внутри €чейки
 
 --получает смещение в зависимости от позции компании
 get_xy = function(i, side)
   if side == 1 then
-    x = s1 - s2 + cell_padding + s2 * i
+    x = ch - cw + cell_padding + cw * i
     y = 0
   elseif side == 2 then
-    x = 800 - s2
-    y = s1 - s2 - a + (s2 + a) * i + cell_padding
+    x = 800 - cw
+    y = ch - cw - a + (cw + a) * i + cell_padding
   elseif side == 3 then
-    x = 800 - s1 + cell_padding - s2 * i
-    y = 600 - s2 + cell_padding * 2
+    x = 800 - ch + cell_padding - cw * i
+    y = 600 - cw + cell_padding * 2
   elseif side == 4 then
     x = cell_padding
-    y = 600 - s1 - (s2 + a) * i + cell_padding
+    y = 600 - ch - (cw + a) * i + cell_padding
   else
     if i == 1 or i == 4 then
       x = cell_padding * 2
     else
-      x = 800 - s1 + cell_padding * 2
+      x = 800 - ch + cell_padding * 2
     end
     if i == 1 or i == 2 then
       y = cell_padding * 2
     else
-      y = 600 - s1 + cell_padding * 2
+      y = 600 - ch + cell_padding * 2
     end
   end
   return x, y
@@ -91,21 +91,21 @@ render = {} --массив с функци€ми рендеринга клеток, дл€ каждого типа сво€
 
 --рисование полупрозрачного пр€моугольника, означающего что клетка куплена
 local draw_fuzzy = function(x, y, sx, sy, side)
-  local sx = s2/16
-  local sy = s1/16
-  local sx2 = (s2 + a)/16
+  local sx = cw/16
+  local sy = ch/16
+  local sx2 = (cw + a)/16
   if side == 1 then 
     x = x - cell_padding
     G.draw(fuzzy, x, y, 0, sx, sy)
   elseif side == 2 then
-    G.draw(fuzzy, x + s2, y - cell_padding, math.pi/2, sx2, sy)
+    G.draw(fuzzy, x + cw, y - cell_padding, math.pi/2, sx2, sy)
   elseif side == 3 then 
     x = x - cell_padding
-    y = y - cell_padding*2
-    G.draw(fuzzy, x, y - s2 + cell_padding * 2, 0, sx, sy)
+    y = 600 - ch
+    G.draw(fuzzy, x, y, 0, sx, sy)
   elseif side == 4 then 
     x = x + cell_padding*2
-    G.draw(fuzzy, x - cell_padding*3 + s1, y - cell_padding, math.pi/2, sx2, sy)
+    G.draw(fuzzy, x - cell_padding*3 + ch, y - cell_padding, math.pi/2, sx2, sy)
   end
 end
 
@@ -114,8 +114,8 @@ render.company = function(s)
   local i = s.pos
   local x, y = get_xy(i, s.side)
   local _x, _y = x, y
-  local sx = (s2 - cell_padding*2)/16
-  local sy = (s1 - cell_padding*2)/16
+  local sx = (cw - cell_padding*2)/16
+  local sy = (ch - cell_padding*2)/16
   local com = rules_company[s.num]
   if com.owner then 
     local c = rules_player_colors[com.owner.k]
@@ -124,20 +124,22 @@ render.company = function(s)
     draw_fuzzy(x, y, sx, sy, s.side)
   end
   G.setColor(255, 255, 255)
-  sx = (s2 - cell_padding * 2) / 128
+  sx = (cw - cell_padding * 2) / 128
   G.draw(rules_company_images[s.num], x, y, 0, sx)
 
-  if com.group then
-    sx = (s1 - s2 - cell_padding * 2) / 64
+  --отрисовка группы
+  if com.group then 
+    local width = math.min(cw, (ch - cw))
+    sx = width / 64
     local group = com.group
     if s.side == 1 then
-      G.draw(rules_group_images[group], x + (s2 - sx * 64 - cell_padding*2) / 2, y + s2 + cell_padding, 0, sx)
+      G.draw(rules_group_images[group], x + (cw - sx * 64 - cell_padding*2) / 2, cw + font_size - cell_padding * 2, 0, sx)
     elseif s.side == 2 then
-      G.draw(rules_group_images[group], x - s2 + cell_padding * 2, y + (s2 + a - sx * 64 - cell_padding*2) / 2, 0, sx)
+      G.draw(rules_group_images[group], x - width, y + (cw + a - sx * 64 - cell_padding*2) / 2, 0, sx)
     elseif s.side == 3 then
-      G.draw(rules_group_images[group], x + (s2 - sx * 64 - cell_padding*2) / 2, y - s2 + cell_padding, 0, sx)
+      G.draw(rules_group_images[group], x + (cw - sx * 64 - cell_padding*2) / 2, 600 - cw - width * 0.8 - font_size + cell_padding * 2, 0, sx)
     elseif s.side == 4 then
-      G.draw(rules_group_images[group], x + s2, y + (s2 + a - sx * 64 - cell_padding*2) / 2, 0, sx)
+      G.draw(rules_group_images[group], x + cw - cell_padding, y + (cw + a - sx * 64) / 2 - cell_padding, 0, sx)
     end
   end
   
@@ -146,7 +148,7 @@ render.company = function(s)
   G.setFont(console)
   G.fontSize = 10
   if s.side == 3 then
-    y = y - s2 - cell_padding/2
+    y = 600 - cw*2 + cell_padding * 4 - font_size
   end
   
   if com.level > 0 then 
@@ -167,17 +169,17 @@ render.company = function(s)
     else
       txt = money(com.money[com.level])
     end
-    Gprintf(txt, x - cell_padding, y + s2 - cell_padding * 2, s2, 'center')
+    Gprintf(txt, x - cell_padding, y + cw - cell_padding * 2, cw, 'center')
   end
   
   
   --заложено?
   if s.mortgage_alpha > 0 then 
     G.setColor(0,0,0,185*s.mortgage_alpha/255)
-    draw_fuzzy(_x, _y, (s2 - cell_padding*2)/16, sy, s.side)
+    draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
     G.setColor(255,255,255,s.mortgage_alpha)
-    if s.side == 3 then y = y + s1 - s2 end
-    G.draw(lock, x - 4, y, 0, s2/128)
+    if s.side == 3 then y = 600 - cw end
+    G.draw(lock, x - 4, y, 0, cw/128)
   elseif com.level and com.level > 2 then
     G.setColor(255,255,255)
     --акции
@@ -196,16 +198,16 @@ render.company = function(s)
       --~ sx = 16/64 
       --~ G.setBlendMode('multiplicative')
     --~ end
-    offset = s2/2 - cell_padding - 10 - lvl*10/2 - 3
+    offset = cw/2 - cell_padding - 10 - lvl*10/2 - 3
     for i = 1, lvl do 
       if s.side == 1 then
-        G.draw(img, x + offset + i*10, y + s1 - 8 + offset_y, 0, sx)
+        G.draw(img, x + offset + i*10, y + ch - 8 + offset_y, 0, sx)
       elseif s.side == 2 then
-        G.draw(img, x + s2 - s1 - 8, y + offset + i*10 + 8, 0, sx)
+        G.draw(img, x + cw - ch - 8, y + offset + i*10 + 8, 0, sx)
       elseif s.side == 3 then
-        G.draw(img, x + offset + i*10, y-5+ offset_y, 0, sx)
+        G.draw(img, x + offset + i*10, 600 - ch - 8, 0, sx)
       elseif s.side == 4 then
-        G.draw(img, x + s1 - 12, y + offset + i*10 + 8 , 0, sx)
+        G.draw(img, x + ch - 12, y + offset + i*10 + 8 , 0, sx)
       end
       
     end
@@ -218,48 +220,48 @@ render.big_cell = function(s)
   if s.pos == 1 or s.pos == 4 then
     x = cell_padding * 2
   else
-    x = 800 - s1 + cell_padding * 2
+    x = 800 - ch + cell_padding * 2
   end
   if s.pos == 1 or s.pos == 2 then
     y = cell_padding * 2
   else
-    y = 600 - s1 + cell_padding * 2
+    y = 600 - ch + cell_padding * 2
   end
-  G.draw(rules_company_images[s.num], x, y, 0, (s1 - cell_padding * 4) / 128)
+  G.draw(rules_company_images[s.num], x, y, 0, (ch - cell_padding * 4) / 128)
 end
 
 --ф-€ рендеринга казны и шанса
 render.chance = function(s)
   x, y = get_xy(s.pos, s.side)
-  sx = (s2 - cell_padding * 2) / 128
+  sx = (cw - cell_padding * 2) / 128
   G.draw(rules_company_images[s.num], x, y, 0, sx)
   if s.side == 1 then
-    y = y + s2
+    y = y + cw
   else
     y = y - 16 - cell_padding * 2
   end
   G.setColor(0,0,0)
   G.setFont(console)
   G.fontSize = 15
-  Gprintf(rules_company[s.num].name, x, y, s2+6, 'center')
-  --G.rectangle('line', x,y,s2- cell_padding * 2,12)
+  Gprintf(rules_company[s.num].name, x, y, cw+6, 'center')
+  --G.rectangle('line', x,y,cw- cell_padding * 2,12)
 end
 
 --ф-€ рендеринга налога
 render.nalog = function(s)
   x, y = get_xy(s.pos, s.side)
   if s.side == 2 then
-    x = 800 - s1
-    y = s1 + s.pos * s2
+    x = 800 - ch
+    y = ch + s.pos * cw
   else
     x = 0
-    y = 600 - s1 - 16*2 - s.pos * s2
+    y = 600 - ch - 16*2 - s.pos * cw
   end
   G.setColor(0,0,0)
   G.setFont(console)
   G.fontSize = 15
-  Gprintf(rules_company[s.num].name .. '\n' .. money(rules_company[s.num].money), x, y, s1, 'center')
-  --G.rectangle('line', x,y,s1, s2)
+  Gprintf(rules_company[s.num].name .. '\n' .. money(rules_company[s.num].money), x, y, ch, 'center')
+  --G.rectangle('line', x,y,ch, cw)
 end
 
 local c = 1
@@ -309,17 +311,17 @@ board_gui = E:new(board)
 --функци€ рендеринга игрока
 player_draw = function(s)
   sx = 30/64
-  if gamemenu._visible == false then G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx) end
+  if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*30, 0, sx) end
   if s.ingame == true then 
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx) 
-    if gamemenu._visible == false then Gprint(money(s.cash), s1+45, s1+97 + s.k*30) end
+    if gamemenu._visible == false then Gprint(money(s.cash), ch+45, ch+97 + s.k*30) end
     G.setBlendMode('additive')
     G.setColor(255,255,255,s.blend_alpha)
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
-    if gamemenu._visible == false then G.draw(rules_player_images[s.k], s1+10, s1+90 + s.k*30, 0, sx) end
+    if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*30, 0, sx) end
     G.setBlendMode('alpha')
   else
-    Gprint('Ѕанкрот', s1+45, s1+97 + s.k*30)
+    Gprint('Ѕанкрот', ch+45, ch+97 + s.k*30)
   end
 end
 
@@ -329,7 +331,7 @@ dice_draw = function(s)
   G.draw(dice[ds2 or 1], s.x + 66, s.y, 0, 0.5)
 end
 
-E:new(board_gui):draw(dice_draw):move(s1 + 10, s1 + 10)
+E:new(board_gui):draw(dice_draw):move(ch + 10, ch + 10)
 
 --анимаци€ передачи денех
 coins = E:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
@@ -388,9 +390,19 @@ table.insert(lquery_hooks, function()
 end)
 
 
-frame = E:new(screen):set({x = 300, y = s1, w = 400, h = 600-s1, oy = 0, fb = G.newFramebuffer( 400*screen_scale, (600-s1*2)*screen_scale )})
+frame = E:new(screen):set({x = 300, y = ch, w = 400, h = 600-ch, oy = 0, fb = G.newFramebuffer( 400*screen_scale, (600-ch*2)*screen_scale )})
 :draw(function(s)
 G.draw(s.fb, s.x, s.y, 0, 1/screen_scale)
 end):mousepress(drag_start):mouserelease(drag_end)
 rag_upd(frame)
 ]]
+require('ui.slider')
+E:new(board_gui):move(200, 400):slider('Cell width', 50, 60, {'cw'}, 
+function(v) 
+  ch = (800-cw*field_width)/2 
+  a = (600-ch*2)/field_height - cw 
+  scaley = (ch-sep_padding*2)/16 
+  burn:size(800 - ch*2+10,600 - ch*2 +10):move(ch - 5,ch - 5) 
+end)
+E:new(board_gui):move(200, 440):slider('Cell padding', 0, 10, {'cell_padding'})
+--E:new(screen):move(300, 250):slider('ch', 20, 200, {'ch'}, function(v) a = (600-ch*2)/field_height - cw print(a) end)

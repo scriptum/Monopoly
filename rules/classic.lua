@@ -1,3 +1,6 @@
+field_width = 11 --компаний по горизонтали
+field_height = 6 --компаний по вертикали
+cell_jail = 13 --на какой клетке тюрьма
 --картинки для игроков
 rules_player_img = {
   'player_blue.png',
