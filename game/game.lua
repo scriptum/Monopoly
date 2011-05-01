@@ -18,7 +18,7 @@ getplayerxy = function(n, k)
     x = x + k*14 -15
     y = y + math.cos(k*math.pi*0.5)*30 + 24
   end
-  return x, y
+  return x + cell_padding, y + cell_padding
 end
 
 __i = 1
