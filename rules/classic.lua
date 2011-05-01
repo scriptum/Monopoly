@@ -85,7 +85,7 @@ end
 
 -- Ёкшн тюрьмы
 action_jail_value = function(player)
- if math.random(1, 5) == 1 and playar.jail == 0 then action_jail(player) end
+ if playar.jail == 0  and math.random(1, 5) == 1 then action_jail(player) end
 end
 
 -- Ёкш шанса
