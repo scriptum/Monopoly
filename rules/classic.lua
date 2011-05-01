@@ -81,11 +81,12 @@ action_jail = function(player)
  player.jail = 4
  local x, y = getplayerxy(13, player.k)
  player:stop('main'):animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
+ A.play(sound_jail)
 end
 
 -- Ёкшн тюрьмы
 action_jail_value = function(player)
- if playar.jail == 0  and math.random(1, 5) == 1 then action_jail(player) end
+ if player.jail == 0  and math.random(1, 5) == 1 then action_jail(player) end
 end
 
 -- Ёкш шанса

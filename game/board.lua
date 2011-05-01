@@ -318,8 +318,14 @@ player_draw = function(s)
     G.setBlendMode('additive')
     G.setColor(255,255,255,s.blend_alpha)
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
+    
     if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*30, 0, sx) end
     G.setBlendMode('alpha')
+    
+    if s.jail > 0 then 
+      G.setColor(255,255,255,255)
+      G.draw(player_jail, s.x+2, s.y+2, 0, 26/32)
+    end
   elseif gamemenu._visible == false then 
     Gprint('Bankrupt', ch+45, ch+97 + s.k*30)
   end
