@@ -330,6 +330,7 @@ gogo = function(s)
 	double = double + 1
       else
 	buf.pos = cell_jail
+	if jquery_fx then sound_jail:play() end
 	local x, y = getplayerxy(cell_jail, buf.k)
 	buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
 	player:delay({callback=gogo})
