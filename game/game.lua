@@ -198,7 +198,7 @@ ai = function(pl)
     end
   end
 
-  -- проверка на возможность залога оставшихся компаний
+  -- игрок вылетает
   player:delay({speed = 0, cb = function()
     if pl.cash < 0 then
       for k,v in pairs(rules_company) do
@@ -210,29 +210,29 @@ ai = function(pl)
       end
       pl.ingame = false
       pl.pos = 1
-      local x, y = getplayerxy(1, pl.k)
-      pl:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
     end
   end})
 
 --  if rules_company[pl.pos].type == "company" and not rules_company[pl.pos].owner and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
-    buy_company(pl, rules_company[pl.pos])
---  end
-
--- выкуп компаний
-  for k,v in pairs(rules_company) do
-    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
-      if buyout_company(pl, v, k) == true then
-	player:delay({speed = 0, cb = function() ai(pl) end})
-	return
-      end
+    if buy_company(pl, rules_company[pl.pos])  == true then
+      player:delay({speed = 0, cb = function() ai(pl) end})
+      return
     end
-  end
+--  end
 
 -- прокачка компаний
   for k,v in pairs(rules_company) do
     if rules_company[pl.pos].type == "company" and pl.cash >= (rules_group[rules_company[pl.pos].group].upgrade) then
       if buybons_company(pl, v) == true then
+	player:delay({speed = 0, cb = function() ai(pl) end})
+	return
+      end
+    end
+  end
+  -- выкуп компаний
+  for k,v in pairs(rules_company) do
+    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
+      if buyout_company(pl, v, k) == true then
 	player:delay({speed = 0, cb = function() ai(pl) end})
 	return
       end
@@ -350,7 +350,7 @@ for k = 1, 5 do
   x, y = getplayerxy(1, k)
   E:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = initplayers[i] ~= 'Empty', blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), blend_alpha = 0, cash = 1500})
 end
 
 
