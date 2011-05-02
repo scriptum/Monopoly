@@ -350,7 +350,7 @@ for k = 1, 5 do
   x, y = getplayerxy(1, k)
   E:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = initplayers[i] ~= 'Empty', blend_alpha = 0, cash = 1500})
 end
 
 
