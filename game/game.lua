@@ -210,6 +210,7 @@ ai = function(pl)
       end
       pl.ingame = false
       pl.pos = 1
+      sound_out:play()
     end
   end})
 

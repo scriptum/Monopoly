@@ -18,6 +18,8 @@ end
 sound_coin = A.newSource('data/sfx/coin.ogg', 'static')
 sound_jail = A.newSource('data/sfx/door_close.ogg', 'static')
 sound_jail:setVolume(0.2)
+sound_out = A.newSource('data/sfx/out.mp3', 'static')
+sound_out:setVolume(0.3)
 local music = {}
 for i = 1,6 do
 	table.insert(music, 'data/music/' .. i .. '.ogg')
