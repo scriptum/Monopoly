@@ -185,18 +185,13 @@ angles = {1, 13, 20, 32}
 
 moove = function(pl, x)
   if pl.jail == 0 then
-    local pos_begin = pl.pos
-    local pos_end = pl.pos + x
-    local step_cell = {}
-    local i,k, pl_x, pl_y
+    local pl_x, pl_y
     local last_cell = 0
-    local angles_move = {}
     -- добавляем все углы, по которым проходим
-    for i=1, 1+x do
+    for i=1, x do
       pl.pos = pl.pos + 1
       if pl.pos > max then
 	pl.pos = pl.pos-max
-	money_transfer(200, pl)
       end
       if table.find(angles, pl.pos) > 0 then
 	pl_x, pl_y = getplayerxy(pl.pos, pl.k)
@@ -208,56 +203,6 @@ moove = function(pl, x)
       pl_x, pl_y = getplayerxy(pl.pos, pl.k)
       pl:animate({x=pl_x, y=pl_y},{speed=0.7})
     end
-
---[[
-    if pos_end > max then
-      pos_end = pos_end - max
-      money_transfer(200, pl)
-      for i = pos_begin, max do
-	table.insert(step_cell, i)
-      end
-      for i = 1, pos_end do
-	table.insert(step_cell, i)
-      end
-    else
-      for i = pos_begin, pos_end do
-	table.insert(step_cell, i)
-      end
-    end
-    pl.pos = pos_end
-    table.remove(step_cell, #step_cell)
-    table.remove(step_cell, 1)
-    for i=1, #step_cell do
-      for k=1, #angles do
-	if step_cell[i] == angles[k] then table.insert(angles_move, angles[k]) end
-      end
-    end
-    if #angles_move > 0 then
-      for i=1, #angles_move do
-	pl_x, pl_y = getplayerxy(angles_move[i], pl.k)
-	if angles_move[i] == angles[1] then
-	  pl:animate({y=pl_y})
-	elseif angles_move[i] == angles[2] then
-	  pl:animate({x=pl_x})
-	elseif angles_move[i] == angles[3] then
-	  pl:animate({y=pl_y})
-	else
-	  pl:animate({x=pl_x})
-	end
-      end
-    end
-     движение после последнего угла
-    pl_x, pl_y = getplayerxy(pos_end, pl.k)
-    if pos_end < angles[2] then
-      print(pl_x)
-      pl:animate({x=pl_x})
-    elseif pos_end < angles[3] then
-      pl:animate({y=pl_y})
-    elseif pos_end < angles[4] then
-      pl:animate({x=pl_x})
-    else
-      pl:animate({y=pl_y})
-    end]]
   end
 end
 
@@ -385,21 +330,15 @@ gogo = function(s)
 	end
       end
       local buf = s._child[__i]
---[[      if buf.jail == 0 then
-	buf.pos = buf.pos + ds1 + ds2
-      end
-      local max = field_width*2 + field_height*2 + 4
       local add_money = false
-      if buf.pos > max then
-	buf.pos = buf.pos - max
+      if buf.pos + ds1 + ds2 > max then
 	add_money = true
       end
-      local x, y = getplayerxy(buf.pos, buf.k)]]
       moove(buf, ds1+ds2)
       buf:delay({speed=0, callback = function(s)
---[[	if add_money == true then
+	if add_money == true then
 	  money_transfer(200, buf)
-	end]]
+	end
 	local cell = rules_company[s.pos]
 	if cell.action then cell.action(s) end
 	ai(s)
