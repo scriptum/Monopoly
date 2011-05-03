@@ -183,66 +183,63 @@ end]]
 
 angles = {1, 13, 20, 32}
 
-moove = finction(pl, x)
+moove = function(pl, x)
+  if pl.jail == 0 then
+    local pos_begin = pl.pos
+    local pos_end = pl.pos + x
+    local step_cell = {}
+    local i,k, pl_x, pl_y
+    local angles_move = {}
+    -- добавляем все углы, по которым проходим
+    if pos_end > max then
+      pos_end = pos_end - max
+      money_transfer(200, pl)
 
-  local pos_begin = pl.pos
-  local pos_end = pl.pos + x
-  local step_cell = {}
-  local i,k, pl_x, pl_y
-  local angles_move = {}
-
-  -- добавляем все углы, по которым проходим
-  if pos_end > max then
-    pos_end = pos_end - max
-    money_transfer(200, pl)
-
-    for i = pos_begin, max do
-      table.insert(step_cell, i)
-    end
-    for i = 1, pos_end do
-      table.insert(step_cell, i)
-    end
-  else
-    for i = pos_begin, pos_end do
-      table.insert(step_cell, i)
-    end
-  end
-  table.remove(step_cell, #step_cell)
-  table.remove(step_cell, 1)
-  for i=1, #step_cell do
-    for k=1, #angles do
-      if step_cell[i] == angles[k] then table.insert(angles_move, angles[k]) end
-    end
-  end
-
-  -- проход углов
-  if #angles_move > 0 then
-    for i=1, #angles_move do
-      pl_x, pl_y = getplayerxy(angles_move[i], pl.k)
-      if angle_move[i] == angles[1] then
-	pl:animate({y=pl_y})
-      elseif angle_move[i] == angles[2] then
-	pl:animate({x=pl_x})
-      elseif angle_move[i] == angles[3] then
-	pl:animate({y=pl_y})
-      else
-	pl:animate({x=pl_x})
+      for i = pos_begin, max do
+	table.insert(step_cell, i)
+      end
+      for i = 1, pos_end do
+	table.insert(step_cell, i)
+      end
+    else
+      for i = pos_begin, pos_end do
+	table.insert(step_cell, i)
       end
     end
+    table.remove(step_cell, #step_cell)
+    table.remove(step_cell, 1)
+    for i=1, #step_cell do
+      for k=1, #angles do
+	if step_cell[i] == angles[k] then table.insert(angles_move, angles[k]) end
+      end
+    end
+    -- проход углов
+    if #angles_move > 0 then
+      for i=1, #angles_move do
+	pl_x, pl_y = getplayerxy(angles_move[i], pl.k)
+	if angle_move[i] == angles[1] then
+	  pl:animate({y=pl_y})
+	elseif angle_move[i] == angles[2] then
+	  pl:animate({x=pl_x})
+	elseif angle_move[i] == angles[3] then
+	  pl:animate({y=pl_y})
+	else
+	  pl:animate({x=pl_x})
+	end
+      end
+    end
+    -- движение после последнего угла
+    pl_x, pl_y = getplayerxy(pos_end, pl.k)
+    if angle_move[i] < angles[2] then
+      pl:animate({x=pl_x})
+    elseif angle_move[i] < angles[3] then
+      pl:animate({y=pl_y})
+    elseif angle_move[i] < angles[4] then
+      pl:animate({x=pl_x})
+    else
+      pl:animate({y=pl_y})
+    end
   end
-
-  -- движение после последнего угла
-  pl_x, pl_y = getplayerxy(pos_end, pl.k)
-  if angle_move[i] < angles[2] then
-    pl:animate({x=pl_x})
-  elseif angle_move[i] < angles[3] then
-    pl:animate({y=pl_y})
-  elseif angle_move[i] < angles[4] then
-    pl:animate({x=pl_x})
-  else
-    pl:animate({y=pl_y})
-  end
-  
 end
 
 -- искусственный интеллект
@@ -369,7 +366,7 @@ gogo = function(s)
 	end
       end
       local buf = s._child[__i]
-      if buf.jail == 0 then
+--[[      if buf.jail == 0 then
 	buf.pos = buf.pos + ds1 + ds2
       end
       local max = field_width*2 + field_height*2 + 4
@@ -378,8 +375,8 @@ gogo = function(s)
 	buf.pos = buf.pos - max
 	add_money = true
       end
-      local x, y = getplayerxy(buf.pos, buf.k)
-      buf:stop('main'):animate({x=x,y=y},{callback = function(s)
+      local x, y = getplayerxy(buf.pos, buf.k)]]
+      buf:stop('main'):moove(buf, ds1+ds2):delay({speed=0, callback = function(s)
 	if add_money == true then
 	  money_transfer(200, buf)
 	end
@@ -387,7 +384,7 @@ gogo = function(s)
 	if cell.action then cell.action(s) end
 	ai(s)
 	statistics[s.pos] = statistics[s.pos] + 1
-      end, speed = 1})
+      end})
       if ds1 ~= ds2 or fromjail == true then
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
