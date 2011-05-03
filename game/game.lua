@@ -199,11 +199,11 @@ moove = function(pl, x)
       end
       if table.find(angles, pl.pos) > 0 then
 	pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-	pl:animate({x=pl_x},{y=pl_y})
+	pl:animate({x=pl_x, y=pl_y},{speed=0.7})
       end
     end
     pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-    pl:animate({x=pl_x},{y=pl_y})
+    pl:animate({x=pl_x, y=pl_y},{speed=0.7})
 
 --[[
     if pos_end > max then
@@ -392,10 +392,10 @@ gogo = function(s)
       end
       local x, y = getplayerxy(buf.pos, buf.k)]]
       moove(buf, ds1+ds2)
-      buf:stop('main'):delay({speed=0, callback = function(s)
-	if add_money == true then
+      buf:delay({speed=0, callback = function(s)
+--[[	if add_money == true then
 	  money_transfer(200, buf)
-	end
+	end]]
 	local cell = rules_company[s.pos]
 	if cell.action then cell.action(s) end
 	ai(s)
