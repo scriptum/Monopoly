@@ -233,11 +233,11 @@ moove = finction(pl, x)
 
   -- движение после последнего угла
   pl_x, pl_y = getplayerxy(pos_end, pl.k)
-  if angle_move[i] == angles[2] then
+  if angle_move[i] < angles[2] then
     pl:animate({x=pl_x})
-  elseif angle_move[i] == angles[3] then
+  elseif angle_move[i] < angles[3] then
     pl:animate({y=pl_y})
-  elseif angle_move[i] == angles[4] then
+  elseif angle_move[i] < angles[4] then
     pl:animate({x=pl_x})
   else
     pl:animate({y=pl_y})
