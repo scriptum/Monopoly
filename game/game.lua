@@ -190,12 +190,25 @@ moove = function(pl, x)
     local step_cell = {}
     local i,k, pl_x, pl_y
     local angles_move = {}
-    pl.pos = pl.pos + x
     -- добавляем все углы, по которым проходим
+    for i=1, 1+x do
+      pl.pos = pl.pos + 1
+      if pl.pos > max then
+	pl.pos = pl.pos-max
+	money_transfer(200, pl)
+      end
+      if table.find(angles, pl.pos) > 0 then
+	pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+	pl:animate({x=pl_x},{y=pl_y})
+      end
+    end
+    pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+    pl:animate({x=pl_x},{y=pl_y})
+
+--[[
     if pos_end > max then
       pos_end = pos_end - max
       money_transfer(200, pl)
-
       for i = pos_begin, max do
 	table.insert(step_cell, i)
       end
@@ -207,6 +220,7 @@ moove = function(pl, x)
 	table.insert(step_cell, i)
       end
     end
+    pl.pos = pos_end
     table.remove(step_cell, #step_cell)
     table.remove(step_cell, 1)
     for i=1, #step_cell do
@@ -214,7 +228,6 @@ moove = function(pl, x)
 	if step_cell[i] == angles[k] then table.insert(angles_move, angles[k]) end
       end
     end
-    -- проход углов
     if #angles_move > 0 then
       for i=1, #angles_move do
 	pl_x, pl_y = getplayerxy(angles_move[i], pl.k)
@@ -229,9 +242,10 @@ moove = function(pl, x)
 	end
       end
     end
-    -- движение после последнего угла
+     движение после последнего угла
     pl_x, pl_y = getplayerxy(pos_end, pl.k)
     if pos_end < angles[2] then
+      print(pl_x)
       pl:animate({x=pl_x})
     elseif pos_end < angles[3] then
       pl:animate({y=pl_y})
@@ -239,7 +253,7 @@ moove = function(pl, x)
       pl:animate({x=pl_x})
     else
       pl:animate({y=pl_y})
-    end
+    end]]
   end
 end
 
