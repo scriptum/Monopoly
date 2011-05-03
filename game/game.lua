@@ -21,6 +21,7 @@ getplayerxy = function(n, k)
   return x + cell_padding, y + cell_padding
 end
 
+max = field_width*2 + field_height*2 + 4
 __i = 1
 double = 1
 __max = 5
@@ -179,6 +180,70 @@ mortgage_ai = function(pl)
     end
   end
 end]]
+
+angles = {1, 13, 20, 32}
+
+moove = finction(pl, x)
+
+  local pos_begin = pl.pos
+  local pos_end = pl.pos + x
+  local step_cell = {}
+  local i,k, pl_x, pl_y
+  local angles_move = {}
+
+  -- добавляем все углы, по которым проходим
+  if pos_end > max then
+    pos_end = pos_end - max
+    money_transfer(200, pl)
+
+    for i = pos_begin, max do
+      table.insert(step_cell, i)
+    end
+    for i = 1, pos_end do
+      table.insert(step_cell, i)
+    end
+  else
+    for i = pos_begin, pos_end do
+      table.insert(step_cell, i)
+    end
+  end
+  table.remove(step_cell, #step_cell)
+  table.remove(step_cell, 1)
+  for i=1, #step_cell do
+    for k=1, #angles do
+      if step_cell[i] == angles[k] then table.insert(angles_move, angles[k]) end
+    end
+  end
+
+  -- проход углов
+  if #angles_move > 0 then
+    for i=1, #angles_move do
+      pl_x, pl_y = getplayerxy(angles_move[i], pl.k)
+      if angle_move[i] == angles[1] then
+	pl:animate({y=pl_y})
+      elseif angle_move[i] == angles[2] then
+	pl:animate({x=pl_x})
+      elseif angle_move[i] == angles[3] then
+	pl:animate({y=pl_y})
+      else
+	pl:animate({x=pl_x})
+      end
+    end
+  end
+
+  -- движение после последнего угла
+  pl_x, pl_y = getplayerxy(pos_end, pl.k)
+  if angle_move[i] == angles[2] then
+    pl:animate({x=pl_x})
+  elseif angle_move[i] == angles[3] then
+    pl:animate({y=pl_y})
+  elseif angle_move[i] == angles[4] then
+    pl:animate({x=pl_x})
+  else
+    pl:animate({y=pl_y})
+  end
+  
+end
 
 -- искусственный интеллект
 ai = function(pl)
