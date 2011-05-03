@@ -189,6 +189,7 @@ moove = function(pl, x)
     local pos_end = pl.pos + x
     local step_cell = {}
     local i,k, pl_x, pl_y
+    local last_cell = 0
     local angles_move = {}
     -- добавляем все углы, по которым проходим
     for i=1, 1+x do
@@ -200,10 +201,13 @@ moove = function(pl, x)
       if table.find(angles, pl.pos) > 0 then
 	pl_x, pl_y = getplayerxy(pl.pos, pl.k)
 	pl:animate({x=pl_x, y=pl_y},{speed=0.7})
+	last_cell = pl.pos
       end
     end
-    pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-    pl:animate({x=pl_x, y=pl_y},{speed=0.7})
+    if pl.pos ~= last_cell then
+      pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+      pl:animate({x=pl_x, y=pl_y},{speed=0.7})
+    end
 
 --[[
     if pos_end > max then
