@@ -190,6 +190,7 @@ moove = function(pl, x)
     local step_cell = {}
     local i,k, pl_x, pl_y
     local angles_move = {}
+    pl.pos = pl.pos + x
     -- добавляем все углы, по которым проходим
     if pos_end > max then
       pos_end = pos_end - max
@@ -217,11 +218,11 @@ moove = function(pl, x)
     if #angles_move > 0 then
       for i=1, #angles_move do
 	pl_x, pl_y = getplayerxy(angles_move[i], pl.k)
-	if angle_move[i] == angles[1] then
+	if angles_move[i] == angles[1] then
 	  pl:animate({y=pl_y})
-	elseif angle_move[i] == angles[2] then
+	elseif angles_move[i] == angles[2] then
 	  pl:animate({x=pl_x})
-	elseif angle_move[i] == angles[3] then
+	elseif angles_move[i] == angles[3] then
 	  pl:animate({y=pl_y})
 	else
 	  pl:animate({x=pl_x})
@@ -230,11 +231,11 @@ moove = function(pl, x)
     end
     -- движение после последнего угла
     pl_x, pl_y = getplayerxy(pos_end, pl.k)
-    if angle_move[i] < angles[2] then
+    if pos_end < angles[2] then
       pl:animate({x=pl_x})
-    elseif angle_move[i] < angles[3] then
+    elseif pos_end < angles[3] then
       pl:animate({y=pl_y})
-    elseif angle_move[i] < angles[4] then
+    elseif pos_end < angles[4] then
       pl:animate({x=pl_x})
     else
       pl:animate({y=pl_y})
@@ -376,7 +377,8 @@ gogo = function(s)
 	add_money = true
       end
       local x, y = getplayerxy(buf.pos, buf.k)]]
-      buf:stop('main'):moove(buf, ds1+ds2):delay({speed=0, callback = function(s)
+      moove(buf, ds1+ds2)
+      buf:stop('main'):delay({speed=0, callback = function(s)
 	if add_money == true then
 	  money_transfer(200, buf)
 	end
