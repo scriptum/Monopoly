@@ -1,4 +1,4 @@
-function table_print (tt, indent, done)
+function table.print (tt, indent, done)
   done = done or {}
   indent = indent or 0
   if type(tt) == "table" then
@@ -36,4 +36,13 @@ function table.find(array, value)
     if v == value then return k end
   end
   return -1
+end
+
+function table.shuffle(array)
+  local b
+  for k, v in pairs(array) do
+    b = math.random(1,#array)
+    array[k] = array[b]
+    array[b] = v
+  end
 end

@@ -17,9 +17,16 @@ for i = 1,6 do
 end
 sound_coin = A.newSource('data/sfx/coin.ogg', 'static')
 sound_jail = A.newSource('data/sfx/door_close.ogg', 'static')
-sound_jail:setVolume(0.5)
+sound_jail:setVolume(0.2)
+sound_out = A.newSource('data/sfx/out.mp3', 'static')
+sound_out:setVolume(0.3)
 local music = {}
-for i = 1,7 do
+for i = 1,6 do
 	table.insert(music, 'data/music/' .. i .. '.ogg')
 end
-TEsound.playLooping(music, 'music', 0, 0.9)
+math.randomseed(os.time() + math.random(99999))
+table.shuffle(music)
+TEsound.playLooping(music, 'music', nil, 0.9)
+function love.update()
+TEsound.cleanup()
+end

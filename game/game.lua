@@ -18,7 +18,7 @@ getplayerxy = function(n, k)
     x = x + k*14 -15
     y = y + math.cos(k*math.pi*0.5)*30 + 24
   end
-  return x, y
+  return x + cell_padding, y + cell_padding
 end
 
 __i = 1
@@ -198,7 +198,7 @@ ai = function(pl)
     end
   end
 
-  -- проверка на возможность залога оставшихся компаний
+  -- игрок вылетает
   player:delay({speed = 0, cb = function()
     if pl.cash < 0 then
       for k,v in pairs(rules_company) do
@@ -210,24 +210,16 @@ ai = function(pl)
       end
       pl.ingame = false
       pl.pos = 1
-      local x, y = getplayerxy(1, pl.k)
-      pl:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+      sound_out:play()
     end
   end})
 
 --  if rules_company[pl.pos].type == "company" and not rules_company[pl.pos].owner and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
-    buy_company(pl, rules_company[pl.pos])
---  end
-
--- выкуп компаний
-  for k,v in pairs(rules_company) do
-    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
-      if buyout_company(pl, v, k) == true then
-	player:delay({speed = 0, cb = function() ai(pl) end})
-	return
-      end
+    if buy_company(pl, rules_company[pl.pos])  == true then
+      player:delay({speed = 0, cb = function() ai(pl) end})
+      return
     end
-  end
+--  end
 
 -- прокачка компаний
   for k,v in pairs(rules_company) do
@@ -238,7 +230,17 @@ ai = function(pl)
       end
     end
   end
+  -- выкуп компаний
+  for k,v in pairs(rules_company) do
+    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
+      if buyout_company(pl, v, k) == true then
+	player:delay({speed = 0, cb = function() ai(pl) end})
+	return
+      end
+    end
+  end
   player:delay({callback=gogo})
+  player:delay({speed = 0, cb = function()pl:stop('blend'):set({blend_alpha = 0})end})
 end
 
 --бросок кубиков
@@ -257,14 +259,17 @@ statistics = {
 -- Функция перемещения игрока по полю.
 gogo = function(s)
   local buf = s._child[__i]
-  if buf.ingame == false then
+  if buf.ingame == false or (buf.jail == 4 and double > 1) then 
+    double = 1
     __i = __i + 1
     if __i > #player._child then __i = 1 end
     --player:delay({callback=gogo})
     gogo(s)
-  else
-    buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
-    buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
+  else 
+    player:delay({speed = 0, cb = function()
+      buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
+      buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
+    end})
       
     if lquery_fx == true then
       --звук костей
@@ -316,10 +321,9 @@ gogo = function(s)
 	local cell = rules_company[s.pos]
 	if cell.action then cell.action(s) end
 	ai(s)
-	s:stop('blend'):set({blend_alpha = 0})
 	statistics[s.pos] = statistics[s.pos] + 1
       end, speed = 1})
-      if ds1 ~= ds2 or buf.pos == 32 or fromjail == true then
+      if ds1 ~= ds2 or fromjail == true then
 	__i = __i + 1
   --      if __i > 5 then __i = 1 end
 	double = 1
@@ -327,6 +331,7 @@ gogo = function(s)
 	double = double + 1
       else
 	buf.pos = cell_jail
+	if jquery_fx then sound_jail:play() end
 	local x, y = getplayerxy(cell_jail, buf.k)
 	buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
 	player:delay({callback=gogo})
@@ -346,7 +351,7 @@ for k = 1, 5 do
   x, y = getplayerxy(1, k)
   E:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = true, blend_alpha = 0, cash = 1500})
+  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), blend_alpha = 0, cash = 1500})
 end
 
 

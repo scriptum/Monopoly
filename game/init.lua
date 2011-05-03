@@ -1,7 +1,6 @@
-require('game.start')
 require('game.background')
 require('game.scaled_font')
+require('game.menu')
 require('game.board')
 require('game.game')
-require('game.menu')
 require('game.quit')

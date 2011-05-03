@@ -24,14 +24,23 @@ E:new(menuvsettings):move(200, 250):slider('Sound volume', 0, 100, {'gameoptions
 
 
 local function mainsettings() menumain:menutoggle(menuvsettings) end
+local function mainsingle() menumain:menutoggle(menusingle) end
 E:new(menuvsettings):move(414, 400):button('Back', mainsettings)
 
 menumain = E:new(gamemenu):menu({
-	{text = 'Singleplayer', action = nil},
+	{text = 'Singleplayer', action = mainsingle},
 	{text = 'Multiplayer', action = nil},
 	--{text = 'Audio settings', action = nil},
 	{text = 'Settings', action = mainsettings},
 	{text = 'Quit', action = function() love.event.push('q') end}
 })
 
-
+menusingle = E:new(gamemenu):hide()
+initplayers = {'Human', 'Computer', 'Empty', 'Empty', 'Empty'}
+local singleplayer_options = {'Human', 'Computer', 'Empty'}
+for i = 1, 5 do
+	E:new(menusingle):move(200, 100+i*50):list('player', singleplayer_options, singleplayer_options, {'initplayers', i})
+	E:new(menusingle):image(rules_player_images[i]):move(280, 100+i*50):scale(40/64, 40/64)
+end
+E:new(menusingle):move(130, 400):button('Start', nil)
+E:new(menusingle):move(414, 400):button('Back', mainsingle)
