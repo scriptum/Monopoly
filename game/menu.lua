@@ -36,7 +36,7 @@ menumain = E:new(gamemenu):menu({
 })
 
 menusingle = E:new(gamemenu):hide()
-initplayers = {'Human', 'Computer', 'Empty', 'Empty', 'Empty'}
+
 local singleplayer_options = {'Human', 'Computer', 'Empty'}
 for i = 1, 5 do
 	E:new(menusingle):move(200, 100+i*50):list('player', singleplayer_options, singleplayer_options, {'initplayers', i})
