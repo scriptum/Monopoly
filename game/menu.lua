@@ -1,3 +1,12 @@
+--меню для игрока
+menuplayer = E:new(screen):menu({
+	{text = 'Buy company', action = nil},
+	{text = 'Auction', action = nil},
+	{text = 'Mortgage', action = nil},
+	{text = 'Shares', action = nil},
+	{text = 'Trade', action = nil}
+}):show()
+
 gamemenu = E:new(screen):hide()
 menuvsettings = E:new(gamemenu):hide()
 local modes = G.getModes()
@@ -11,7 +20,7 @@ local screenlist = E:new(menuvsettings):move(200, 150):list('Screen resolution',
 local screenmode = E:new(menuvsettings):move(200, 200):list('Screen mode', {true, false}, {'fullscreen', 'windowed'}, {'gameoptions', 'fullscreen'})
 local apply = E:new(menuvsettings):move(130, 400):button('Apply', function(s) 
 	local p = screenlist._pos
-	local mode = screenlist._vars[p]
+	local mode = {width = G.getWidth(), height = G.getHeight()}
 	local full = screenmode._vars[screenmode._pos]
 	if gameoptions.mode ~= mode or gameoptions.fullscreen ~= full then
 		gameoptions.mode = mode
@@ -44,3 +53,5 @@ for i = 1, 5 do
 end
 E:new(menusingle):move(130, 400):button('Start', new_game)
 E:new(menusingle):move(414, 400):button('Back', mainsingle)
+
+

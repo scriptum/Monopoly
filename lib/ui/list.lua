@@ -6,6 +6,7 @@ local function list_mousepress(s, x, y, b)
     s._pos = s._pos - 1
     if(s._pos < 1) then s._pos = #s._vars end
   end
+  var_by_reference(s._variable, s._vars[s._pos])
 end
 
 --label: list description

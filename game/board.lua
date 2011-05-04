@@ -314,14 +314,15 @@ player_draw = function(s)
     sx = 30/64
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx) 
     if gamemenu._visible == false then 
-      Gprint(money(s.cash), ch+45, ch+97 + s.k*30)
-      G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*30, 0, sx)
+      G.fontSize = 20
+      Gprint(money(s.cash), ch+45, ch+90 + s.k*40)
+      G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*40, 0, sx)
     end
     G.setBlendMode('additive')
     G.setColor(255,255,255,s.blend_alpha)
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
     
-    if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*30, 0, sx) end
+    if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*40, 0, sx) end
     G.setBlendMode('alpha')
     
     if s.jail > 0 then 
@@ -404,12 +405,12 @@ G.draw(s.fb, s.x, s.y, 0, 1/screen_scale)
 end):mousepress(drag_start):mouserelease(drag_end)
 rag_upd(frame)
 ]]
-E:new(board_gui):move(200, 400):slider('Cell width', 50, 60, {'cw'}, 
-function(v) 
-  ch = (800-cw*field_width)/2 
-  a = (600-ch*2)/field_height - cw 
-  scaley = (ch-sep_padding*2)/16 
-  burn:size(800 - ch*2+10,600 - ch*2 +10):move(ch - 5,ch - 5) 
-end)
-E:new(board_gui):move(200, 440):slider('Cell padding', 0, 10, {'cell_padding'})
+--~ E:new(board_gui):move(200, 400):slider('Cell width', 50, 60, {'cw'}, 
+--~ function(v) 
+  --~ ch = (800-cw*field_width)/2 
+  --~ a = (600-ch*2)/field_height - cw 
+  --~ scaley = (ch-sep_padding*2)/16 
+  --~ burn:size(800 - ch*2+10,600 - ch*2 +10):move(ch - 5,ch - 5) 
+--~ end)
+--~ E:new(board_gui):move(200, 440):slider('Cell padding', 0, 10, {'cell_padding'})
 --E:new(screen):move(300, 250):slider('ch', 20, 200, {'ch'}, function(v) a = (600-ch*2)/field_height - cw print(a) end)
