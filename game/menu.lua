@@ -42,5 +42,5 @@ for i = 1, 5 do
 	E:new(menusingle):move(200, 100+i*50):list('player', singleplayer_options, singleplayer_options, {'initplayers', i})
 	E:new(menusingle):image(rules_player_images[i]):move(280, 100+i*50):scale(40/64, 40/64)
 end
-E:new(menusingle):move(130, 400):button('Start', nil)
+E:new(menusingle):move(130, 400):button('Start', new_game)
 E:new(menusingle):move(414, 400):button('Back', mainsingle)

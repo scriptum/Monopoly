@@ -1,3 +1,19 @@
+max = field_width*2 + field_height*2 + 4
+
+new_game = function()
+  for k = 1, 5 do
+    x, y = getplayerxy(1, k)
+    player._child[k]:set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), blend_alpha = 0, cash = 1500})
+  end
+  for k = 1, max do
+    if rules_company[k].type == "company" then
+      rules_company[k].owner = nil
+      rules_company[k].level = 1
+      companys._child[k].mortgage_alpha = 0
+    end
+  end
+end
+
 --получить позицию игрока основываясь на номере клетке и самого игрока (нужно для смещения)
 getplayerxy = function(n, k)
   side = companys._child[n].side
@@ -21,7 +37,6 @@ getplayerxy = function(n, k)
   return x + cell_padding, y + cell_padding
 end
 
-max = field_width*2 + field_height*2 + 4
 __i = 1
 double = 1
 __max = 5
@@ -369,16 +384,18 @@ end
 player = E:new(board):delay({callback=gogo})
 
 for k = 1, 5 do
-  x, y = getplayerxy(1, k)
   E:new(player)
   :draw(player_draw)
-  :set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), blend_alpha = 0, cash = 1500})
 end
 
+new_game()
 
 function love.keyreleased( key, unicode )
    if key == "1" then
       player._child[1].cash = player._child[1].cash - 1000
+   end
+   if key == "n" then
+      new_game()
    end
      if key == "q" then
       player._child[1].cash = player._child[1].cash + 100
