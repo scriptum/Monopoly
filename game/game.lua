@@ -1,9 +1,10 @@
 max = field_width*2 + field_height*2 + 4
 
 new_game = function()
+  player:stop()
   for k = 1, 5 do
     x, y = getplayerxy(1, k)
-    player._child[k]:set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), blend_alpha = 0, cash = 1500})
+    player._child[k]:stop():set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), blend_alpha = 0, cash = 1500})
   end
   for k = 1, max do
     if rules_company[k].type == "company" then
@@ -12,6 +13,8 @@ new_game = function()
       companys._child[k].mortgage_alpha = 0
     end
   end
+  __i = 1
+  gogo(player)
 end
 
 --получить позицию игрока основываясь на номере клетке и самого игрока (нужно для смещения)
@@ -381,7 +384,7 @@ gogo = function(s)
   end
 end
 
-player = E:new(board):delay({callback=gogo})
+player = E:new(board)
 
 for k = 1, 5 do
   E:new(player)
