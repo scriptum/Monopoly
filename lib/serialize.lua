@@ -8,7 +8,7 @@ function serialize(t)
 		else error("Attempted to Tserialize a table with an invalid key: "..tostring(k))
 		end
 		if type(v) == "string" then v = "\""..v.."\""			
-		elseif type(v) == "table" then v = Tserialize(v)
+		elseif type(v) == "table" then v = serialize(v)
 		elseif type(v) == "boolean" then v = v and "true" or "false"
 		elseif type(v) == "userdata" then v = ("%q"):format(tostring(v))
 		end

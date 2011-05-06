@@ -477,6 +477,7 @@ function love.keyreleased( key, unicode )
    end
    if key == "escape" then
      gamemenu:toggle()
+     --playermenu:toggle()
      board_gui:toggle()
    end
 end

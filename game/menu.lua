@@ -1,5 +1,6 @@
 --меню для игрока
-menuplayer = E:new(screen):menu({
+playermenu = E:new(screen)
+menuplayer = E:new(playermenu):menu({
 	{text = 'Buy company', action = human_buy_company},
 	{text = 'Auction', action = human_auction},
 	{text = 'Mortgage', action = nil},
@@ -13,7 +14,7 @@ menuplayer = E:new(screen):menu({
 }):hide()
 end_move = E:new(menuplayer):move(272, 120):button('End turn', turn):hide()
 
-gui_done = E:new(screen):move(272, 180):button('Done', function() 
+gui_done = E:new(playermenu):move(272, 180):button('Done', function() 
 	gui_done:menutoggle(menuplayer)
 	for k, v in pairs(companys._child) do
 		v:animate({all_alpha = 0})
@@ -33,10 +34,9 @@ local screenlist = E:new(menuvsettings):move(200, 150):list('Screen resolution',
 local screenmode = E:new(menuvsettings):move(200, 200):list('Screen mode', {true, false}, {'fullscreen', 'windowed'}, {'gameoptions', 'fullscreen'})
 local apply = E:new(menuvsettings):move(130, 400):button('Apply', function(s) 
 	local p = screenlist._pos
-	local mode = {width = G.getWidth(), height = G.getHeight()}
+	local mode = G.getWidth() .. 'x' .. G.getHeight()
 	local full = screenmode._vars[screenmode._pos]
 	if gameoptions.mode ~= mode or gameoptions.fullscreen ~= full then
-		gameoptions.mode = mode
 		gameoptions.fullscreen = full
 		G.setMode(modes[p].width, modes[p].height, full)
 		screen_scale, x_screen_scale, y_screen_scale = getScale() --rescale screen

@@ -7,6 +7,7 @@ if not gameoptions then
 		volume = 70
 	}
 end
-local modes = string.split(gameoptions.mode, 'x')
+
+local modes = gameoptions.mode:split('x')
 G.setMode(modes[1], modes[2], gameoptions.fullscreen)
 A.setVolume(gameoptions.volume/100)
