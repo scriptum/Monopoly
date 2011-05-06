@@ -454,6 +454,7 @@ human_click_company = function(company)
     print('buybons_company')
   else
     buy_company(pl, rules_company[company.num])
+    company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
     print('buy_company')
   end
 end
