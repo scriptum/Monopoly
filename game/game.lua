@@ -445,6 +445,11 @@ human_auction = function()
   end_move:show()
 end
 
+human_click_company = function(company)
+--Тут пишем обработку в зависимости от того в какой момент была нажата компания
+--company имеет тип Entity!!!
+end
+
 turn = function()
   menuplayer:hide()
   local pl = player._child[current_player]
