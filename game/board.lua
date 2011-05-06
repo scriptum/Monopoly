@@ -172,14 +172,14 @@ render.company = function(s)
     Gprintf(txt, x - cell_padding, y + cw - cell_padding * 2, cw, 'center')
   end
   
-  
+  G.setColor(0,0,0,185*math.max(s.mortgage_alpha, s.all_alpha)/255)
+  draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
   --заложено?
   if s.mortgage_alpha > 0 then 
-    G.setColor(0,0,0,185*s.mortgage_alpha/255)
-    draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
+    
     G.setColor(255,255,255,s.mortgage_alpha)
     if s.side == 3 then y = 600 - cw end
-    G.draw(lock, x - 4, y, 0, cw/128)
+    if com.level == 0 then G.draw(lock, x - 4, y, 0, cw/128) end
   elseif com.level and com.level > 2 then
     G.setColor(255,255,255)
     --акции
@@ -289,7 +289,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
       side = side + 1
     end
     E:new(companys)
-    :set({pos = c, side = side, num = i, mortgage_alpha = 0})
+    :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0})
     :draw(render[rules_group[rules_company[i].group].draw])
     c = c + 1
   end

@@ -3,11 +3,22 @@ menuplayer = E:new(screen):menu({
 	{text = 'Buy company', action = human_buy_company},
 	{text = 'Auction', action = human_auction},
 	{text = 'Mortgage', action = nil},
-	{text = 'Shares', action = nil},
+	{text = 'Shares', action = function() 
+		for k, v in pairs(companys._child) do
+			v:animate({all_alpha = 255}, 0.7)
+		end 
+		gui_done:menutoggle(menuplayer)
+	end},
 	{text = 'Trade', action = nil}
 }):hide()
 end_move = E:new(menuplayer):move(272, 120):button('End turn', turn):hide()
 
+gui_done = E:new(screen):move(272, 180):button('Done', function() 
+	gui_done:menutoggle(menuplayer)
+	for k, v in pairs(companys._child) do
+		v:animate({all_alpha = 0})
+	end 
+end):hide()
 
 gamemenu = E:new(screen):hide()
 menuvsettings = E:new(gamemenu):hide()
