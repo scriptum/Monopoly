@@ -309,6 +309,7 @@ human_play = function()
       menuplayer._child[1]:hide()
     end
   else
+    menuplayer._child[1]:hide()
     menuplayer._child[2]:hide()
   end
   menuplayer:show()
@@ -389,10 +390,10 @@ gogo = function()
 -- выбор игрок живой илди комп
 	if initplayers[buf.k] == 'Computer' then
 	  ai(buf)
-	  print(initplayers[buf.k])
+--	  print(initplayers[buf.k])
 	else
 	  human_play(buf)
-	  print(initplayers[buf.k])
+--	  print(initplayers[buf.k])
 	end
 	statistics[buf.pos] = statistics[buf.pos] + 1
       end})
