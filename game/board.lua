@@ -298,7 +298,6 @@ for i = 1, field_width*2 + field_height*2 + 4 do
     :draw(render[rules_group[rules_company[i].group].draw])
     :mouseover(function(s) s:animate({logo_hover = 255}) end)
     :mouseout(function(s) s:animate({logo_hover = 0}) end)
-    :click(human_click_company)
     c = c + 1
   end
 end

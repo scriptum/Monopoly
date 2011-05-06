@@ -8,14 +8,14 @@ menuplayer = E:new(playermenu):menu({
 		for k, v in pairs(companys._child) do
 			v:animate({all_alpha = 255}, 0.7)
 		end 
-		gui_done:menutoggle(menuplayer)
+		gui_shares_done:menutoggle(menuplayer)
 	end},
 	{text = 'Trade', action = nil}
 }):hide()
 end_move = E:new(menuplayer):move(272, 120):button('End turn', turn):hide()
 
-gui_done = E:new(playermenu):move(272, 180):button('Done', function() 
-	gui_done:menutoggle(menuplayer)
+gui_shares_done = E:new(playermenu):move(272, 180):button('Done', function() 
+	gui_shares_done:menutoggle(menuplayer)
 	for k, v in pairs(companys._child) do
 		v:animate({all_alpha = 0})
 	end 

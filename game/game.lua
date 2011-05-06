@@ -448,7 +448,19 @@ end
 human_click_company = function(company)
 --Тут пишем обработку в зависимости от того в какой момент была нажата компания
 --company имеет тип Entity!!!
+  local pl = player._child[current_player]
+  if gui_shares_done._visible == true then
+    buybons_company(pl, rules_company[company.num])
+    print('buybons_company')
+  else
+    buy_company(pl, rules_company[company.num])
+    print('buy_company')
+  end
 end
+
+for k, v in pairs(companys._child) do
+  v:click(human_click_company)
+end 
 
 turn = function()
   menuplayer:hide()
