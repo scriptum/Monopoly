@@ -1,7 +1,7 @@
 --меню для игрока
 menuplayer = E:new(screen):menu({
 	{text = 'Buy company', action = human_buy_company},
-	{text = 'Auction', action = nil},
+	{text = 'Auction', action = human_auction},
 	{text = 'Mortgage', action = nil},
 	{text = 'Shares', action = nil},
 	{text = 'Trade', action = nil}

@@ -439,6 +439,12 @@ human_buy_company = function()
   end_move:show()
 end
 
+human_auction = function()
+  menuplayer._child[1]:hide()
+  menuplayer._child[2]:hide()
+  end_move:show()
+end
+
 turn = function()
   menuplayer:hide()
   local pl = player._child[current_player]
