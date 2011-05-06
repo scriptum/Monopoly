@@ -1,6 +1,6 @@
 function Entity:button(text, action)
   self.text = text or ''
-  if action then self._click = action end
+  self._click = action
   self._draw = ui_style.button.draw
   self._bound = Entity.bounds.rectangle
   self.w = ui_style.button.w

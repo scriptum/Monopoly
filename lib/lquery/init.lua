@@ -94,13 +94,13 @@ local function events(v)
 end
 
 local function process_entities(ent)
-  if ent._animQueue then 
-    animate(ent) 
-  end
-  if ent._control then --if mouse controlled
-    events(ent)
-  end
-  if ent._visible == true then
+  if ent._visible == true then 
+    if ent._animQueue then 
+      animate(ent) 
+    end
+    if ent._control then --if mouse controlled
+      events(ent)
+    end
     if ent._draw then 
       G.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
       if ent.blendMode then G.setBlendMode(ent.blendMode) else G.setBlendMode('alpha') end
