@@ -112,7 +112,7 @@ end
 --ф-я рендеринга для нормальной компании
 render.company = function(s)
   local i = s.pos
-  local x, y = get_xy(i, s.side)
+  x, y = get_xy(i, s.side)
   local _x, _y = x, y
   local sx = (cw - cell_padding*2)/16
   local sy = (ch - cell_padding*2)/16
@@ -126,7 +126,11 @@ render.company = function(s)
   G.setColor(255, 255, 255)
   sx = (cw - cell_padding * 2) / 128
   G.draw(rules_company_images[s.num], x, y, 0, sx)
-
+  G.setColor(255, 255, 255, s.logo_hover)
+  G.setBlendMode('additive')
+  G.draw(rules_company_images[s.num], x, y, 0, sx)
+  G.setBlendMode('alpha')
+  G.setColor(255, 255, 255)
   --отрисовка группы
   if com.group then 
     local width = math.min(cw, (ch - cw))
@@ -288,11 +292,12 @@ for i = 1, field_width*2 + field_height*2 + 4 do
       c = 1
       side = side + 1
     end
-    x, y = get_xy(i, side)
+    x, y = get_xy(c, side)
     E:new(companys)
-    :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0, x = x, y = y, w = cw - cell_padding * 2, h = cw - cell_padding * 2})
+    :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0, x = x, y = y, w = cw - cell_padding * 2, h = cw - cell_padding * 2, logo_hover = 0})
     :draw(render[rules_group[rules_company[i].group].draw])
-    :mousemove(function(s) s:animate({all_alpha = 255}) end)
+    :mouseover(function(s) s:animate({logo_hover = 255}) end)
+    :mouseout(function(s) s:animate({logo_hover = 0}) end)
     c = c + 1
   end
 end
