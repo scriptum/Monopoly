@@ -1,6 +1,6 @@
 max = field_width*2 + field_height*2 + 4
 
-new_game = function()
+start_new_game = function()
   player:stop()
   for k = 1, 5 do
     x, y = getplayerxy(1, k)
@@ -15,6 +15,15 @@ new_game = function()
   end
   __i = 1
   gogo(player)
+end
+
+new_game = function()
+  for k = 1, 5 do
+    if initplayers[k] ~= 'Empty' then
+      start_new_game()
+      break
+    end
+  end
 end
 
 --получить позицию игрока основываясь на номере клетке и самого игрока (нужно для смещения)
@@ -43,6 +52,7 @@ end
 __i = 1
 double = 1
 __max = 5
+current_player = 1
 
 -- Пересчет монополий
 conversion_monopoly = function(pl, company)
@@ -287,6 +297,23 @@ ai = function(pl)
   player:delay({speed = 0, cb = function()pl:stop('blend'):set({blend_alpha = 0})end})
 end
 
+-- Функция игрока
+human_play = function()
+  local pl = player._child[current_player]
+  local company = rules_company[pl.pos]
+  if company.type == 'company' then
+    menuplayer._child[2]:show()
+    if pl.cash >= company.money[1] then
+      menuplayer._child[1]:show()
+    else
+      menuplayer._child[1]:hide()
+    end
+  else
+    menuplayer._child[2]:hide()
+  end
+  menuplayer:show()
+end
+
 --бросок кубиков
 roll = function()
   math.randomseed(os.time() + time + math.random(99999))
@@ -301,8 +328,8 @@ statistics = {
 0,0,0,0,0,0,0,0,0,0}
 
 -- Функция перемещения игрока по полю.
-gogo = function(s)
-  local buf = s._child[__i]
+gogo = function()
+  local buf = player._child[__i]
   if buf.ingame == false or (buf.jail == 4 and double > 1) then 
     double = 1
     __i = __i + 1
@@ -314,7 +341,7 @@ gogo = function(s)
       buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
       buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
     end})
-      
+    current_player = __i
     if lquery_fx == true then
       --звук костей
       local i = math.random(1,6)
@@ -325,13 +352,13 @@ gogo = function(s)
       sound_dice[j]:setPitch(0.8 + math.random()/3)
       A.play(sound_dice[j])
       for i = 1, 19 do
-	s:delay({queue = 'roll', speed = i/200, callback = roll})
+	buf:delay({queue = 'roll', speed = i/200, callback = roll})
       end
     else
-      s:delay({queue = 'roll', speed = 0, callback = roll})
+      buf:delay({queue = 'roll', speed = 0, callback = roll})
     end
 
-    s:delay({queue = 'roll', speed = 1, callback = function(s)
+    buf:delay({queue = 'roll', speed = 1, callback = function(s)
       local fromjail = false
       if buf.jail > 0 then
 	if ds1 == ds2 then
@@ -347,7 +374,7 @@ gogo = function(s)
 	  buf.jail = 0
 	end
       end
-      local buf = s._child[__i]
+--      local buf = player._child[__i]
       local add_money = false
       if buf.pos + ds1 + ds2 > max then
 	add_money = true
@@ -357,10 +384,17 @@ gogo = function(s)
 	if add_money == true then
 	  money_transfer(200, buf)
 	end
-	local cell = rules_company[s.pos]
-	if cell.action then cell.action(s) end
-	ai(s)
-	statistics[s.pos] = statistics[s.pos] + 1
+	local cell = rules_company[buf.pos]
+	if cell.action then cell.action(buf) end
+-- выбор игрок живой илди комп
+	if initplayers[buf.k] == 'Computer' then
+	  ai(buf)
+	  print(initplayers[buf.k])
+	else
+	  human_play(buf)
+	  print(initplayers[buf.k])
+	end
+	statistics[buf.pos] = statistics[buf.pos] + 1
       end})
       if ds1 ~= ds2 or fromjail == true then
 	__i = __i + 1
@@ -391,7 +425,15 @@ for k = 1, 5 do
   :draw(player_draw)
 end
 
-new_game()
+start_new_game()
+
+human_buy_company = function()
+  local pl = player._child[current_player]
+  local company = rules_company[pl.pos]
+  buy_company(pl, company)
+  menuplayer._child[1]:hide()
+  menuplayer._child[2]:hide()
+end
 
 function love.keyreleased( key, unicode )
    if key == "1" then
