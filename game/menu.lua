@@ -6,7 +6,7 @@ menuplayer = E:new(screen):menu({
 	{text = 'Shares', action = nil},
 	{text = 'Trade', action = nil}
 }):hide()
-end_move = E:new(menuplayer):move(272, 120):button('End turn', gogo):hide()
+end_move = E:new(menuplayer):move(272, 120):button('End turn', turn):hide()
 
 
 gamemenu = E:new(screen):hide()

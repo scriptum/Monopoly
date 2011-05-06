@@ -301,7 +301,7 @@ end
 human_play = function()
   local pl = player._child[current_player]
   local company = rules_company[pl.pos]
-  if company.type == 'company' then
+  if company.type == 'company' and not company.owner then
     end_move:hide()
     menuplayer._child[2]:show()
     if pl.cash >= company.money[1] then
@@ -437,6 +437,13 @@ human_buy_company = function()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
   end_move:show()
+end
+
+turn = function()
+  menuplayer:hide()
+  local pl = player._child[current_player]
+  pl:stop('blend'):set({blend_alpha = 0})
+  gogo()
 end
 
 function love.keyreleased( key, unicode )
