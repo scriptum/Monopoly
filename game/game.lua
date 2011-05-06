@@ -302,6 +302,7 @@ human_play = function()
   local pl = player._child[current_player]
   local company = rules_company[pl.pos]
   if company.type == 'company' then
+    end_move:hide()
     menuplayer._child[2]:show()
     if pl.cash >= company.money[1] then
       menuplayer._child[1]:show()
@@ -311,6 +312,7 @@ human_play = function()
   else
     menuplayer._child[1]:hide()
     menuplayer._child[2]:hide()
+    end_move:show()
   end
   menuplayer:show()
 end
@@ -434,6 +436,7 @@ human_buy_company = function()
   buy_company(pl, company)
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
+  end_move:show()
 end
 
 function love.keyreleased( key, unicode )
