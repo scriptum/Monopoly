@@ -288,9 +288,11 @@ for i = 1, field_width*2 + field_height*2 + 4 do
       c = 1
       side = side + 1
     end
+    x, y = get_xy(i, side)
     E:new(companys)
-    :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0})
+    :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0, x = x, y = y, w = cw - cell_padding * 2, h = cw - cell_padding * 2})
     :draw(render[rules_group[rules_company[i].group].draw])
+    :mousemove(function(s) s:animate({all_alpha = 255}) end)
     c = c + 1
   end
 end
