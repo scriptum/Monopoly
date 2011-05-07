@@ -162,7 +162,11 @@ end
 buybons_company = function(pl, company)
   if company.owner == pl and company.level >= 2 and company.level < 7 and company.group ~= "oil" and 
 	    company.group ~= "bank" and pl.cash > rules_group[company.group].upgrade then
-    player:delay({speed = 0, cb = function() company.level = company.level + 1 end})
+    if initplayers[current_player] == 'Human' then
+      company.level = company.level + 1
+    else
+      player:delay({speed = 0, cb = function() company.level = company.level + 1 end})
+    end
     money_transfer(rules_group[company.group].upgrade * (-1), pl)
     return true
   end
@@ -277,7 +281,7 @@ ai = function(pl)
 
 -- прокачка компаний
   for k,v in pairs(rules_company) do
-    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_group[rules_company[pl.pos].group].upgrade) then
+    if v.type == "company" and v.owner == pl and pl.cash >= (rules_group[v.group].upgrade) then
       if buybons_company(pl, v) == true then
 	player:delay({speed = 0, cb = function() ai(pl) end})
 	return
@@ -286,7 +290,7 @@ ai = function(pl)
   end
   -- выкуп компаний
   for k,v in pairs(rules_company) do
-    if rules_company[pl.pos].type == "company" and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
+    if v.type == "company" and v.owner == pl and pl.cash >= (v.money[1] + 200) then
       if buyout_company(pl, v, k) == true then
 	player:delay({speed = 0, cb = function() ai(pl) end})
 	return
