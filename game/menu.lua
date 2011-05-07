@@ -5,8 +5,9 @@ menuplayer = E:new(playermenu):menu({
 	{text = 'Auction', action = human_auction},
 	{text = 'Mortgage', action = nil},
 	{text = 'Shares', action = function() 
-		for k, v in pairs(companys._child) do
-			v:animate({all_alpha = 255}, 0.7)
+		for k, v in pairs(companys._child) do 
+			local c = rules_company[v.num]
+			if not(c.owner == player._child[current_player] and c.level > 1) then v:animate({all_alpha = 255}, 0.7) end
 		end 
 		gui_shares_done:menutoggle(menuplayer)
 	end},

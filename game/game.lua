@@ -487,11 +487,7 @@ function love.keyreleased( key, unicode )
       player._child[3].cash = player._child[3].cash - 1000
    end
    if key == "f" then 
-     if lquery_fx == true then
-       lquery_fx = false
-     else
-       lquery_fx = true
-     end
+     lquery_fx = not lquery_fx 
    end
    if key == "escape" then
      gamemenu:toggle()
