@@ -501,8 +501,11 @@ end
 human_auction = function()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
+  click_end_move = true
   end_move:show()
 end
+
+click_end_move = false
 
 human_click_company = function(company)
 --Тут пишем обработку в зависимости от того в какой момент была нажата компания
@@ -515,7 +518,7 @@ human_click_company = function(company)
     mortgage_company(pl, rules_company[company.num], company.num)
     if pl.cash > 0 then
       game_ower:hide()
-      if rules_company[pl.pos].type == 'company' and not rules_company[pl.pos].owner then
+      if rules_company[pl.pos].type == 'company' and not rules_company[pl.pos].owner and click_end_move ~= true then
 	menuplayer._child[2]:show()
 	if pl.cash >= rules_company[pl.pos].money[1] then
 	  menuplayer._child[1]:show()
@@ -547,6 +550,7 @@ turn = function()
   menuplayer:hide()
   local pl = player._child[current_player]
   pl:stop('blend'):set({blend_alpha = 0})
+  click_end_move = false
   gogo()
 end
 
