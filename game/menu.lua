@@ -33,23 +33,23 @@ menuplayer = E:new(playermenu):menu({
 }):hide()
 end_move = E:new(menuplayer):move(272, 120):button('End turn', turn):hide()
 
-game_ower = E:new(menuplayer):move(272, 120):button('Surrender', game_ower):hide()
+game_ower = E:new(menuplayer):move(272, 194):button('Surrender', game_ower):hide()
 
-gui_shares_done = E:new(playermenu):move(272, 180):button('Done', function() 
+gui_shares_done = E:new(playermenu):move(272, 194):button('Done', function() 
 	gui_shares_done:menutoggle(menuplayer)
 	for k, v in pairs(companys._child) do
 		v:animate({all_alpha = 0})
 	end 
 end):hide()
 
-gui_mortgage_done = E:new(playermenu):move(272, 180):button('Done', function() 
+gui_mortgage_done = E:new(playermenu):move(272, 194):button('Done', function() 
 	gui_mortgage_done:menutoggle(menuplayer)
 	for k, v in pairs(companys._child) do
 		v:animate({all_alpha = 0})
 	end 
 end):hide()
 
-gui_trade_done = E:new(playermenu):move(272, 180):button('Done', function() 
+gui_trade_done = E:new(playermenu):move(272, 194):button('Done', function() 
 	gui_trade_done:menutoggle(menuplayer)
 	for k, v in pairs(companys._child) do
 		v:animate({all_alpha = 0})
