@@ -3,20 +3,54 @@ playermenu = E:new(screen)
 menuplayer = E:new(playermenu):menu({
 	{text = 'Buy company', action = human_buy_company},
 	{text = 'Auction', action = human_auction},
-	{text = 'Mortgage', action = nil},
+	{text = 'Mortgage', action = function() 
+		for k, v in pairs(companys._child) do 
+			local c = rules_company[v.num]
+			if not(c.owner == player._child[current_player] and c.level > 0) then
+			  v:animate({all_alpha = 255}, 0.7)
+			end
+		end 
+		gui_mortgage_done:menutoggle(menuplayer)
+	end},
 	{text = 'Shares', action = function() 
 		for k, v in pairs(companys._child) do 
 			local c = rules_company[v.num]
-			if not(c.owner == player._child[current_player] and c.level > 1) then v:animate({all_alpha = 255}, 0.7) end
+			if not(c.owner == player._child[current_player] and c.level > 1) or (c.group == 'oil' or c.group == 'bank') then
+			  v:animate({all_alpha = 255}, 0.7)
+			end
 		end 
 		gui_shares_done:menutoggle(menuplayer)
 	end},
-	{text = 'Trade', action = nil}
+	{text = 'Trade', action = function() 
+		for k, v in pairs(companys._child) do 
+			local c = rules_company[v.num]
+			if not(c.owner == player._child[current_player] and c.level == 0) then
+			  v:animate({all_alpha = 255}, 0.7)
+			end
+		end 
+		gui_trade_done:menutoggle(menuplayer)
+	end}
 }):hide()
 end_move = E:new(menuplayer):move(272, 120):button('End turn', turn):hide()
 
+game_ower = E:new(menuplayer):move(272, 120):button('Surrender', game_ower):hide()
+
 gui_shares_done = E:new(playermenu):move(272, 180):button('Done', function() 
 	gui_shares_done:menutoggle(menuplayer)
+	for k, v in pairs(companys._child) do
+		v:animate({all_alpha = 0})
+	end 
+end):hide()
+
+gui_mortgage_done = E:new(playermenu):move(272, 180):button('Done', function() 
+	gui_mortgage_done:menutoggle(menuplayer)
+	for k, v in pairs(companys._child) do
+		v:animate({all_alpha = 0})
+	end 
+end):hide()
+
+gui_trade_done = E:new(playermenu):move(272, 180):button('Done', function() 
+	gui_trade_done:menutoggle(menuplayer)
 	for k, v in pairs(companys._child) do
 		v:animate({all_alpha = 0})
 	end 

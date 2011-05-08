@@ -215,6 +215,7 @@ end]]
 
 angles = {1, 13, 20, 32}
 
+--функция движения по полю
 moove = function(pl, x)
   if pl.jail == 0 then
     local pl_x, pl_y
@@ -317,6 +318,12 @@ human_play = function()
     menuplayer._child[1]:hide()
     menuplayer._child[2]:hide()
     end_move:show()
+  end
+  if pl.cash < 0 then
+    game_ower:show()
+    menuplayer._child[1]:hide()
+    menuplayer._child[2]:hide()
+    end_move:hide()
   end
   menuplayer:show()
 end
@@ -434,6 +441,7 @@ end
 
 start_new_game()
 
+-- Обработка клика покупки компании
 human_buy_company = function()
   local pl = player._child[current_player]
   local company = rules_company[pl.pos]
@@ -443,6 +451,7 @@ human_buy_company = function()
   end_move:show()
 end
 
+-- Функция обработки кнопки аукцион
 human_auction = function()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
@@ -456,6 +465,16 @@ human_click_company = function(company)
   if gui_shares_done._visible == true then
     buybons_company(pl, rules_company[company.num])
     print('buybons_company')
+  elseif gui_mortgage_done._visible == true then
+    mortgage_company(pl, rules_company[company.num], company.num)
+    if pl.cash > 0 then
+      game_ower:hide()
+      end_move:show()
+    end
+    print('mortgage_company')
+  elseif gui_trade_done._visible == true then
+    buyout_company(pl, rules_company[company.num], company.num)
+    print('buyout_company')
   else
     buy_company(pl, rules_company[company.num])
     company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
@@ -467,10 +486,28 @@ for k, v in pairs(companys._child) do
   v:click(human_click_company)
 end 
 
+-- Обработка кнопки переход хода
 turn = function()
   menuplayer:hide()
   local pl = player._child[current_player]
   pl:stop('blend'):set({blend_alpha = 0})
+  gogo()
+end
+
+game_ower = function()
+  menuplayer:hide()
+  local pl = player._child[current_player]
+  pl:stop('blend'):set({blend_alpha = 0})
+  for k,v in pairs(rules_company) do
+    if v.owner == pl then
+      v.owner = nil
+      v.level = 1
+      companys._child[k].mortgage_alpha = 0
+    end
+  end
+  pl.ingame = false
+  pl.pos = 1
+  sound_out:play()
   gogo()
 end
 
