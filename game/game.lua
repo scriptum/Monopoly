@@ -13,6 +13,16 @@ start_new_game = function()
       companys._child[k].mortgage_alpha = 0
     end
   end
+      menuplayer:hide()
+      end_move:hide()
+      game_ower:hide()
+      gui_pay50k:hide()
+      gui_shares_done:hide()
+      gui_mortgage_done:hide()
+      gui_trade_done:hide()
+      gamemenu:hide()
+      menuvsettings:hide()
+      menusingle:hide()
   __i = 1
   gogo(player)
 end
@@ -21,6 +31,16 @@ new_game = function()
   for k = 1, 5 do
     if initplayers[k] ~= 'Empty' then
       start_new_game()
+      menuplayer:hide()
+      end_move:hide()
+      game_ower:hide()
+      gui_pay50k:hide()
+      gui_shares_done:hide()
+      gui_mortgage_done:hide()
+      gui_trade_done:hide()
+      gamemenu:hide()
+      menuvsettings:hide()
+      menusingle:hide()
       break
     end
   end
@@ -503,7 +523,7 @@ human_click_company = function(company)
     mortgage_company(pl, rules_company[company.num], company.num)
     if pl.cash > 0 then
       game_ower:hide()
-      if rules_company[pl.pos].type == 'company' then
+      if rules_company[pl.pos].type == 'company' and not rules_company[pl.pos].owner then
 	menuplayer._child[2]:show()
 	if pl.cash >= rules_company[pl.pos].money[1] then
 	  menuplayer._child[1]:show()
