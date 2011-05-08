@@ -225,7 +225,7 @@ rules_company =
   },
 
   {
-    name = "Сбербанк",
+    name = "Bank of America",
     type = "company",
     group = "bank",
     money = {150, 7, 20},
@@ -255,7 +255,7 @@ rules_company =
   },
 
   {
-    name = "Лукойл",
+    name = "Chevron",
     type = "company",
     group = "oil",
     money = {200, 50},
@@ -286,7 +286,7 @@ rules_company =
   },
 
   {
-    name = "АШАН",
+    name = "Auchan",
     type = "company",
     group = "market",
     money = {140, 10, 50, 150, 450, 625, 750},
@@ -294,7 +294,7 @@ rules_company =
   },
 
   {
-    name = "Мегафон",
+    name = "AT&T",
     type = "company",
     group = "mobile",
     money = {180, 14, 70, 200, 550, 750, 950},
@@ -309,7 +309,7 @@ rules_company =
   },
 
   {
-    name = "Билайн",
+    name = "Vodafone",
     type = "company",
     group = "mobile",
     money = {180, 14, 70, 200, 550, 750, 950},
@@ -317,7 +317,7 @@ rules_company =
   },
 
   {
-    name = "МТС",
+    name = "Beeline",
     type = "company",
     group = "mobile",
     money = {200, 16, 80, 220, 600, 800, 1000},
@@ -372,7 +372,7 @@ rules_company =
   },
 
   {
-    name = "ВТБ",
+    name = "Citigroup",
     type = "company",
     group = "bank",
     money = {150, 7, 20},
@@ -402,7 +402,7 @@ rules_company =
   },
 
   {
-    name = "Татнефть",
+    name = "ExonMobil",
     type = "company",
     group = "oil",
     money = {200, 50},
