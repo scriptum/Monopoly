@@ -344,7 +344,7 @@ human_play = function()
       menuplayer._child[1]:hide()
     end
   else
-    if pl.jail > 1 then
+    if pl.jail > 1 and pl.cash >= 50 then
       gui_pay50k:show()
     end
     menuplayer._child[1]:hide()
@@ -411,12 +411,13 @@ gogo = function()
 	if ds1 == ds2 then
 	  buf.jail = 0
 	  fromjail = true
+	  if initplayers[buf.k] == 'Human' then gui_pay50k:hide() end
 	elseif buf.jail > 2 then
 	  buf.jail = buf.jail - 1
 	elseif buf.jail == 2 then
 	  buf.jail = buf.jail - 1
 	  money_transfer(-50, buf)
-	  buf.cash = buf.cash - 50
+--	  buf.cash = buf.cash - 50
 	else
 	  buf.jail = 0
 	end
@@ -555,11 +556,14 @@ game_ower = function()
   gogo()
 end
 
+--  нопка оплаты выхода из тюрьмы
 pay50k = function()
   local pl = player._child[current_player]
-  money_transfer(-50, pl)
+  if pl.cash >= 50 then
+    money_transfer(-50, pl)
+    pl.jail = 0
+  end
   gui_pay50k:hide()
-  pl.jail = 0
 end
 
 playermenu_getvisible = false
