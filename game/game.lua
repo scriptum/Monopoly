@@ -92,7 +92,7 @@ end
 
 -- покупка компании
 buy_company = function(pl, company)
-  if not company.owner and company.type == "company" and pl.cash > company.money[1] then 
+  if not company.owner and company.type == "company" and pl.cash >= company.money[1] then 
     player:delay({speed = 0, cb = function() 
       company.owner = pl
       conversion_monopoly(pl, company)
@@ -491,21 +491,27 @@ human_click_company = function(company)
   local pl = player._child[current_player]
   if gui_shares_done._visible == true then
     buybons_company(pl, rules_company[company.num])
-    print('buybons_company')
+--    print('buybons_company')
   elseif gui_mortgage_done._visible == true then
     mortgage_company(pl, rules_company[company.num], company.num)
     if pl.cash > 0 then
       game_ower:hide()
-      end_move:show()
+      menuplayer._child[2]:show()
+      if pl.cash >= rules_company[company.num].money[1] then
+	menuplayer._child[1]:show()
+      else
+	menuplayer._child[1]:hide()
+      end
+--      end_move:show()
     end
-    print('mortgage_company')
+--    print('mortgage_company')
   elseif gui_trade_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
-    print('buyout_company')
+--    print('buyout_company')
   else
     buy_company(pl, rules_company[company.num])
     company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
-    print('buy_company')
+--    print('buy_company')
   end
 end
 
@@ -521,6 +527,7 @@ turn = function()
   gogo()
 end
 
+-- Обработка кнопки Сдаться
 game_ower = function()
   menuplayer:hide()
   local pl = player._child[current_player]
@@ -537,6 +544,8 @@ game_ower = function()
   sound_out:play()
   gogo()
 end
+
+playermenu_getvisible = false
 
 function love.keyreleased( key, unicode )
    if key == "1" then
@@ -559,7 +568,13 @@ function love.keyreleased( key, unicode )
    end
    if key == "escape" then
      gamemenu:toggle()
-     --playermenu:toggle()
+     if playermenu._visible == true then
+       playermenu:toggle()
+       playermenu_getvisible = true
+     elseif playermenu_getvisible == true then
+       playermenu_getvisible = false
+       playermenu:toggle()
+     end
      board_gui:toggle()
    end
 end
