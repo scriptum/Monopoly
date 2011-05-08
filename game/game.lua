@@ -266,6 +266,7 @@ moove = function(pl, x)
   end
 end
 
+--////////////////*****************************AI*****************************////////////////
 -- искусственный интеллект
 ai = function(pl)
 -- если денег меньше нуля - закладываем компании
@@ -329,6 +330,7 @@ ai = function(pl)
   player:delay({speed = 0, cb = function()pl:stop('blend'):set({blend_alpha = 0})end})
 end
 
+--////////////////*****************************HUMAN_PLAY*****************************////////////////
 -- Функция игрока
 human_play = function()
   local pl = player._child[current_player]
@@ -342,6 +344,9 @@ human_play = function()
       menuplayer._child[1]:hide()
     end
   else
+    if pl.jail > 1 then
+      gui_pay50k:show()
+    end
     menuplayer._child[1]:hide()
     menuplayer._child[2]:hide()
     end_move:show()
@@ -368,6 +373,7 @@ statistics = {
 0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0}
 
+--////////////////*****************************GOGO*****************************////////////////
 -- Функция перемещения игрока по полю.
 gogo = function()
   local buf = player._child[__i]
@@ -547,6 +553,13 @@ game_ower = function()
   pl.pos = 1
   sound_out:play()
   gogo()
+end
+
+pay50k = function()
+  local pl = player._child[current_player]
+  money_transfer(-50, pl)
+  gui_pay50k:hide()
+  pl.jail = 0
 end
 
 playermenu_getvisible = false

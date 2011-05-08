@@ -35,6 +35,8 @@ end_move = E:new(menuplayer):move(272, 120):button('End turn', turn):hide()
 
 game_ower = E:new(menuplayer):move(272, 194):button('Surrender', game_ower):hide()
 
+gui_pay50k = E:new(menuplayer):move(272, 194):button('Pay $ 50 K', pay50k):hide()
+
 gui_shares_done = E:new(playermenu):move(272, 194):button('Done', function() 
 	gui_shares_done:menutoggle(menuplayer)
 	for k, v in pairs(companys._child) do
