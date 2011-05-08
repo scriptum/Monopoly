@@ -351,7 +351,7 @@ E:new(board_gui):draw(dice_draw):move(ch + 10, ch + 10)
 
 --анимация передачи денех
 coins = E:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
-money_transfer_param = {speed = 1, cb = function(s) s:hide() s.a = 255 end}
+money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
 money_transfer = function(money, from, to)
   if to then 
     from.cash = from.cash - money
@@ -363,7 +363,8 @@ money_transfer = function(money, from, to)
     if lquery_fx == true then
       A.play(sound_coin)
     end
-    coins:move(from.x + 3, from.y):show()
+    coins:stop():move(from.x + 3, from.y):show()
+    coins.a = 255
     if to then
       coins:animate({x = to.x + 3, y = to.y}, money_transfer_param)
     else
@@ -375,7 +376,7 @@ money_transfer = function(money, from, to)
       end
     end
   end})
-  player:delay(1)
+  if initplayers[current_player] == 'Computer' then player:delay(1) end
 end
 
 
