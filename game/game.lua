@@ -21,16 +21,16 @@ new_game = function()
   for k = 1, 5 do
     if initplayers[k] ~= 'Empty' then
       start_new_game()
-      menuplayer:hide()
-      end_move:hide()
+--      menuplayer:hide()
+--      end_move:hide()
       game_ower:hide()
-      gui_pay50k:hide()
-      gui_shares_done:hide()
-      gui_mortgage_done:hide()
-      gui_trade_done:hide()
-      gamemenu:hide()
-      menuvsettings:hide()
-      menusingle:hide()
+--      gui_pay50k:hide()
+--      gui_shares_done:hide()
+--      gui_mortgage_done:hide()
+--      gui_trade_done:hide()
+--      gamemenu:hide()
+--      menuvsettings:hide()
+--      menusingle:hide()
       break
     end
   end
@@ -427,9 +427,11 @@ gogo = function()
 	elseif buf.jail == 2 then
 	  buf.jail = buf.jail - 1
 	  money_transfer(-50, buf)
+	  if initplayers[buf.k] == 'Human' then gui_pay50k:hide() end
 --	  buf.cash = buf.cash - 50
 	else
 	  buf.jail = 0
+	  if initplayers[buf.k] == 'Human' then gui_pay50k:hide() end
 	end
       end
 --      local buf = player._child[__i]
