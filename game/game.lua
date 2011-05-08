@@ -13,16 +13,6 @@ start_new_game = function()
       companys._child[k].mortgage_alpha = 0
     end
   end
-      menuplayer:hide()
-      end_move:hide()
-      game_ower:hide()
-      gui_pay50k:hide()
-      gui_shares_done:hide()
-      gui_mortgage_done:hide()
-      gui_trade_done:hide()
-      gamemenu:hide()
-      menuvsettings:hide()
-      menusingle:hide()
   __i = 1
   gogo(player)
 end
