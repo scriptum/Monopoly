@@ -496,11 +496,15 @@ human_click_company = function(company)
     mortgage_company(pl, rules_company[company.num], company.num)
     if pl.cash > 0 then
       game_ower:hide()
-      menuplayer._child[2]:show()
-      if pl.cash >= rules_company[company.num].money[1] then
-	menuplayer._child[1]:show()
+      if rules_company[pl.pos].type == 'company' then
+	menuplayer._child[2]:show()
+	if pl.cash >= rules_company[pl.pos].money[1] then
+	  menuplayer._child[1]:show()
+	else
+	  menuplayer._child[1]:hide()
+	end
       else
-	menuplayer._child[1]:hide()
+	end_move:show()
       end
 --      end_move:show()
     end
