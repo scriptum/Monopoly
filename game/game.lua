@@ -109,16 +109,28 @@ mortgage_company = function(pl, company, num)
   local group = 0
   if company.owner == pl and company.type == "company" and company.level > 0 then
     if company.group == "oil" or company.group == "bank" then
-      player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) end})
+      if initplayers[current_player] == 'Human' then
+	company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company)
+      else
+	player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) end})
+      end
       money_transfer(company.money[1]/2, pl)
       return true
     else
       if company.level > 2 then
-	player:delay({speed = 0, cb = function() company.level = company.level - 1 conversion_monopoly(pl, company) end})
+	if initplayers[current_player] == 'Human' then
+	  company.level = company.level - 1 conversion_monopoly(pl, company)
+	else
+	  player:delay({speed = 0, cb = function() company.level = company.level - 1 conversion_monopoly(pl, company) end})
+	end
 	money_transfer(rules_group[company.group].upgrade, pl)
 	return true
       elseif company.level == 1 then
-	player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) end})
+	if initplayers[current_player] == 'Human' then
+	  company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company)
+	else
+	  player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) end})
+	end
 	money_transfer(company.money[1]/2, pl)
 	return true
       else
@@ -129,11 +141,20 @@ mortgage_company = function(pl, company, num)
 	  end
 	end
 	if group == #comp then
-	  player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) 
-	    for k,v in pairs(comp) do
-	      if v.level > 1 then v.level = 1 end
-	    end 
-	  end})
+	  if initplayers[current_player] == 'Human' then
+	    company.level = 0
+	    companys._child[num]:animate({mortgage_alpha = 255})
+	    conversion_monopoly(pl, company) 
+	      for k,v in pairs(comp) do
+		if v.level > 1 then v.level = 1 end
+	      end
+	  else
+	    player:delay({speed = 0, cb = function() company.level = 0 companys._child[num]:animate({mortgage_alpha = 255}) conversion_monopoly(pl, company) 
+	      for k,v in pairs(comp) do
+		if v.level > 1 then v.level = 1 end
+	      end 
+	    end})
+	  end
 	  --print("pledge_company: "..company.name.." cash: "..company.money[1]/2)
 	  money_transfer(company.money[1]/2, pl)
 	  return true
@@ -147,11 +168,17 @@ end
 -- Выкуп компаний
 buyout_company = function(pl, company, num)
   if company.owner == pl and company.type == "company" and company.level == 0 and pl.cash > company.money[1] then
-    player:delay({speed = 0, cb = function() 
-      company.level = 1 
+    if initplayers[current_player] == 'Human' then
+      company.level = 1
       conversion_monopoly(pl, company) 
       companys._child[num]:animate({mortgage_alpha = 0, cb = function(s)s.mortgage_alpha=0 end})
-    end})
+    else
+      player:delay({speed = 0, cb = function() 
+	company.level = 1 
+	conversion_monopoly(pl, company) 
+	companys._child[num]:animate({mortgage_alpha = 0, cb = function(s)s.mortgage_alpha=0 end})
+      end})
+    end
     money_transfer(company.money[1]*(-1), pl)
     return true
   end
