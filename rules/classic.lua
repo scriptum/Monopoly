@@ -273,8 +273,8 @@ rules_company =
   {
     name = "Jail",
     type = "big",
-    group = "big"
---    action = action_jail_value
+    group = "big",
+    action = action_jail_value
   },
   
   {
