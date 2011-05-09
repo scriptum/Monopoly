@@ -586,6 +586,63 @@ pay50k = function()
   gui_pay50k:hide()
 end
 
+human_mortgage = function() 
+  gui_text.text = l.mortgage_help
+  for k, v in pairs(companys._child) do 
+    local c = rules_company[v.num]
+    if c.owner ~= player._child[current_player] or not c.owner then
+      v:animate({all_alpha = 255}, 0.7)
+    end
+  end 
+  gui_mortgage_done:menutoggle(menuplayer)
+end
+
+human_unmortgage = function() 
+  gui_text.text = l.unmortgage_help
+  for k, v in pairs(companys._child) do 
+    local c = rules_company[v.num]
+    if not(c.owner == player._child[current_player] and c.level == 0) then
+      v:animate({all_alpha = 255}, 0.7)
+    end
+  end 
+  gui_unmortgage_done:menutoggle(menuplayer)
+end
+
+human_shares = function() 
+  gui_text.text = l.shares_help
+  for k, v in pairs(companys._child) do 
+    local c = rules_company[v.num]
+    if not(c.owner == player._child[current_player] and c.level > 1) or (c.group == 'oil' or c.group == 'bank') then
+      v:animate({all_alpha = 255}, 0.7)
+    end
+  end 
+  gui_shares_done:menutoggle(menuplayer)
+end
+
+human_shares_done = function() 
+  gui_text.text = ''
+  gui_shares_done:menutoggle(menuplayer)
+  for k, v in pairs(companys._child) do
+    v:animate({all_alpha = 0})
+  end 
+end
+
+human_mortgage_done = function() 
+  gui_text.text = ''
+  gui_mortgage_done:menutoggle(menuplayer)
+  for k, v in pairs(companys._child) do
+    v:animate({all_alpha = 0})
+  end 
+end
+
+human_unmortgage_done = function() 
+  gui_text.text = ''
+  gui_unmortgage_done:menutoggle(menuplayer)
+  for k, v in pairs(companys._child) do
+    v:animate({all_alpha = 0})
+  end 
+end
+
 auction_buyer = {0,0}
 
 auction = function(pl, company, sum)
