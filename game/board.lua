@@ -322,14 +322,14 @@ player_draw = function(s)
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx) 
     if gamemenu._visible == false then 
       G.fontSize = 20
-      Gprint(money(s.cash), ch+45, ch+90 + s.k*40)
-      G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*40, 0, sx)
+      Gprint(money(s.cash), ch+45, ch+55 + s.k*36)
+      G.draw(rules_player_images[s.k], ch+10, ch+55 + s.k*36, 0, sx)
     end
     G.setBlendMode('additive')
     G.setColor(255,255,255,s.blend_alpha)
     G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
     
-    if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+90 + s.k*40, 0, sx) end
+    if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+55 + s.k*36, 0, sx) end
     G.setBlendMode('alpha')
     
     if s.jail > 0 then 
