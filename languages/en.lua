@@ -19,12 +19,13 @@ multiplayer = 'Multiplayer',
 settings = 'Settings',
 quit = 'Quit',
 human = 'Human',
+player = 'player',
 computer = 'Computer',
 empty = 'Empty',
 start = 'Start',
 fullscreen = 'fullscreen',
 windowed = 'windowed',
-mortgage_help = 'Click on the companies that want to mortgage. Click "Done" at the end',
-unmortgage_help = 'Click on the companies that want to unmortgage. If a company has shares, clicking sell one share. Click "Done" at the end',
-shares_help = 'Click on the company to buy one share. Click "Done" at the end'
+mortgage_help = 'Click on the companies that want to mortgage. Click "Done" at the end.',
+unmortgage_help = 'Click on the companies that want to unmortgage. If a company has shares, clicking sells one share. Click "Done" at the end.',
+shares_help = 'Click on the company to buy one share. Click "Done" at the end.'
 }
