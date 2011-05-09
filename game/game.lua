@@ -14,23 +14,26 @@ start_new_game = function()
     end
   end
   __i = 1
-  gogo(player)
+  gogo()
 end
 
 new_game = function()
   for k = 1, 5 do
     if initplayers[k] ~= 'Empty' then
       start_new_game()
---      menuplayer:hide()
---      end_move:hide()
-      game_ower:hide()
---      gui_pay50k:hide()
---      gui_shares_done:hide()
---      gui_mortgage_done:hide()
---      gui_trade_done:hide()
---      gamemenu:hide()
+      menuplayer:hide() -- меню опций игрока
+      end_move:hide() -- кнопка перехода хода
+      game_ower:hide() -- кнопка Сдаться
+--      gui_pay50k:hide() -- заплатить 50К и выйти из тюрьмы
+--      gui_shares_done:hide() -- покупка акций
+--      gui_mortgage_done:hide() -- кнопка Готово после залога
+--      gui_trade_done:hide() -- кнопка Готово после продажи компании
+      gamemenu:hide() -- Меню игры, вызываемое по эскейпу
 --      menuvsettings:hide()
 --      menusingle:hide()
+      playermenu:show() -- родитель menuplayer
+      board_gui:show() -- родитель отрисовки игроков с ценами в центре доски
+      playermenu_getvisible = false
       break
     end
   end
