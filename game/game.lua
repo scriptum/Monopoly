@@ -102,7 +102,7 @@ end
 
 -- ïîêóïêà êîìïàíèè
 buy_company = function(pl, company, money)
-  if money == 0 then money = company.money[1]
+  if money == nil then money = company.money[1] end
   if not company.owner and company.type == "company" and pl.cash >= money then 
     player:delay({speed = 0, cb = function() 
       company.owner = pl
@@ -590,34 +590,31 @@ auction = function(pl, company, sum)
   local start_for = pl.k + 1
   local j = 0
   local auction_buy = false
+
   for i = start_for, stop_for do
     j = i
     if j > #player._child then j = j - #player._child end
-    if player._child[j], company, sum + 0.1*sum.ingame == true and player._child[j].cash >= sum then
+    if player._child[j].ingame == true and player._child[j].cash >= sum then
       if initplayers[buf.k] == 'Computer' then
 	auction_buy = auction_ai(player._child[j], company, sum + 0.1*sum)
 	if auction_buy == true then
 	  auction_buyer[1] = player._child[j]
 	  auction_buyer[2] = sum + 0.1*sum
 	  auction(player._child[j], company, sum + 0.1*sum)
-	  break
+--	  break
 	  return
 	end
       else
 	auction_human(player._child[j], company, sum + 0.1*sum)
-	break
+	return
       end
     end
---    if auction_buy == false and auction_buyer ~= 0 then
---      bye_company(pl, company, sum)
---      auction_buyer = 0
---    elseif  auction_buy == false and auction_buyer ~= 0 then
---    end
   end
+
 end
 
 auction_ai = function(pl, company, sum)
-  if pl.cash >= sum and sum <= (sompany.money[1] + sompany.money[1]*0.5) then
+  if pl.cash >= sum and sum <= (company.money[1] + company.money[1]*0.5) then
     return true
   else
     return false
