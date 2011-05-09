@@ -94,6 +94,7 @@ end
 cashback_chance = function(player)
  math.randomseed(os.time() + time + math.random(99999))
  local chance = math.random(1, #rules_chance)
+ gui_text.text = 'Шанс: ' .. rules_chance[chance].text
  money_transfer(rules_chance[chance].money, player)
 -- print("Chance: "..rules_chance[chance].money)
 end
@@ -102,6 +103,7 @@ end
 cashback_treasury = function(player)
  math.randomseed(os.time() + time + math.random(99999))
  local treasury = math.random(1, #rules_treasury)
+ gui_text.text = 'Казна: ' .. rules_treasury[treasury].text
  money_transfer(rules_treasury[treasury].money, player)
 -- print("Treasury: "..rules_chance[treasury].money)
 end
@@ -273,7 +275,7 @@ rules_company =
   {
     name = "Jail",
     type = "big",
-    group = "big"
+    group = "big",
     action = action_jail_value
   },
   
@@ -603,7 +605,7 @@ rules_treasury = {
 rules_company_images = {}
 --load images
 for k, v in pairs(rules_company) do
-  table.insert(rules_company_images, G.newImage('data/gfx/eng/'..k..'.png'))
+  table.insert(rules_company_images, G.newImage('data/gfx/logos/'..k..'.png'))
 end
 
 --предварительная загрузка картинок с группами в память

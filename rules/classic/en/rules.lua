@@ -75,6 +75,14 @@ action_bank = function(player)
  end
 end
 
+
+local jail_reason = 
+{
+  '¬ы€снилось, что вы давно уже в розыске. ќтправл€йтесь в тюрьму',
+  '—отрудники таможни обнаружили нарушени€ в накладных. ќтправл€йтесь в тюрьму',
+  '¬ пылу споры вы ударили сотрудника таможни, чем ввели его в €рость. ќтправл€йтесь в тюрьму',
+  '¬аши конкуренты устроили вам подставу, и вас признали виновным. ќтправл€йтесь в тюрьму',
+}
 -- Ёкшн таможни
 action_jail = function(pl)
   pl.pos = 13
@@ -83,11 +91,15 @@ action_jail = function(pl)
   pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
   player:delay(1)
   if lquery_fx == true then A.play(sound_jail) end
+  gui_text.text = jail_reason[math.random(1, #jail_reason)]
 end
 
 -- Ёкшн тюрьмы
 action_jail_value = function(player)
- if player.jail == 0  and math.random(1, 5) == 1 then action_jail(player) end
+  if player.jail == 0 and math.random(1, 5) == 1 then 
+    action_jail(player)
+  end
+  gui_text.text = '” работников таможни к вам нет никаких претензий'
 end
 
 -- Ёкш шанса
@@ -605,14 +617,14 @@ rules_treasury = {
 rules_company_images = {}
 --load images
 for k, v in pairs(rules_company) do
-  table.insert(rules_company_images, G.newImage('data/gfx/eng/'..k..'.png'))
+  table.insert(rules_company_images, G.newImage('rules/classic/en/logos/'..k..'.png'))
 end
 
 --предварительна€ загрузка картинок с группами в пам€ть
 rules_group_images = {}
 for k, v in pairs(rules_group) do 
   if v.image then
-    rules_group_images[k] = G.newImage('data/gfx/blue_icons/'..v.image)
+    rules_group_images[k] = G.newImage('rules/classic/icons/'..v.image)
   end
 end
 --предварительна€ загрузка картинок с игроками в пам€ть
@@ -620,3 +632,7 @@ rules_player_images = {}
 for k, v in pairs(rules_player_img) do 
   table.insert(rules_player_images, G.newImage('data/gfx/player/'..v))
 end
+
+--акции
+action = G.newImage('rules/classic/icons/document.png')
+all_actions = G.newImage('rules/classic/icons/briefcase.png')
