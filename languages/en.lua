@@ -2,6 +2,7 @@ l = {
 buy_company = 'Buy company',
 auction = 'Auction',
 mortgage = 'Mortgage',
+unmortgage = 'Unmortgage',
 shares = 'Shares',
 trade = 'Trade',
 end_turn = 'End turn',
