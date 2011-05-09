@@ -8,8 +8,6 @@ dice = {}
 for i = 1,6 do
 	dice[i] = G.newImage('data/gfx/dice/'..i..'.png')
 end
-action = G.newImage('data/gfx/blue_icons/document.png')
-all_actions = G.newImage('data/gfx/blue_icons/briefcase.png')
 
 sound_dice = {}
 for i = 1,6 do
