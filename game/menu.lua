@@ -9,7 +9,7 @@ E:new(menuplayer):size(128, 32):move(126, 450):button(l.mortgage, function()
   gui_text.text = l.mortgage_help
   for k, v in pairs(companys._child) do 
     local c = rules_company[v.num]
-    if not(c.owner == player._child[current_player] and c.level > 0) then
+    if c.owner ~= player._child[current_player] or not c.owner then
       v:animate({all_alpha = 255}, 0.7)
     end
   end 
