@@ -183,7 +183,7 @@ render.company = function(s)
     
     G.setColor(255,255,255,s.mortgage_alpha)
     if s.side == 3 then y = 600 - cw end
-    if com.level == 0 then G.draw(lock, x - 4, y, 0, cw/128) end
+    if com.level == 0 and s.all_alpha == 0 then G.draw(lock, x - 4, y, 0, cw/128) end
   elseif com.level and com.level > 2 then
     G.setColor(255,255,255)
     --акции
