@@ -348,7 +348,11 @@ dice_draw = function(s)
 end
 
 E:new(board_gui):draw(dice_draw):move(ch + 10, ch + 10)
-
+gui_text = E:new(board_gui):draw(function(s)
+  G.fontSize = 20
+  Gprintf(s.text, ch + 158, ch + 20, 800 - ch * 2 - 168)
+end)
+gui_text.text = ''
 --анимация передачи денех
 coins = E:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
 money_transfer_param = {speed = 1, cb = function(s) s:hide() end}

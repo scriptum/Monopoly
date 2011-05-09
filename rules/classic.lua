@@ -94,6 +94,7 @@ end
 cashback_chance = function(player)
  math.randomseed(os.time() + time + math.random(99999))
  local chance = math.random(1, #rules_chance)
+ gui_text.text = 'Шанс: ' .. rules_chance[chance].text
  money_transfer(rules_chance[chance].money, player)
 -- print("Chance: "..rules_chance[chance].money)
 end
@@ -102,6 +103,7 @@ end
 cashback_treasury = function(player)
  math.randomseed(os.time() + time + math.random(99999))
  local treasury = math.random(1, #rules_treasury)
+ gui_text.text = 'Казна: ' .. rules_treasury[treasury].text
  money_transfer(rules_treasury[treasury].money, player)
 -- print("Treasury: "..rules_chance[treasury].money)
 end
@@ -480,42 +482,42 @@ rules_chance = {
   type = "chance",
   action = cashback,
   money = 150,
-  text = "Возврат займа\nполучите 150К"
+  text = "Возврат займа\nполучите $ 150 К"
  },
 
 {
 type = "chance",
 action =  cashback,
 money = 100,
-text = "Вы выиграли чемпионат по шахматам\nполучите 100К"
+text = "Вы выиграли чемпионат по шахматам\nполучите $ 100 К"
 },
 
  {
   type = "chance",
   action = cashback,
   money = 50,
-  text = "Банковские дивиденты\nполучите 50К"
+  text = "Банковские дивиденты\nполучите $ 50 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = -15,
-  text = "Штраф за превышение скорости\nзаплатите 15К"
+  text = "Штраф за превышение скорости\nзаплатите $ 15 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = -20,
-  text = "Вождение в нетрезвом виде\nштраф 20К"
+  text = "Вождение в нетрезвом виде\nштраф $ 20 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = -150,
-  text = "Оплата курсов водителей\nзаплатите 150К"
+  text = "Оплата курсов водителей\nзаплатите $ 150 К"
  }
 }
 
@@ -525,77 +527,77 @@ rules_treasury = {
   type = "treasury",
   action = cashback,
   money = 200,
-  text = "Банковская ошибка в вашу пользу\nполучите 200К"
+  text = "Банковская ошибка в вашу пользу\nполучите $ 200 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Выгодная продажа акций\nполучите 25К"
+  text = "Выгодная продажа акций\nполучите $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -50,
-  text = "Оплата страховки\nзаплатите 50К"
+  text = "Оплата страховки\nзаплатите $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Выгодная продажа акций\nполучите 25К"
+  text = "Выгодная продажа акций\nполучите $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 100,
-  text = "Сбор ренты\nполучите 100К"
+  text = "Сбор ренты\nполучите $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Возмещение налога\nполучите 25К"
+  text = "Возмещение налога\nполучите $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 100,
-  text = "Вы получили наследство\nполучите 100К"
+  text = "Вы получили наследство\nполучите $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -50,
-  text = "Оплата услуг доктора\nзаплатите 50К"
+  text = "Оплата услуг доктора\nзаплатите $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -100,
-  text = "Оплата лечения\nзаплатите 100К"
+  text = "Оплата лечения\nзаплатите $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 50,
-  text = "Выгодная продажа облигаций\nполучите 50К"
+  text = "Выгодная продажа облигаций\nполучите $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 10,
-  text = "вы заняли второе место на конкурсе красоту\nполучите 10К"
+  text = "вы заняли второе место на конкурсе красоту\nполучите $ 10 К"
  }
 }
 
