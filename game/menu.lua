@@ -6,6 +6,7 @@ E:new(menuplayer):move(126, 360):button(l.buy_company, human_buy_company)
 E:new(menuplayer):move(418, 360):button(l.auction, human_auction)
 
 E:new(menuplayer):size(128, 32):move(126, 450):button(l.mortgage, function() 
+  gui_text.text = l.mortgage_help
   for k, v in pairs(companys._child) do 
     local c = rules_company[v.num]
     if not(c.owner == player._child[current_player] and c.level > 0) then
@@ -15,15 +16,17 @@ E:new(menuplayer):size(128, 32):move(126, 450):button(l.mortgage, function()
   gui_mortgage_done:menutoggle(menuplayer)
 end)
 E:new(menuplayer):size(128, 32):move(266, 450):button(l.unmortgage, function() 
+  gui_text.text = l.unmortgage_help
   for k, v in pairs(companys._child) do 
     local c = rules_company[v.num]
     if not(c.owner == player._child[current_player] and c.level == 0) then
       v:animate({all_alpha = 255}, 0.7)
     end
   end 
-  gui_trade_done:menutoggle(menuplayer)
+  gui_unmortgage_done:menutoggle(menuplayer)
 end)
 E:new(menuplayer):size(128, 32):move(406, 450):button(l.shares, function() 
+  gui_text.text = l.shares_help
   for k, v in pairs(companys._child) do 
     local c = rules_company[v.num]
     if not(c.owner == player._child[current_player] and c.level > 1) or (c.group == 'oil' or c.group == 'bank') then
@@ -43,24 +46,27 @@ game_ower = E:new(menuplayer):move(418, 360):button(l.surrender, game_ower):hide
 gui_pay50k = E:new(menuplayer):move(418, 360):button(l.pay_50_K, pay50k):hide()
 
 gui_shares_done = E:new(playermenu):move(272, 360):button(l.done, function() 
-	gui_shares_done:menutoggle(menuplayer)
-	for k, v in pairs(companys._child) do
-		v:animate({all_alpha = 0})
-	end 
+  gui_text.text = ''
+  gui_shares_done:menutoggle(menuplayer)
+  for k, v in pairs(companys._child) do
+    v:animate({all_alpha = 0})
+  end 
 end):hide()
 
 gui_mortgage_done = E:new(playermenu):move(272, 360):button(l.done, function() 
-	gui_mortgage_done:menutoggle(menuplayer)
-	for k, v in pairs(companys._child) do
-		v:animate({all_alpha = 0})
-	end 
+  gui_text.text = ''
+  gui_mortgage_done:menutoggle(menuplayer)
+  for k, v in pairs(companys._child) do
+    v:animate({all_alpha = 0})
+  end 
 end):hide()
 
-gui_trade_done = E:new(playermenu):move(272, 194):button(l.done, function() 
-	gui_trade_done:menutoggle(menuplayer)
-	for k, v in pairs(companys._child) do
-		v:animate({all_alpha = 0})
-	end 
+gui_unmortgage_done = E:new(playermenu):move(272, 360):button(l.done, function() 
+  gui_text.text = ''
+  gui_unmortgage_done:menutoggle(menuplayer)
+  for k, v in pairs(companys._child) do
+    v:animate({all_alpha = 0})
+  end 
 end):hide()
 
 gamemenu = E:new(screen):hide()
