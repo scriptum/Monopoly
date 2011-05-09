@@ -1,7 +1,7 @@
 return {
   button = {
     image = G.newImage('data/gfx/menu-button.png'),
-    font = G.newFont('data/fonts/ru.ttf', 32),
+    --font = G.newFont('data/fonts/ru.ttf', 32),
     font_color = {0,0,0,255},
     w = 256, h = 64,
     normal = {
@@ -11,6 +11,7 @@ return {
       quad = G.newQuad(0, 64, 256, 64, 256, 128)
     },
     draw = function(s)
+      G.fontSize = s.fontSize or 30 * s.w / ui_style.button.w
       --normal
       G.drawq(ui_style.button.image, ui_style.button.normal.quad, s.x, s.y, s.angle, s.sx, s.sy)
       --hover
@@ -21,13 +22,13 @@ return {
       if s.text then
         if ui_style.button.font then G.setFont(ui_style.button.font) end
         G.setColor(255,255,255, s.a*s.a/255/2) 
-        G.printf(s.text, s.x+1, 1+s.y+(s.h - ui_style.button.font:getHeight())/2, s.w, 'center')
+        Gprintf(s.text, s.x+1, 1+s.y+(s.h - G.fontSize)/2, s.w, 'center')
         
         if ui_style.button.font_color then 
           local c = ui_style.button.font_color
           G.setColor(c[1],c[2],c[3],s.a*c[4]/255)
         end
-        G.printf(s.text, s.x, s.y+(s.h - ui_style.button.font:getHeight())/2, s.w, 'center')
+        Gprintf(s.text, s.x, s.y+(s.h - G.fontSize)/2, s.w, 'center')
         
       end
       --G.setColor(255, 255, 255, s.a)
