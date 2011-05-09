@@ -102,7 +102,7 @@ end
 
 -- покупка компании
 buy_company = function(pl, company, money)
-  if money == nil then money = company.money[1] end
+  if not money and company.type == "company" then money = company.money[1] end
   if not company.owner and company.type == "company" and pl.cash >= money then 
     player:delay({speed = 0, cb = function() 
       company.owner = pl
