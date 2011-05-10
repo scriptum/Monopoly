@@ -13,6 +13,13 @@ start_new_game = function()
       companys._child[k].mortgage_alpha = 0
     end
   end
+  not_buy = false
+  playermenu_getvisible = false
+  current_player = 1
+  click_end_move = false
+  auction_buyer = {0,0}
+  num = #player._child - 1
+  double = 1
   __i = 1
   gogo()
 end
@@ -32,7 +39,6 @@ new_game = function()
 --      menusingle:hide()
       playermenu:show() -- родитель menuplayer
       board_gui:show() -- родитель отрисовки игроков с ценами в центре доски
-      playermenu_getvisible = false
       start_new_game()
       break
     end
@@ -62,10 +68,8 @@ getplayerxy = function(n, k)
   return x + cell_padding, y + cell_padding
 end
 
-__i = 1
-double = 1
+
 __max = 5
-current_player = 1
 
 -- Пересчет монополий
 conversion_monopoly = function(pl, company)
@@ -105,15 +109,17 @@ end
 
 -- покупка компании
 buy_company = function(pl, company, money)
-  if not money and company.type == "company" then money = company.money[1] end
-  if not company.owner and company.type == "company" and pl.cash >= money then 
+  if not money and rules_company[company].type == "company" then money = rules_company[company].money[1] end
+  if not rules_company[company].owner and rules_company[company].type == "company" and pl.cash >= money then 
     player:delay({speed = 0, cb = function() 
-      company.owner = pl
-      conversion_monopoly(pl, company)
-      companys._child[pl.pos]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+      rules_company[company].owner = pl
+      conversion_monopoly(pl, rules_company[company])
+      companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
     end})
     money_transfer(money * (-1), pl)
     return true
+  else
+    return false
   end
 end
 
@@ -273,8 +279,14 @@ ai = function(pl)
     end
   end})
   -- покупка компании
-  if buy_company(pl, rules_company[pl.pos])  == true then
+  if not_buy == false and buy_company(pl, pl.pos) == true then
     player:delay({speed = 0, cb = function() ai(pl) end})
+    print('if 1')
+    return
+  elseif not_buy == false and rules_company[pl.pos].type ==  "company" and not rules_company[pl.pos].owner then
+    print('if 2')
+    auction2(pl, pl.pos, rules_company[pl.pos].money[1])
+--    player:delay({speed = 0, cb = function() ai(pl) end})
     return
   end
 -- прокачка компаний
@@ -295,6 +307,7 @@ ai = function(pl)
       end
     end
   end
+  not_buy = false
   player:delay({callback=gogo})
   player:delay({speed = 0, cb = function()pl:stop('blend'):set({blend_alpha = 0})end})
 end
@@ -447,8 +460,8 @@ start_new_game()
 -- Обработка клика покупки компании
 human_buy_company = function()
   local pl = player._child[current_player]
-  local company = rules_company[pl.pos]
-  buy_company(pl, company)
+--  local company = rules_company[pl.pos]
+  buy_company(pl, pl.pos)
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
   end_move:show()
@@ -458,11 +471,9 @@ end
 human_auction = function()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
-  click_end_move = true
-  end_move:show()
+  local pl = player._child[current_player]
+  auction2(pl, rules_company[pl.pos], rules_company[pl.pos].money[1])
 end
-
-click_end_move = false
 
 human_click_company = function(company)
 --Тут пишем обработку в зависимости от того в какой момент была нажата компания
@@ -488,7 +499,7 @@ human_click_company = function(company)
   elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
   else
-    buy_company(pl, rules_company[company.num])
+    buy_company(pl, company.num)
     company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
   end
 end
@@ -503,6 +514,7 @@ turn = function()
   local pl = player._child[current_player]
   pl:stop('blend'):set({blend_alpha = 0})
   click_end_move = false
+  not_buy = false
   gogo()
 end
 
@@ -591,49 +603,62 @@ human_unmortgage_done = function()
   end 
 end
 
-auction_buyer = {0,0}
-
-auction = function(pl, company, sum)
-  local stop_for = start_for + #player._child
-  local start_for = pl.k + 1
-  local j = 0
-  local auction_buy = false
-
-  for i = start_for, stop_for do
-    j = i
-    if j > #player._child then j = j - #player._child end
-    if player._child[j].ingame == true and player._child[j].cash >= sum then
-      if initplayers[buf.k] == 'Computer' then
-	auction_buy = auction_ai(player._child[j], company, sum + 0.1*sum)
-	if auction_buy == true then
-	  auction_buyer[1] = player._child[j]
-	  auction_buyer[2] = sum + 0.1*sum
-	  auction(player._child[j], company, sum + 0.1*sum)
---	  break
-	  return
-	end
-      else
-	auction_human(player._child[j], company, sum + 0.1*sum)
-	return
-      end
+auction2 = function(pl, company, sum)
+  if num > 0 then
+    local i = pl.k + 1
+    print(i)
+    if i > #player._child then i = i - #player._child end
+    if player._child[i].ingame == true and player._child[i].cash >= sum then
+      if initplayers[i] == 'Computer' then auction_ai(player._child[i], company, sum)
+      else auction_human(player._child[i], company, sum) end
+    else
+      num = num - 1
+      auction2(player._child[i], company, sum)
+    end
+  else
+    if auction_buyer[1] ~= 0 then
+      buy_company(player._child[auction_buyer[1]], company, auction_buyer[2])
+      companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+      print('Kto: '..auction_buyer[1]..' za sk: '..auction_buyer[2])
+      not_buy = true
+    end
+    num = #player._child - 1
+    auction_buyer = {0,0}
+    if initplayers[player._child[current_player].k] == 'Human' then
+      click_end_move = true
+      end_move:show()
+    else
+      ai(player._child[current_player])
     end
   end
-
 end
 
 auction_ai = function(pl, company, sum)
-  if pl.cash >= sum and sum <= (company.money[1] + company.money[1]*0.5) then
-    return true
+  local new_sum = math.floor(sum + 0.1*sum)
+  if pl.cash >= sum and sum <= (companys._child[company].money[1] + companys._child[company].money[1]*0.5) then
+    num = #player._child - 1
+    auction_buyer = {pl.k, sum}
+    auction2(pl, company, new_sum)
   else
-    return false
+    num = num - 1
+    auction2(pl, company, sum)
   end
 end
 
 auction_human = function(pl, company, sum)
-  
+  if pl.cash >= sum then auction_human_go(pl, company, sum)
+  else
+    num = num - 1
+    auction2(pl, company, sum)
+  end
 end
 
-playermenu_getvisible = false
+auction_human_go = function(pl, company, sum)
+  local new_sum = math.floor(sum + 0.1*sum)
+  num = #player._child - 1
+  auction_buyer = {pl.k, sum}
+  auction2(pl, company, new_sum)
+end
 
 function love.keyreleased( key, unicode )
    if key == "1" then
@@ -646,7 +671,7 @@ function love.keyreleased( key, unicode )
       player._child[1].cash = player._child[1].cash + 100
    end
    if key == "2" then
-      player._child[2].cash = player._child[2].cash - 1000
+      player._child[2].cash = player._child[2].cash - 1500
    end
    if key == "3" then
       player._child[3].cash = player._child[3].cash - 1000
