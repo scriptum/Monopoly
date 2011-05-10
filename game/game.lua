@@ -169,7 +169,6 @@ mortgage_company = function(pl, company, num)
 	      end 
 	    end})
 	  end
-	  --print("pledge_company: "..company.name.." cash: "..company.money[1]/2)
 	  money_transfer(company.money[1]/2, pl)
 	  return true
 	end
@@ -213,46 +212,6 @@ buybons_company = function(pl, company)
   end
   return false
 end
-
---[[
--- Вылет из игры
-gameout = function(pl)
-  for k,v in pairs(rules_company) do
-    if v.owner == pl then
-      v.owner = nil
-      v.level = 1
-      companys._child[k].mortgage_alpha = 0
-    end
-  end
-  pl.ingame = false
-end
-
-comp = 0
--- Функция залога компаний для AI
-mortgage_ai = function(pl)
-  if pl.cash < 0 then
-    for k,v in pairs(rules_company) do
-      mortgage_company(pl, v, k)
-      if pl.cash >= 0 then break end
-    end
-    if pl.cash < 0 then
-      print("if")
-      player:delay({speed=0, cb = function()
-	for k,v in pairs(rules_company) do
-	  if v.owner == pl and v.level > 0 then
-	    comp = 1
-	    break
-	  end
-	end
-	print(comp)
-	if comp == 1 then
-	  comp = 0
-	  mortgage_ai(pl)
-	end
-      end})
-    end
-  end
-end]]
 
 angles = {1, 13, 20, 32}
 
@@ -298,7 +257,6 @@ ai = function(pl)
       end
     end
   end
-
   -- игрок вылетает
   player:delay({speed = 0, cb = function()
     if pl.cash < 0 then
@@ -314,14 +272,11 @@ ai = function(pl)
       sound_out:play()
     end
   end})
-
---  if rules_company[pl.pos].type == "company" and not rules_company[pl.pos].owner and pl.cash >= (rules_company[pl.pos].money[1] + 200) then
-    if buy_company(pl, rules_company[pl.pos])  == true then
-      player:delay({speed = 0, cb = function() ai(pl) end})
-      return
-    end
---  end
-
+  -- покупка компании
+  if buy_company(pl, rules_company[pl.pos])  == true then
+    player:delay({speed = 0, cb = function() ai(pl) end})
+    return
+  end
 -- прокачка компаний
   for k,v in pairs(rules_company) do
     if v.type == "company" and v.owner == pl and pl.cash >= (rules_group[v.group].upgrade) then
@@ -395,8 +350,7 @@ gogo = function()
     double = 1
     __i = __i + 1
     if __i > #player._child then __i = 1 end
-    --player:delay({callback=gogo})
-    gogo(s)
+    gogo()
   else 
     player:delay({speed = 0, cb = function()
       buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
@@ -453,10 +407,8 @@ gogo = function()
 -- выбор игрок живой илди комп
 	if initplayers[buf.k] == 'Computer' then
 	  ai(buf)
---	  print(initplayers[buf.k])
 	else
 	  human_play(buf)
---	  print(initplayers[buf.k])
 	end
 	statistics[buf.pos] = statistics[buf.pos] + 1
       end})
@@ -517,7 +469,6 @@ human_click_company = function(company)
   local pl = player._child[current_player]
   if gui_shares_done._visible == true then
     buybons_company(pl, rules_company[company.num])
---    print('buybons_company')
   elseif gui_mortgage_done._visible == true then
     mortgage_company(pl, rules_company[company.num], company.num)
     if pl.cash > 0 then
@@ -532,16 +483,12 @@ human_click_company = function(company)
       else
 	end_move:show()
       end
---      end_move:show()
     end
---    print('mortgage_company')
   elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
---    print('buyout_company')
   else
     buy_company(pl, rules_company[company.num])
     company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
---    print('buy_company')
   end
 end
 
