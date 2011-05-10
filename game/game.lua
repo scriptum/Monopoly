@@ -535,7 +535,7 @@ human_click_company = function(company)
 --      end_move:show()
     end
 --    print('mortgage_company')
-  elseif gui_trade_done._visible == true then
+  elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
 --    print('buyout_company')
   else
