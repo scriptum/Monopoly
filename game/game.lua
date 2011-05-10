@@ -606,7 +606,6 @@ end
 auction2 = function(pl, company, sum)
   if num > 0 then
     local i = pl.k + 1
-    print(i)
     if i > #player._child then i = i - #player._child end
     if player._child[i].ingame == true and player._child[i].cash >= sum then
       if initplayers[i] == 'Computer' then auction_ai(player._child[i], company, sum)
@@ -619,7 +618,6 @@ auction2 = function(pl, company, sum)
     if auction_buyer[1] ~= 0 then
       buy_company(player._child[auction_buyer[1]], company, auction_buyer[2])
       companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
-      print('Kto: '..auction_buyer[1]..' za sk: '..auction_buyer[2])
     end
     not_buy = true
     num = #player._child - 1
