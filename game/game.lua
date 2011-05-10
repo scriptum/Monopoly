@@ -472,7 +472,7 @@ human_auction = function()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
   local pl = player._child[current_player]
-  auction2(pl, rules_company[pl.pos], rules_company[pl.pos].money[1])
+  auction2(pl, pl.pos, rules_company[pl.pos].money[1])
 end
 
 human_click_company = function(company)
