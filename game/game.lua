@@ -423,6 +423,7 @@ gogo = function()
 	if jquery_fx then sound_jail:play() end
 	local x, y = getplayerxy(cell_jail, buf.k)
 	buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+	gui_text.text = '¬ас поймали на подтосовке результата бросков. ќтправл€йтесь в тюрьму'
 	player:delay({callback=gogo})
 	double = 1
 	buf.jail = 4
