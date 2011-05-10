@@ -1,42 +1,4 @@
-field_width = 11 --компаний по горизонтали
-field_height = 6 --компаний по вертикали
-cell_jail = 13 --на какой клетке тюрьма
---картинки для игроков
-rules_player_img = {
-  'player_blue.png',
-  'player_green.png',
-  'player_red.png',
-  'player_sea.png',
-  'player_yellow.png'
-}
-
-rules_player_colors = {
-{0,0,255},
-{0,255,0},
-{255,0,0},
-{0,255,255},
-{255,255,0}
-}
-
--- Экшн обычных компаний
-action_company = function(player)
- local level = rules_company[player.pos].level
- local money = rules_company[player.pos].money
- local cell = rules_company[player.pos]
- local cash
- if cell.owner and cell.owner ~= player and level > 0 then
-  if level == 1 then
-   cash = money[2]
-  elseif level == 2 then
-   cash = money[2] * 2
-  else
-   cash = money[level]
-  end  
-  money_transfer(cash, player, cell.owner)
- end
-end
-
-local nalog_reason = {
+reason_tax = {
   'Неожиданно пришла налоговая. Вы не успели спрятать документы',
   'Друзья много болтали о ваших успехах и налоговая тоже услышала',
   'У вас нашли ошибки в декларации о налогах. Заплатите штраф',
@@ -44,13 +6,7 @@ local nalog_reason = {
   'С вас требуют взятку. Лучше все-таки дать эту взятку...'
 }
 
--- Налог
-action_nalog = function(player)
-  money_transfer(-rules_company[player.pos].money, player)
-  gui_text.text = nalog_reason[math.random(1, #nalog_reason)]
-end
-
-local oil_reason = {
+reason_oil = {
   'Нефтяные магнаты сговорились и снова подняли цены на бензин',
   'НЕОЖИДАННО пришла зима, власти были не готовы. Спрос на мазут подскочил',	
   'Авария на нефтяном месторождении спровоцировала новый скачок цен',
@@ -58,24 +14,7 @@ local oil_reason = {
   'Цены на нефть растут быстрее, чем прогнозировали аналитики'
 }
 
--- Экш нефтяных компаний
-action_oil = function(player)
- local level = rules_company[player.pos].level
- local money = rules_company[player.pos].money
- local cell = rules_company[player.pos]
- local cash
- if cell.owner and cell.owner ~= player and level > 0 then
-  if level == 3 then
-   cash = money[2]
-  else
-   cash = money[2] * 2 ^ (level - 3)
-  end
-  money_transfer(cash, player, cell.owner)
-  gui_text.text = oil_reason[math.random(1, #oil_reason)]
- end
-end
-
-local bank_reason = {
+reason_bank = {
   'На заседании центробанка было объявлено о повышении процентных ставок',
   'Вы просрочили платежи по кредиту. Заплатите штраф',	
   'Вы не прочитали условия по кредиту мелким шрифтом. Заплатите штраф',
@@ -83,69 +22,12 @@ local bank_reason = {
   'Долговые банковские вексиля анулированы. Вы несете убытки'
 }
 
--- Экш банковских компаний
-action_bank = function(player)
- local level = rules_company[player.pos].level
- local money = rules_company[player.pos].money
- local cell = rules_company[player.pos]
- local cash
- if cell.owner and cell.owner ~= player and level > 0 then
-  if level == 3 then
-   cash = (ds1 + ds2) * money[2]
-  else
-   cash = (ds1 + ds2) * money[3]
-  end
-  money_transfer(cash, player, cell.owner)
-  gui_text.text = bank_reason[math.random(1, #bank_reason)]
- end
-end
-
-
-local jail_reason = 
-{
+reason_jail = {
   'Выяснилось, что вы давно уже в розыске. Отправляйтесь в тюрьму',
   'Сотрудники таможни обнаружили нарушения в накладных. Отправляйтесь в тюрьму',
   'В пылу спора вы ударили сотрудника таможни, чем ввели его в ярость. Отправляйтесь в тюрьму',
   'Ваши конкуренты устроили вам подставу, и вас признали виновным. Отправляйтесь в тюрьму',
 }
--- Экшн таможни
-action_jail = function(pl)
-  pl.pos = 13
-  pl.jail = 4
-  local x, y = getplayerxy(13, pl.k)
-  pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
-  player:delay(1)
-  if lquery_fx == true then A.play(sound_jail) end
-  gui_text.text = jail_reason[math.random(1, #jail_reason)]
-end
-
--- Экшн тюрьмы
-action_jail_value = function(player)
-  if player.jail == 0 and math.random(1, 5) == 1 then 
-    action_jail(player)
-    gui_text.text = 'Когда вы были на экскурсии в тюрьме - сотрудник узнал в Вас опасного приступника. Вас посадили'
-  elseif player.jail == 0 then
-    gui_text.text = 'У работников тюрьмы к вам нет никаких претензий'
-  end
-end
-
--- Экш шанса
-cashback_chance = function(player)
- math.randomseed(os.time() + time + math.random(99999))
- local chance = math.random(1, #rules_chance)
- gui_text.text = 'Шанс: ' .. rules_chance[chance].text
- money_transfer(rules_chance[chance].money, player)
--- print("Chance: "..rules_chance[chance].money)
-end
-
--- Экш казны
-cashback_treasury = function(player)
- math.randomseed(os.time() + time + math.random(99999))
- local treasury = math.random(1, #rules_treasury)
- gui_text.text = 'Казна: ' .. rules_treasury[treasury].text
- money_transfer(rules_treasury[treasury].money, player)
--- print("Treasury: "..rules_chance[treasury].money)
-end
 
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
@@ -689,12 +571,3 @@ for k, v in pairs(rules_group) do
     rules_group_images[k] = G.newImage('rules/classic/icons/'..v.image)
   end
 end
---предварительная загрузка картинок с игроками в память
-rules_player_images = {}
-for k, v in pairs(rules_player_img) do 
-  table.insert(rules_player_images, G.newImage('data/gfx/player/'..v))
-end
-
---акции
-action = G.newImage('rules/classic/icons/document.png')
-all_actions = G.newImage('rules/classic/icons/briefcase.png')
