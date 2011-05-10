@@ -635,7 +635,7 @@ end
 
 auction_ai = function(pl, company, sum)
   local new_sum = math.floor(sum + 0.1*sum)
-  if pl.cash >= sum and sum <= (companys._child[company].money[1] + companys._child[company].money[1]*0.5) then
+  if pl.cash >= sum and sum <= (rules_company[company].money[1] + rules_company[company].money[1]*0.5) then
     num = #player._child - 1
     auction_buyer = {pl.k, sum}
     auction2(pl, company, new_sum)
