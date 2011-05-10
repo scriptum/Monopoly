@@ -620,8 +620,8 @@ auction2 = function(pl, company, sum)
       buy_company(player._child[auction_buyer[1]], company, auction_buyer[2])
       companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
       print('Kto: '..auction_buyer[1]..' za sk: '..auction_buyer[2])
-      not_buy = true
     end
+    not_buy = true
     num = #player._child - 1
     auction_buyer = {0,0}
     if initplayers[player._child[current_player].k] == 'Human' then
