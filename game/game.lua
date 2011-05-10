@@ -281,10 +281,8 @@ ai = function(pl)
   -- покупка компании
   if not_buy == false and buy_company(pl, pl.pos) == true then
     player:delay({speed = 0, cb = function() ai(pl) end})
-    print('if 1')
     return
   elseif not_buy == false and rules_company[pl.pos].type ==  "company" and not rules_company[pl.pos].owner then
-    print('if 2')
     auction2(pl, pl.pos, rules_company[pl.pos].money[1])
 --    player:delay({speed = 0, cb = function() ai(pl) end})
     return
