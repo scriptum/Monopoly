@@ -18,6 +18,19 @@ gui_shares_done = E:new(playermenu):move(272, 360):button(l.done, human_shares_d
 gui_mortgage_done = E:new(playermenu):move(272, 360):button(l.done, human_mortgage_done):hide()
 gui_unmortgage_done = E:new(playermenu):move(272, 360):button(l.done, human_unmortgage_done):hide()
 
+
+manuauction = E:new(playermenu)
+gui_auction_text = E:new(manuauction):text('$ 100 K', 30):move(126, 375)
+local w, h, sx = 91, 32, 280
+E:new(manuauction):size(w, h):move(sx, 360):button('+1', nil)
+E:new(manuauction):size(w, h):move(sx, 400):button('-1', nil)
+E:new(manuauction):size(w, h):move(sx+(w+10), 360):button('+10', nil)
+E:new(manuauction):size(w, h):move(sx+(w+10), 400):button('-10', nil)
+E:new(manuauction):size(w, h):move(sx+(w+10)*2, 360):button('+100', nil)
+E:new(manuauction):size(w, h):move(sx+(w+10)*2, 400):button('-100', nil)
+E:new(manuauction):size(w, h):move(sx+(w+10)*3, 360):button('Bid', nil):set({disabled = true})
+E:new(manuauction):size(w, h):move(sx+(w+10)*3, 400):button('Pass', nil)
+
 gamemenu = E:new(screen):hide()
 menuvsettings = E:new(gamemenu):hide()
 

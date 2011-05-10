@@ -11,11 +11,14 @@ return {
       quad = G.newQuad(0, 64, 256, 64, 256, 128)
     },
     draw = function(s)
-      G.fontSize = s.fontSize or 30 * s.w / ui_style.button.w
+      G.fontSize = s.fontSize or 30 * s.h / ui_style.button.h
       --normal
+      if s.disabled == true then 
+        G.setColor(255, 255, 255, 128)
+      end
       G.drawq(ui_style.button.image, ui_style.button.normal.quad, s.x, s.y, s.angle, s.sx, s.sy)
       --hover
-      if s.hover_alpha > 0 then
+      if s.hover_alpha > 0 and s.disabled == false then
         G.setColor(s.r or 255, s.g or 255, s.b or 255, (s.hover_alpha*s.a)/255)
         G.drawq(ui_style.button.image, ui_style.button.hover.quad, s.x, s.y, s.angle, s.sx, s.sy)
       end
