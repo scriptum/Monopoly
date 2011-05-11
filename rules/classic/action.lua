@@ -29,15 +29,19 @@ action_company = function(player)
 	local money = rules_company[player.pos].money
 	local cell = rules_company[player.pos]
 	local cash
-	if cell.owner and cell.owner ~= player and level > 0 then
-		if level == 1 then
-			cash = money[2]
-		elseif level == 2 then
-			cash = money[2] * 2
-		else
-			cash = money[level]
-		end  
-		money_transfer(cash, player, cell.owner)
+	if cell.owner then
+		if cell.owner ~= player and level > 0 then
+			if level == 1 then
+				cash = money[2]
+			elseif level == 2 then
+				cash = money[2] * 2
+			else
+				cash = money[level]
+			end  
+			money_transfer(cash, player, cell.owner)
+		end
+	else
+		gui_text.text = 'Ёта компани€ никем не зан€та. ¬ы можете купить еЄ или выставить на аукцион.'
 	end
 end
 
@@ -96,13 +100,13 @@ end
 action_jail_value = function(player)
   if player.jail == 0 and math.random(1, 5) == 1 then 
     action_jail(player)
-    gui_text.text = ' огда вы были на экскурсии в тюрьме - сотрудник узнал в ¬ас опасного приступника. ¬ас посадили'
+    rnd_txt(reason_jail_2)
   elseif player.jail == 0 then
-    gui_text.text = '” работников тюрьмы к вам нет никаких претензий'
+    gui_text.text = action_phrase.jail
   end
 end
 
--- Ёкш шанса
+-- Ёкшн шанса
 cashback_chance = function(player)
 	math.randomseed(os.time() + time + math.random(99999))
 	local chance = math.random(1, #rules_chance)
@@ -111,7 +115,7 @@ cashback_chance = function(player)
 -- print("Chance: "..rules_chance[chance].money)
 end
 
--- Ёкш казны
+-- Ёкшн казны
 cashback_treasury = function(player)
 	math.randomseed(os.time() + time + math.random(99999))
 	local treasury = math.random(1, #rules_treasury)
@@ -120,6 +124,10 @@ cashback_treasury = function(player)
 -- print("Treasury: "..rules_chance[treasury].money)
 end
 
+-- Ёкшн острова
+action_island = function(player)
+	gui_text.text = action_phrase.island
+end
 
 --предварительна€ загрузка картинок с игроками в пам€ть
 rules_player_images = {}
