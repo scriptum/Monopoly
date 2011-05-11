@@ -41,14 +41,14 @@ action_company = function(player)
 			money_transfer(cash, player, cell.owner)
 		end
 	else
-		gui_text.text = 'Эта компания никем не занята. Вы можете купить её или выставить на аукцион.'
+		gui_text.text = action_phrase.company_free
 	end
 end
 
 -- Налог
 action_nalog = function(player)
   money_transfer(-rules_company[player.pos].money, player)
-  rnd_txt(reason_tax)
+  rnd_txt(rules_group.nalog.phrase)
 end
 
 -- Экш нефтяных компаний
@@ -64,7 +64,7 @@ action_oil = function(player)
 		cash = money[2] * 2 ^ (level - 3)
 	end
 	money_transfer(cash, player, cell.owner)
-	rnd_txt(reason_oil)
+	rnd_txt(rules_group.oil.phrase)
 	end
 end
 
@@ -81,7 +81,7 @@ action_bank = function(player)
 			cash = (ds1 + ds2) * money[3]
 		end
 		money_transfer(cash, player, cell.owner)
-		rnd_txt(reason_bank)
+		rnd_txt(rules_group.bank.phrase)
 	end
 end
 
