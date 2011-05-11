@@ -14,6 +14,8 @@ start_new_game = function()
     end
   end
   not_buy = false
+auction_company = 0
+bid_sum = 0
   playermenu_getvisible = false
   current_player = 1
   click_end_move = false
@@ -470,7 +472,7 @@ human_auction = function()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
   local pl = player._child[current_player]
-  auction2(pl, pl.pos, rules_company[pl.pos].money[1])
+  auction2(pl, pl.pos)
 end
 
 human_click_company = function(company)
@@ -601,59 +603,160 @@ human_unmortgage_done = function()
   end 
 end
 
-auction2 = function(pl, company, sum)
+
+
+auction2 = function(pl, company)
+  if company then
+    auction_company = company
+    auction_buyer[2] = rules_company[auction_company].money[1]
+    bid_sum = auction_buyer[2]
+  end
   if num > 0 then
     local i = pl.k + 1
     if i > #player._child then i = i - #player._child end
-    if player._child[i].ingame == true and player._child[i].cash >= sum then
-      if initplayers[i] == 'Computer' then auction_ai(player._child[i], company, sum)
-      else auction_human(player._child[i], company, sum) end
+    if player._child[i].ingame == true and player._child[i].cash >= auction_buyer[2] then
+      if initplayers[i] == 'Computer' then auction_ai(player._child[i])
+      else auction_human(player._child[i]) end
     else
       num = num - 1
-      auction2(player._child[i], company, sum)
+      auction2(player._child[i])
     end
   else
     if auction_buyer[1] ~= 0 then
-      buy_company(player._child[auction_buyer[1]], company, auction_buyer[2])
-      companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+      buy_company(player._child[auction_buyer[1]], auction_company, auction_buyer[2])
+      companys._child[auction_company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
     end
     not_buy = true
     num = #player._child - 1
     auction_buyer = {0,0}
+    auction_company = 0
+    bid_sum = 0
     if initplayers[player._child[current_player].k] == 'Human' then
       click_end_move = true
       end_move:show()
     else
+      menuplayer:hide()
       ai(player._child[current_player])
     end
   end
 end
 
-auction_ai = function(pl, company, sum)
-  local new_sum = math.floor(sum + 0.1*sum)
-  if pl.cash >= sum and sum <= (rules_company[company].money[1] + rules_company[company].money[1]*0.5) then
+auction_ai = function(pl)
+  local new_sum = auction_buyer[2]
+  if auction_buyer[1] ~= 0 then
+    new_sum = math.floor(auction_buyer[2] + 0.1*auction_buyer[2])
+  end
+  if pl.cash >= new_sum and new_sum <= (rules_company[auction_company].money[1] + rules_company[auction_company].money[1]*0.5) then
     num = #player._child - 1
-    auction_buyer = {pl.k, sum}
-    auction2(pl, company, new_sum)
+    auction_buyer = {pl.k, new_sum}
+    bid_sum = new_sum
+    auction2(pl)
   else
     num = num - 1
-    auction2(pl, company, sum)
+    auction2(pl)
   end
 end
 
-auction_human = function(pl, company, sum)
-  if pl.cash >= sum then auction_human_go(pl, company, sum)
+auction_human_pl = 0
+
+auction_human = function(pl)
+  auction_human_pl = pl
+  manuauction._child[1].text = '$ '..bid_sum..' K'
+  if pl.cash > auction_buyer[2] then
+    manuauction._child[2].disabled = false
+    manuauction._child[3].disabled = true
+    if pl.cash >= auction_buyer[2] + 10 then manuauction._child[4].disabled = false
+    else manuauction._child[4].disabled = false end
+    manuauction._child[5].disabled = true
+    if pl.cash >= auction_buyer[2] + 100 then manuauction._child[6].disabled = false
+    else manuauction._child[6].disabled = true end
+    manuauction._child[7].disabled = true
+    if auction_buyer[2] == 0 then manuauction._child[8].disabled = false
+    else manuauction._child[8].disabled = true end
+    manuauction._child[9].disabled = false
+    manuauction:show()
+    if initplayers[player._child[current_player].k] == 'Computer' then
+      menuplayer:show()
+      menuplayer._child[1]:hide()
+      menuplayer._child[2]:hide()
+    end
   else
     num = num - 1
-    auction2(pl, company, sum)
+    auction2(pl)
   end
 end
 
-auction_human_go = function(pl, company, sum)
-  local new_sum = math.floor(sum + 0.1*sum)
-  num = #player._child - 1
-  auction_buyer = {pl.k, sum}
-  auction2(pl, company, new_sum)
+click_manuauction_button_bid = function()
+    num = #player._child - 1
+    auction_buyer = {auction_human_pl.k, bid_sum}
+    manuauction:hide()
+    auction2(auction_human_pl)
+end
+
+click_manuauction_button_pass = function()
+    num = num - 1
+    manuauction:hide()
+    auction2(auction_human_pl)
+end
+
+click_manuauction_button = function(s)
+  loadstring("bid_sum = bid_sum "..s.text)()
+  manuauction._child[1].text = '$ '..bid_sum..' K'
+  local difference = bid_sum - auction_buyer[2]
+  menuplayer:show()
+  menuplayer._child[1]:hide()
+  menuplayer._child[2]:hide()
+  if difference > 0 then
+--*******************************************************************--
+    if difference < 10 then
+    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    else manuauction._child[2].disabled = true end
+      manuauction._child[3].disabled = false
+    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    else manuauction._child[4].disabled = true end
+      manuauction._child[5].disabled = true
+    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    else manuauction._child[6].disabled = true end
+      manuauction._child[7].disabled = true
+      manuauction._child[8].disabled = false
+--*******************************************************************--
+    elseif difference < 100 then
+    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    else manuauction._child[2].disabled = true end
+      manuauction._child[3].disabled = false
+    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    else manuauction._child[4].disabled = true end
+      manuauction._child[5].disabled = false
+    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    else manuauction._child[6].disabled = true end
+      manuauction._child[7].disabled = true
+      manuauction._child[8].disabled = false
+--*******************************************************************--
+    else
+    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    else manuauction._child[2].disabled = true end
+      manuauction._child[3].disabled = false
+    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    else manuauction._child[4].disabled = true end
+      manuauction._child[5].disabled = false
+    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    else manuauction._child[6].disabled = true end
+      manuauction._child[7].disabled = false
+      manuauction._child[8].disabled = false
+    end
+  else
+    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    else manuauction._child[2].disabled = true end
+    manuauction._child[3].disabled = true
+    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    else manuauction._child[4].disabled = true end
+    manuauction._child[5].disabled = true
+    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    else manuauction._child[6].disabled = true end
+    manuauction._child[7].disabled = true
+    if auction_buyer[2] == 0 then manuauction._child[8].disabled = false
+    else manuauction._child[8].disabled = true end
+  end
 end
 
 function love.keyreleased( key, unicode )
