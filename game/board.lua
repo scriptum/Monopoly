@@ -79,7 +79,7 @@ get_xy = function(i, side)
 end
 
 --ф-я формата денег
-local money = function(m)
+money = function(m)
   if m >= 1000 then
     return '$ ' .. m/1000 .. ' M'
   else

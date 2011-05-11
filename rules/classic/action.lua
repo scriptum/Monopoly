@@ -18,71 +18,80 @@ rules_player_colors = {
 	{255,255,0}
 }
 
-
-local rnd_txt = function(a)
-  gui_text.text = a[math.random(1, #a)]
+local rnd_txt = function(a, s)
+  if s and a then 
+    gui_text.text = a[math.random(1, #a)]:gsub('%%', money(s))
+  elseif a then
+    gui_text.text = a[math.random(1, #a)]
+  end
 end
-
--- Экшн обычных компаний
-action_company = function(player)
+-- общий экшн компаний
+__action_company = function(player, f)
 	local level = rules_company[player.pos].level
 	local money = rules_company[player.pos].money
 	local cell = rules_company[player.pos]
-	local cash
-	if cell.owner then
-		if cell.owner ~= player and level > 0 then
-			if level == 1 then
-				cash = money[2]
-			elseif level == 2 then
-				cash = money[2] * 2
-			else
-				cash = money[level]
-			end  
-			money_transfer(cash, player, cell.owner)
+	if cell.owner then 
+		if cell.owner == player then
+			gui_text.text = action_phrase.company_my
+		elseif level > 0 then
+			f(level, money, cell)
+		else
+		  gui_text.text = action_phrase.company_mortgage
 		end
 	else
 		gui_text.text = action_phrase.company_free
 	end
 end
 
+-- Экшн обычных компаний
+action_company = function(player)
+  __action_company (player, function(level, money, cell)
+    local cash
+    if level == 1 then
+	    cash = money[2]
+    elseif level == 2 then
+	    cash = money[2] * 2
+    else
+	    cash = money[level]
+    end  
+    money_transfer(cash, player, cell.owner)
+    rnd_txt(rules_group[cell.group].phrase, cash)
+  end)
+end
+
 -- Налог
 action_nalog = function(player)
-  money_transfer(-rules_company[player.pos].money, player)
-  rnd_txt(rules_group.nalog.phrase)
+  local m = rules_company[player.pos].money
+  money_transfer(-m, player)
+  rnd_txt(rules_group.nalog.phrase, m)
 end
 
 -- Экш нефтяных компаний
 action_oil = function(player)
-	local level = rules_company[player.pos].level
-	local money = rules_company[player.pos].money
-	local cell = rules_company[player.pos]
-	local cash
-	if cell.owner and cell.owner ~= player and level > 0 then
-	if level == 3 then
-		cash = money[2]
-	else
-		cash = money[2] * 2 ^ (level - 3)
-	end
-	money_transfer(cash, player, cell.owner)
-	rnd_txt(rules_group.oil.phrase)
-	end
+  __action_company (player, function(level, money, cell)
+    local cash
+    if level == 3 then
+	    cash = money[2]
+    else
+	    cash = money[2] * 2 ^ (level - 3)
+    end
+    money_transfer(cash, player, cell.owner)
+    rnd_txt(rules_group.oil.phrase, cash)
+  end)
 end
 
 -- Экш банковских компаний
 action_bank = function(player)
-	local level = rules_company[player.pos].level
-	local money = rules_company[player.pos].money
-	local cell = rules_company[player.pos]
-	local cash
-	if cell.owner and cell.owner ~= player and level > 0 then
-		if level == 3 then
-			cash = (ds1 + ds2) * money[2]
-		else
-			cash = (ds1 + ds2) * money[3]
-		end
-		money_transfer(cash, player, cell.owner)
-		rnd_txt(rules_group.bank.phrase)
-	end
+  __action_company (player, function(level, money, cell)
+    local cash
+    if level == 3 then
+	    cash = (ds1 + ds2) * money[2]
+    else
+	    cash = (ds1 + ds2) * money[3]
+    end
+    money_transfer(cash, player, cell.owner)
+    rnd_txt(rules_group.bank.phrase, cash)
+  end)
 end
 
 -- Экшн таможни
