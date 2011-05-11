@@ -662,7 +662,7 @@ auction_human_pl = 0
 auction_human = function(pl)
   auction_human_pl = pl
   manuauction._child[1].text = '$ '..bid_sum..' K'
-  if pl.cash > auction_buyer[2] then
+  if pl.cash >= auction_buyer[2] then
     manuauction._child[2].disabled = false
     manuauction._child[3].disabled = true
     if pl.cash >= auction_buyer[2] + 10 then manuauction._child[4].disabled = false
@@ -671,15 +671,15 @@ auction_human = function(pl)
     if pl.cash >= auction_buyer[2] + 100 then manuauction._child[6].disabled = false
     else manuauction._child[6].disabled = true end
     manuauction._child[7].disabled = true
-    if auction_buyer[2] == 0 then manuauction._child[8].disabled = false
+    if auction_buyer[1] == 0 then manuauction._child[8].disabled = false
     else manuauction._child[8].disabled = true end
     manuauction._child[9].disabled = false
     manuauction:show()
-    if initplayers[player._child[current_player].k] == 'Computer' then
-      menuplayer:show()
-      menuplayer._child[1]:hide()
-      menuplayer._child[2]:hide()
-    end
+    menuplayer:show()
+    menuplayer._child[1]:hide()
+    menuplayer._child[2]:hide()
+    end_move:hide()
+    gui_pay50k:hide()
   else
     num = num - 1
     auction2(pl)
@@ -754,7 +754,7 @@ click_manuauction_button = function(s)
     if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
     else manuauction._child[6].disabled = true end
     manuauction._child[7].disabled = true
-    if auction_buyer[2] == 0 then manuauction._child[8].disabled = false
+    if auction_buyer[1] == 0 then manuauction._child[8].disabled = false
     else manuauction._child[8].disabled = true end
   end
 end
