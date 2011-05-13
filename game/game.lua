@@ -606,8 +606,6 @@ human_unmortgage_done = function()
   end 
 end
 
-
-
 auction2 = function(pl, company)
   if company then
     auction_company = company
@@ -617,7 +615,7 @@ auction2 = function(pl, company)
   if num > 0 then
     local i = pl.k + 1
     if i > #player._child then i = i - #player._child end
-    if player._child[i].ingame == true and player._child[i].cash >= auction_buyer[2] then
+    if player._child[i].ingame == true then
       if initplayers[i] == 'Computer' then auction_ai(player._child[i])
       else auction_human(player._child[i]) end
     else
@@ -667,28 +665,24 @@ auction_human_pl = 0
 auction_human = function(pl)
   auction_human_pl = pl
   manuauction._child[1].text = '$ '..bid_sum..' K'
-  if pl.cash >= auction_buyer[2] then
-    manuauction._child[2].disabled = false
-    manuauction._child[3].disabled = true
-    if pl.cash >= auction_buyer[2] + 10 then manuauction._child[4].disabled = false
-    else manuauction._child[4].disabled = false end
-    manuauction._child[5].disabled = true
-    if pl.cash >= auction_buyer[2] + 100 then manuauction._child[6].disabled = false
-    else manuauction._child[6].disabled = true end
-    manuauction._child[7].disabled = true
-    if auction_buyer[1] == 0 then manuauction._child[8].disabled = false
-    else manuauction._child[8].disabled = true end
-    manuauction._child[9].disabled = false
-    manuauction:show()
-    menuplayer:show()
-    menuplayer._child[1]:hide()
-    menuplayer._child[2]:hide()
-    end_move:hide()
-    gui_pay50k:hide()
-  else
-    num = num - 1
-    auction2(pl)
-  end
+  if pl.cash >= auction_buyer[2] + 1 then manuauction._child[2].disabled = false
+  else manuauction._child[2].disabled = true end
+  manuauction._child[3].disabled = true
+  if pl.cash >= auction_buyer[2] + 10 then manuauction._child[4].disabled = false
+  else manuauction._child[4].disabled = true end
+  manuauction._child[5].disabled = true
+  if pl.cash >= auction_buyer[2] + 100 then manuauction._child[6].disabled = false
+  else manuauction._child[6].disabled = true end
+  manuauction._child[7].disabled = true
+  if auction_buyer[1] == 0 and pl.cash >= auction_buyer[2] then manuauction._child[8].disabled = false
+  else manuauction._child[8].disabled = true end
+  manuauction._child[9].disabled = false
+  manuauction:show()
+  menuplayer:show()
+  menuplayer._child[1]:hide()
+  menuplayer._child[2]:hide()
+  end_move:hide()
+  gui_pay50k:hide()
 end
 
 click_manuauction_button_bid = function()
