@@ -42,6 +42,7 @@ new_game = function()
 --      menusingle:hide()
       playermenu:show() -- родитель menuplayer
       board_gui:show() -- родитель отрисовки игроков с ценами в центре доски
+      manuauction:hide()
       start_new_game()
       break
     end
@@ -516,6 +517,7 @@ turn = function()
   pl:stop('blend'):set({blend_alpha = 0})
   click_end_move = false
   not_buy = false
+  gui_pay50k:hide()
   gogo()
 end
 
@@ -626,7 +628,7 @@ auction2 = function(pl, company)
     if auction_buyer[1] ~= 0 then
       buy_company(player._child[auction_buyer[1]], auction_company, auction_buyer[2])
       companys._child[auction_company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
-      gui_text.text = 'Игрок '..auction_buyer[1]..' купил компанию за '..auction_buyer[2]
+      gui_text.text = rules_players_names[auction_buyer[1]]..' игрок  купил компанию '..rules_company[auction_company].name..' за '..auction_buyer[2]
     end
     not_buy = true
     num = #player._child - 1
@@ -652,7 +654,7 @@ auction_ai = function(pl)
     num = #player._child - 1
     auction_buyer = {pl.k, new_sum}
     bid_sum = new_sum
-    gui_text.text = 'Игрок '..pl.k..' сделал ставку '..new_sum
+    gui_text.text = rules_players_names[pl.k]..' игрок сделал ставку '..new_sum
     auction2(pl)
   else
     num = num - 1
