@@ -628,7 +628,7 @@ auction2 = function(pl, company)
     if auction_buyer[1] ~= 0 then
       buy_company(player._child[auction_buyer[1]], auction_company, auction_buyer[2])
       companys._child[auction_company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
-      gui_text.text = rules_players_names[auction_buyer[1]]..' игрок  купил компанию '..rules_company[auction_company].name..' за '..auction_buyer[2]
+      gui_text.text = rules_players_names[auction_buyer[1]]..' игрок купил компанию '..rules_company[auction_company].name..' за '..auction_buyer[2]
     end
     not_buy = true
     num = #player._child - 1
