@@ -16,6 +16,7 @@ start_new_game = function()
   not_buy = false
 auction_company = 0
 bid_sum = 0
+gui_text.text = ''
   playermenu_getvisible = false
   current_player = 1
   click_end_move = false
@@ -625,6 +626,7 @@ auction2 = function(pl, company)
     if auction_buyer[1] ~= 0 then
       buy_company(player._child[auction_buyer[1]], auction_company, auction_buyer[2])
       companys._child[auction_company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+      gui_text.text = 'Игрок '..auction_buyer[1]..' купил компанию за '..auction_buyer[2]
     end
     not_buy = true
     num = #player._child - 1
@@ -650,6 +652,7 @@ auction_ai = function(pl)
     num = #player._child - 1
     auction_buyer = {pl.k, new_sum}
     bid_sum = new_sum
+    gui_text.text = 'Игрок '..pl.k..' сделал ставку '..new_sum
     auction2(pl)
   else
     num = num - 1
@@ -690,6 +693,7 @@ click_manuauction_button_bid = function()
     num = #player._child - 1
     auction_buyer = {auction_human_pl.k, bid_sum}
     manuauction:hide()
+    gui_text.text = 'Игрок '..auction_human_pl.k..' сделал ставку '..bid_sum
     auction2(auction_human_pl)
 end
 
