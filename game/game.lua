@@ -18,6 +18,7 @@ auction_company = 0
 bid_sum = 0
 gui_text.text = ''
   playermenu_getvisible = false
+  manuauction_getvisible = false
   current_player = 1
   click_end_move = false
   auction_buyer = {0,0}
@@ -558,6 +559,10 @@ human_mortgage = function()
     end
   end 
   gui_mortgage_done:menutoggle(menuplayer)
+  if manuauction._visible == true then
+    manuauction_getvisible = true
+    manuauction:hide()
+  end
 end
 
 human_unmortgage = function() 
@@ -569,6 +574,10 @@ human_unmortgage = function()
     end
   end 
   gui_unmortgage_done:menutoggle(menuplayer)
+  if manuauction._visible == true then
+    manuauction_getvisible = true
+    manuauction:hide()
+  end
 end
 
 human_shares = function() 
@@ -580,6 +589,10 @@ human_shares = function()
     end
   end 
   gui_shares_done:menutoggle(menuplayer)
+  if manuauction._visible == true then
+    manuauction_getvisible = true
+    manuauction:hide()
+  end
 end
 
 human_shares_done = function() 
@@ -587,7 +600,11 @@ human_shares_done = function()
   gui_shares_done:menutoggle(menuplayer)
   for k, v in pairs(companys._child) do
     v:animate({all_alpha = 0})
-  end 
+  end
+  if manuauction_getvisible == true then
+    manuauction_getvisible = false
+    manuauction:show()
+  end
 end
 
 human_mortgage_done = function() 
@@ -595,7 +612,11 @@ human_mortgage_done = function()
   gui_mortgage_done:menutoggle(menuplayer)
   for k, v in pairs(companys._child) do
     v:animate({all_alpha = 0})
-  end 
+  end
+  if manuauction_getvisible == true then
+    manuauction_getvisible = false
+    manuauction:show()
+  end
 end
 
 human_unmortgage_done = function() 
@@ -603,7 +624,11 @@ human_unmortgage_done = function()
   gui_unmortgage_done:menutoggle(menuplayer)
   for k, v in pairs(companys._child) do
     v:animate({all_alpha = 0})
-  end 
+  end
+  if manuauction_getvisible == true then
+    manuauction_getvisible = false
+    manuauction:show()
+  end
 end
 
 auction2 = function(pl, company)
