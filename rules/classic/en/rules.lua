@@ -608,7 +608,7 @@ rules_treasury = {
 rules_company_images = {}
 --load images
 for k, v in pairs(rules_company) do
-  table.insert(rules_company_images, G.newImage('rules/classic/en/logos/'..k..'.png'))
+  table.insert(rules_company_images, G.newImage('rules/classic/'..lang..'/logos/'..k..'.png'))
 end
 
 --предварительная загрузка картинок с группами в память

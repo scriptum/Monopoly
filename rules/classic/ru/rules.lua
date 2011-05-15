@@ -1,112 +1,25 @@
-field_width = 11 --компаний по горизонтали
-field_height = 6 --компаний по вертикали
-cell_jail = 13 --на какой клетке тюрьма
---картинки для игроков
-rules_player_img = {
-  'player_blue.png',
-  'player_green.png',
-  'player_red.png',
-  'player_sea.png',
-  'player_yellow.png'
+reason_jail = {
+  'Выяснилось, что вы давно уже в розыске. Отправляйтесь в тюрьму',
+  'Сотрудники таможни обнаружили нарушения в накладных. Отправляйтесь в тюрьму',
+  'В пылу спора вы ударили сотрудника таможни, чем ввели его в ярость. Отправляйтесь в тюрьму',
+  'Ваши конкуренты устроили вам подставу, и вас признали виновным. Отправляйтесь в тюрьму',
 }
 
-rules_player_colors = {
-{0,0,255},
-{0,255,0},
-{255,0,0},
-{0,255,255},
-{255,255,0}
+reason_jail_2 = {
+  'Сотрудники тюрьмы сверяли документы и выяснили, что вы давно уже в розыске. Отправляйтесь в тюрьму.',
+  'Когда вы были на экскурсии в тюрьме - сотрудник узнал в Вас опасного приступника. Вас посадили.',
+  'Вы ввалились в незнакомое помещение пьяным и с кем-то подрались. За такую наглось начальник тюрьмы распорядился вас арестовать.',
 }
 
--- Экшн обычных компаний
-action_company = function(player)
- local level = rules_company[player.pos].level
- local money = rules_company[player.pos].money
- local cell = rules_company[player.pos]
- local cash
- if cell.owner and cell.owner ~= player and level > 0 then
-  if level == 1 then
-   cash = money[2]
-  elseif level == 2 then
-   cash = money[2] * 2
-  else
-   cash = money[level]
-  end  
-  money_transfer(cash, player, cell.owner)
- end
-end
+action_phrase = {
+  jail = 'У работников тюрьмы к вам нет никаких претензий',
+  island = 'Вы остановились отдохнуть на курорте.',
+  company_free= 'Эта компания никем не занята. Вы можете купить её или выставить на аукцион.',
+  company_my= 'Это ваша компания, вы ничего не теряете.',
+  company_mortgage= 'Это заложенная компания, вы не терпите никаких расходов.',
+}
 
--- Налог
-action_nalog = function(player)
-  money_transfer(-rules_company[player.pos].money, player)
-end
-
--- Экш нефтяных компаний
-action_oil = function(player)
- local level = rules_company[player.pos].level
- local money = rules_company[player.pos].money
- local cell = rules_company[player.pos]
- local cash
- if cell.owner and cell.owner ~= player and level > 0 then
-  if level == 3 then
-   cash = money[2]
-  else
-   cash = money[2] * 2 ^ (level - 3)
-  end
---  print("pay from oil: "..cash)
-  money_transfer(cash, player, cell.owner)
- end
-end
-
--- Экш банковских компаний
-action_bank = function(player)
- local level = rules_company[player.pos].level
- local money = rules_company[player.pos].money
- local cell = rules_company[player.pos]
- local cash
- if cell.owner and cell.owner ~= player and level > 0 then
-  if level == 3 then
-   cash = (ds1 + ds2) * money[2]
-  else
-   cash = (ds1 + ds2) * money[3]
-  end
---  print("pay from bank: "..cash)
-  money_transfer(cash, player, cell.owner)
- end
-end
-
--- Экшн таможни
-action_jail = function(pl)
-  pl.pos = 13
-  pl.jail = 4
-  local x, y = getplayerxy(13, pl.k)
-  pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
-  player:delay(1)
-  if lquery_fx == true then A.play(sound_jail) end
-end
-
--- Экшн тюрьмы
-action_jail_value = function(player)
- if player.jail == 0 and math.random(1, 5) == 1 then action_jail(player) end
-end
-
--- Экш шанса
-cashback_chance = function(player)
- math.randomseed(os.time() + time + math.random(99999))
- local chance = math.random(1, #rules_chance)
- gui_text.text = 'Шанс: ' .. rules_chance[chance].text
- money_transfer(rules_chance[chance].money, player)
--- print("Chance: "..rules_chance[chance].money)
-end
-
--- Экш казны
-cashback_treasury = function(player)
- math.randomseed(os.time() + time + math.random(99999))
- local treasury = math.random(1, #rules_treasury)
- gui_text.text = 'Казна: ' .. rules_treasury[treasury].text
- money_transfer(rules_treasury[treasury].money, player)
--- print("Treasury: "..rules_chance[treasury].money)
-end
+rules_players_names = {'Синий', 'Зеленый', 'Красный', 'Голубой', 'Жёлтый'}
 
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
@@ -114,52 +27,99 @@ rules_group =
   auto = {
     image = "dashboard.png", --картинка-иконка для группы (может быть цвет)
     upgrade = 150,           --стоимость апгрейда акций для этой группы
-    draw = "company"    --функция рендеринга клеток этой группы
+    draw = "company",        --функция рендеринга клеток этой группы
+    phrase = {               --список фраз, которые пишутся при попадании на группу (выбирается случайно)
+      'Вы просрочили страховку и попали в аварию. Пришлось покупать новую машину за %',
+      'Ураган уничтожил автозавод, что вызвало рост цен. Расходы %',
+    }
   },
   oil = {
     image = "drop.png",
     upgrade = 200,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'Нефтяные магнаты сговорились и снова подняли цены на бензин. Вам пришлось выложить %',
+      'НЕОЖИДАННО пришла зима, власти были не готовы. Спрос на мазут подскочил, заплатите %',
+      'Авария на нефтяном месторождении спровоцировала новый скачок цен. Придется раскошелиться на %',
+      'Страны ОПЕК уменьшили квоту на добычу нефти и цены резко подскочили. Заплатите %',
+      'Цены на нефть растут быстрее, чем прогнозировали аналитики, вам пришлось уплатить разницу в цене: %',
+      'Президент нефтяной компании проигрался в карты и цены на бензин резко подскочили. Ваши расходы составили %'
+    }
   },
   food = {
     image = "coffee.png", 
     upgrade = 50,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'За пьяный дебош, устроенный в ресторане с вас вычли %',
+      'Официант вежливо попросил на чай. Пришлось оставить ему %',
+      'Вы хотели улизнуть из ресторана, не заплатив, но не тут-то было. Уладить отношения с секьюрити стоило вам %',
+    }
   },
   bank = {
     image = "bank.png",
     upgrade = 200,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'На заседании центробанка было объявлено о повышении процентных ставок. Ваши убытки составили %',
+      'Вы просрочили платежи по кредиту. Заплатите штраф %',
+      'Вы не прочитали условия по кредиту мелким шрифтом. Заплатите штраф %',
+      'Неудачная инвестиционная политика банка привела к потере средств в размере %',
+      'Долговые банковские векселя анулированы. Вы несете убытки в размере %'
+    }
   },
   inet = {
     image = "web.png",
     upgrade = 50,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'Упал сервер. С верхней полки. Пришлось менять на новый стоимостью %',
+      'Майкрософт снова судится с поисковыми компаниями и поиск стал платным. Счет в %',
+    }
   },
   market = {
     image = "shopping_cart.png",
     upgrade = 100,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'В магазине назойливый менеджер таки всучил вам кучу ненужных вещей на %',
+      'Вы оставили на кассе % и сказали: без сдачи!',
+    }
   },
   it = {
     image = "computer.png",
     upgrade = 150,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'Вирусная эпидемия накрыла все компьтеры у вас в офисе. За востановление данных содрали %',
+    }
   },
   mobile = {
     image = "mobile.png",
     upgrade = 100,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'Вам пришла СМС от мамы: Срочно положи % на этот номер. Вы заплатили не мешкая.',
+      'Вы случайно позвонили во Владивосток. Пока вы выясняли, кто на другом конце провода, счет вырос до %',
+    }
   },
   sport = {
     image = "medal.png",
     upgrade = 100,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'Ваша любимая спортивная команда проиграла. Стоимость разбитого телевизора - %',
+      'Вы зашли в магазин спорттоваров за удочкой, однако вас уговорили ещё купить лодку за %',
+    }
   },
   clock = {
     image = "clock.png",
     upgrade = 150,
-    draw = "company"
+    draw = "company",
+    phrase = {
+      'У ваших золотых часов сломалась секундная стрелка. Установка новой обошлась в %',
+      'Часы, купленные вами за %, оказались позолоченными, а на второй день и вовсе сломались.',
+    }
   },
   chance = {
     image = nil,
@@ -171,7 +131,14 @@ rules_group =
   },
   nalog = {
     image = nil,
-    draw = "nalog"
+    draw = "nalog",
+    phrase = {
+      'Неожиданно пришла налоговая. Вы не успели спрятать документы. заплатите штраф %',
+      'Друзья много болтали о ваших успехах и налоговая тоже услышала. Пришлось дать взятку %',
+      'У вас нашли ошибки в декларации о налогах. Заплатите штраф %',
+      'Ваши конкуренты сдали вас. Проверки и обыски нашли нарушения. Заплатите штраф %',
+      'С вас требуют взятку. Лучше все-таки дать эту взятку... Заплатите %'
+    }
   },
   big = {
     draw = "big_cell"
@@ -517,7 +484,35 @@ text = "Вы выиграли чемпионат по шахматам\nполучите 100К"
   type = "chance",
   action = cashback,
   money = -150,
-  text = "Оплата курсов водителей\nзаплатите 150К"
+  text = "Оплата курсов водителей\nзаплатите $ 150 К"
+ },
+
+ {
+  type = "chance",
+  action = cashback,
+  money = -120,
+  text = "На вашей машине написали: \"ПАМОЙ МИНЯ\"... гвоздем\nремонт обошелся в $ 120 К"
+ },
+
+ {
+  type = "chance",
+  action = cashback,
+  money = 80,
+  text = "Найденный лотерейный билет выиграл\nполучите $ 80 К"
+ },
+
+ {
+  type = "chance",
+  action = cashback,
+  money = 3,
+  text = "Вы усердно работали и получили премию\nполучите $ 3 К"
+ },
+
+ {
+  type = "chance",
+  action = cashback,
+  money = 50,
+  text = "Вы нашли чемодан денег и сдали его в милицию. На радостях милиционеры дали вам премию\nполучите $ 50 К"
  }
 }
 
@@ -527,77 +522,84 @@ rules_treasury = {
   type = "treasury",
   action = cashback,
   money = 200,
-  text = "Банковская ошибка в вашу пользу\nполучите 200К"
+  text = "Банковская ошибка в вашу пользу\nполучите $ 200 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Выгодная продажа акций\nполучите 25К"
+  text = "Выгодная продажа акций\nполучите $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -50,
-  text = "Оплата страховки\nзаплатите 50К"
+  text = "Оплата страховки\nзаплатите $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Выгодная продажа акций\nполучите 25К"
+  text = "Выгодная продажа акций\nполучите $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 100,
-  text = "Сбор ренты\nполучите 100К"
+  text = "Сбор ренты\nполучите $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Возмещение налога\nполучите 25К"
+  text = "Возмещение налога\nполучите $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 100,
-  text = "Вы получили наследство\nполучите 100К"
+  text = "Вы получили наследство\nполучите $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -50,
-  text = "Оплата услуг доктора\nзаплатите 50К"
+  text = "Оплата услуг доктора\nзаплатите $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -100,
-  text = "Оплата лечения\nзаплатите 100К"
+  text = "Оплата лечения\nзаплатите $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 50,
-  text = "Выгодная продажа облигаций\nполучите 50К"
+  text = "Выгодная продажа облигаций\nполучите $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
-  money = 10,
-  text = "вы заняли второе место на конкурсе красоту\nполучите 10К"
+  money = -50,
+  text = "Вы потеряли бумажник\nпропало $ 50 К"
+ },
+
+ {
+  type = "treasury",
+  action = cashback,
+  money = -100,
+  text = "Оставленную вами дома кредитную карточку взяли дети поиграть\nзаплатите $ 100 К"
  }
 }
 
@@ -605,18 +607,13 @@ rules_treasury = {
 rules_company_images = {}
 --load images
 for k, v in pairs(rules_company) do
-  table.insert(rules_company_images, G.newImage('data/gfx/logos/'..k..'.png'))
+  table.insert(rules_company_images, G.newImage('rules/classic/'..lang..'/logos/'..k..'.png'))
 end
 
 --предварительная загрузка картинок с группами в память
 rules_group_images = {}
 for k, v in pairs(rules_group) do 
   if v.image then
-    rules_group_images[k] = G.newImage('data/gfx/blue_icons/'..v.image)
+    rules_group_images[k] = G.newImage('rules/classic/icons/'..v.image)
   end
-end
---предварительная загрузка картинок с игроками в память
-rules_player_images = {}
-for k, v in pairs(rules_player_img) do 
-  table.insert(rules_player_images, G.newImage('data/gfx/player/'..v))
 end

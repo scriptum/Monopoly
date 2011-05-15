@@ -9,7 +9,7 @@ function table.print (tt, indent, done)
         io.write(string.format("[%s] => table\n", tostring (key)));
         io.write(string.rep (" ", indent+4)) -- indent it
         io.write("(\n");
-        table_print (value, indent + 7, done)
+        table.print (value, indent + 7, done)
         io.write(string.rep (" ", indent+4)) -- indent it
         io.write(")\n");
       else
