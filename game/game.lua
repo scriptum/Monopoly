@@ -20,6 +20,7 @@ gui_text.text = ''
   playermenu_getvisible = false
   manuauction_getvisible = false
   current_player = 1
+  current_player_temp = 0
   click_end_move = false
   auction_buyer = {0,0}
   num = #player._child - 1
@@ -631,16 +632,20 @@ human_unmortgage_done = function()
   end
 end
 
+--////////////////*****************************AUCTION*****************************////////////////
+
 auction2 = function(pl, company)
   if company then
     auction_company = company
     auction_buyer[2] = rules_company[auction_company].money[1]
     bid_sum = auction_buyer[2]
   end
+  if current_player_temp == 0 then current_player_temp = current_player end
   if num > 0 then
     local i = pl.k + 1
     if i > #player._child then i = i - #player._child end
     if player._child[i].ingame == true then
+      current_player = i
       if initplayers[i] == 'Computer' then auction_ai(player._child[i])
       else auction_human(player._child[i]) end
     else
@@ -658,6 +663,8 @@ auction2 = function(pl, company)
     auction_buyer = {0,0}
     auction_company = 0
     bid_sum = 0
+    current_player = current_player_temp
+    current_player_temp = 0
     if initplayers[player._child[current_player].k] == 'Human' then
       click_end_move = true
       end_move:show()
