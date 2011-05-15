@@ -288,8 +288,8 @@ ai = function(pl)
   if not_buy == false and buy_company(pl, pl.pos) == true then
     player:delay({speed = 0, cb = function() ai(pl) end})
     return
-  elseif not_buy == false and rules_company[pl.pos].type ==  "company" and not rules_company[pl.pos].owner then
-    auction2(pl, pl.pos, rules_company[pl.pos].money[1])
+  elseif not_buy == false and rules_company[pl.pos].type == "company" and not rules_company[pl.pos].owner then
+    auction(pl, pl.pos)
 --    player:delay({speed = 0, cb = function() ai(pl) end})
     return
   end
@@ -476,7 +476,7 @@ human_auction = function()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
   local pl = player._child[current_player]
-  auction2(pl, pl.pos)
+  auction(pl, pl.pos)
 end
 
 human_click_company = function(company)
@@ -634,11 +634,12 @@ end
 
 --////////////////*****************************AUCTION*****************************////////////////
 
-auction2 = function(pl, company)
+auction = function(pl, company)
   if company then
     auction_company = company
     auction_buyer[2] = rules_company[auction_company].money[1]
     bid_sum = auction_buyer[2]
+    gui_text.text = rules_players_names[pl.k]..' игрок выставляет компанию '..rules_company[auction_company].name..' на аукцион за '..money(auction_buyer[2])
   end
   if current_player_temp == 0 then current_player_temp = current_player end
   if num > 0 then
@@ -650,7 +651,7 @@ auction2 = function(pl, company)
       else auction_human(player._child[i]) end
     else
       num = num - 1
-      auction2(player._child[i])
+      auction(player._child[i])
     end
   else
     if auction_buyer[1] ~= 0 then
@@ -717,10 +718,10 @@ auction_ai = function(pl)
     auction_buyer = {pl.k, new_sum}
     bid_sum = new_sum
     gui_text.text = rules_players_names[pl.k]..' игрок сделал ставку '..money(new_sum)
-    auction2(pl)
+    auction(pl)
   else
     num = num - 1
-    auction2(pl)
+    auction(pl)
   end
 end
 
@@ -754,13 +755,13 @@ click_manuauction_button_bid = function()
     auction_buyer = {auction_human_pl.k, bid_sum}
     manuauction:hide()
     gui_text.text = 'Игрок '..auction_human_pl.k..' сделал ставку '..money(bid_sum)
-    auction2(auction_human_pl)
+    auction(auction_human_pl)
 end
 
 click_manuauction_button_pass = function()
     num = num - 1
     manuauction:hide()
-    auction2(auction_human_pl)
+    auction(auction_human_pl)
 end
 
 click_manuauction_button = function(s)
