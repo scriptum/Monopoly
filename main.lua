@@ -1,6 +1,6 @@
 --определяем язык
 lang = 'en'
-if arg[2] then lang = arg[1] end
+if arg[2] then lang = arg[2] end
 require('lib.lquery')
 require('lib.serialize')
 require('game.start')

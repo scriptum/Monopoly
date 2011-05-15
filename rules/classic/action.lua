@@ -119,7 +119,7 @@ end
 cashback_chance = function(player)
 	math.randomseed(os.time() + time + math.random(99999))
 	local chance = math.random(1, #rules_chance)
-	gui_text.text = 'Шанс: ' .. rules_chance[chance].text
+	gui_text.text = rules_chance[chance].text
 	money_transfer(rules_chance[chance].money, player)
 -- print("Chance: "..rules_chance[chance].money)
 end
@@ -128,7 +128,7 @@ end
 cashback_treasury = function(player)
 	math.randomseed(os.time() + time + math.random(99999))
 	local treasury = math.random(1, #rules_treasury)
-	gui_text.text = 'Казна: ' .. rules_treasury[treasury].text
+	gui_text.text = rules_treasury[treasury].text
 	money_transfer(rules_treasury[treasury].money, player)
 -- print("Treasury: "..rules_chance[treasury].money)
 end

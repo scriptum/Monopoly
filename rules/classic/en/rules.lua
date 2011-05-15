@@ -1,39 +1,32 @@
 reason_jail = {
-  'Выяснилось, что вы давно уже в розыске. Отправляйтесь в тюрьму',
-  'Сотрудники таможни обнаружили нарушения в накладных. Отправляйтесь в тюрьму',
-  'В пылу спора вы ударили сотрудника таможни, чем ввели его в ярость. Отправляйтесь в тюрьму',
-  'Ваши конкуренты устроили вам подставу, и вас признали виновным. Отправляйтесь в тюрьму',
+  'It turned out that you have long wanted. Go to jail',
+  'Customs officers discovered violation in invoices. Go to jail',
 }
 
 reason_jail_2 = {
-  'Сотрудники тюрьмы сверяли документы и выяснили, что вы давно уже в розыске. Отправляйтесь в тюрьму.',
-  'Когда вы были на экскурсии в тюрьме - сотрудник узнал в Вас опасного приступника. Вас посадили.',
-  'Вы ввалились в незнакомое помещение пьяным и с кем-то подрались. За такую наглось начальник тюрьмы распорядился вас арестовать.',
-  'Вы заключили пари с друзьями, что прикольнетесь над полицейским. Сидя в тюрьме, вы начали смутно догадываться, что шутка не совсем удалась.'
+  'When you were on excursion in jail employee found in you a dangerous criminal. Stay in jail',
 }
 
 action_phrase = {
-  jail = 'У работников тюрьмы к вам нет никаких претензий',
-  island = 'Вы остановились отдохнуть на курорте.',
-  company_free= 'Эта компания никем не занята. Вы можете купить её или выставить на аукцион.',
-  company_my= 'Это ваша компания, вы ничего не теряете.',
-  company_mortgage= 'Это заложенная компания, вы не терпите никаких расходов.',
+  jail = 'Jail stuff have no claims to you',
+  island = 'You are staying at the resort',
+  company_free= 'This company is free. You can buy it or put it on auction',
+  company_my= 'This is your company',
+  company_mortgage= 'This is mortgaged company, you don\'t pay anything',
 }
 
-rules_players_names = {'Синий', 'Зеленый', 'Красный', 'Голубой', 'Жёлтый'}
+rules_players_names = {'Blue', 'Green', 'Red', 'Azure', 'Yellow'}
 
 --группы, одна группа означает как монополию так и просто клетки одного типа
 rules_group =
 {
   auto = {
-    image = "dashboard.png", --картинка-иконка для группы (может быть цвет)
-    upgrade = 150,           --стоимость апгрейда акций для этой группы
-    draw = "company",        --функция рендеринга клеток этой группы
-    phrase = {               --список фраз, которые пишутся при попадании на группу (выбирается случайно)
-      'Вы просрочили страховку и попали в аварию. Пришлось покупать новую машину за %',
-      'Ураган уничтожил автозавод, что вызвало рост цен. Расходы %',
-      'У вас угнали машину. Через неделю ее нашли сгоревшей в канаве. Пришлось купить новую за %',
-      'Вандалы разбили стелко машины и вытащили магнитолу. Присмотревшись, вы поняли, что и колеса, и двери, и сидения, и все, что было в багажнике, и даже все, что было под капотом. Ремонт обошелся в %'
+    image = "dashboard.png", --image of the group
+    upgrade = 150,           --upgrade cost
+    draw = "company",        --render function
+    phrase = {               --phrases to display
+      'You have an accident. You had to buy a new car for %',
+      'The hurricane destroyed the car factory, causing a rise in prices. Expenses %',
     }
   },
   oil = {
@@ -41,12 +34,7 @@ rules_group =
     upgrade = 200,
     draw = "company",
     phrase = {
-      'Нефтяные магнаты сговорились и снова подняли цены на бензин. Вам пришлось выложить %',
-      'НЕОЖИДАННО пришла зима, власти были не готовы. Спрос на мазут подскочил, заплатите %',
-      'Авария на нефтяном месторождении спровоцировала новый скачок цен. Придется раскошелиться на %',
-      'Страны ОПЕК уменьшили квоту на добычу нефти и цены резко подскочили. Заплатите %',
-      'Цены на нефть растут быстрее, чем прогнозировали аналитики, вам пришлось уплатить разницу в цене: %',
-      'Президент нефтяной компании проигрался в карты и цены на бензин резко подскочили. Ваши расходы составили %'
+      'An accident at an oil field sparked a new rise in prices. Expenses %',
     }
   },
   food = {
@@ -54,10 +42,7 @@ rules_group =
     upgrade = 50,
     draw = "company",
     phrase = {
-      'За пьяный дебош, устроенный в ресторане с вас вычли %',
-      'Официант вежливо попросил на чай, вы не смогли отказать. Пришлось оставить ему %',
-      'Вы хотели улизнуть из ресторана, не заплатив, но не тут-то было. Уладить отношения с секьюрити стоило вам %',
-      'Вышел закон, по которому мясные продукты теперь должны содержать мясо. Цены подскачили. Расходы составили %'
+      'The waiter politely asked for a tip, you could not refuse. Had to give him a tip %',
     }
   },
   bank = {
@@ -65,11 +50,7 @@ rules_group =
     upgrade = 200,
     draw = "company",
     phrase = {
-      'На заседании центробанка было объявлено о повышении процентных ставок. Ваши убытки составили %',
-      'Вы просрочили платежи по кредиту. Заплатите штраф %',
-      'Вы не прочитали условия по кредиту мелким шрифтом. Заплатите штраф %',
-      'Неудачная инвестиционная политика банка привела к потере средств в размере %',
-      'Долговые банковские векселя анулированы. Вы несете убытки в размере %'
+      'You did not read the terms of the credit in small print. Pay %',
     }
   },
   inet = {
@@ -77,9 +58,7 @@ rules_group =
     upgrade = 50,
     draw = "company",
     phrase = {
-      'Упал сервер. С верхней полки. Пришлось менять на новый стоимостью %',
-      'Майкрософт снова судится с поисковыми компаниями и поиск стал платным. Счет в %',
-      'Когда вам срочно понадобился интернет - его, как обычно, не оказалось. покупка запасного спутникового канала обошлась в %'
+      'Your server is down. Need to buy new for %',
     }
   },
   market = {
@@ -87,10 +66,7 @@ rules_group =
     upgrade = 100,
     draw = "company",
     phrase = {
-      'В магазине назойливый менеджер-таки всучил вам кучу ненужных вещей на %',
-      'Вы оставили на кассе % и сказали: без сдачи!',
-      'Выходя из магазина вы задумались, зачем вам пожизненный набор зубочисток за %? Все-таки замечательные там продавцы, решили вы.',
-      'Поход с женой за новыми туфлями обернулся покупкой еще и сумочки, и костюма, и вечернего плвтья на сумму %'
+      'In the shop manager persuaded you to buy a lot of unnecessary things for %',
     }
   },
   it = {
@@ -98,9 +74,7 @@ rules_group =
     upgrade = 150,
     draw = "company",
     phrase = {
-      'Вирусная эпидемия накрыла все компьтеры у вас в офисе. За востановление данных содрали %',
-      'Вышел закон об авторских правах на ПО. Пришлось купить пакет лицензионных программ за %',
-      'Во время игры в самый неподходящий момент у вас заглючила мышка... Счет за разбитую мышку, а так же клавиатуру, монитор и системный блок составил %'
+      'There was a new copyright law. You need to buy software for %',
     }
   },
   mobile = {
@@ -108,10 +82,7 @@ rules_group =
     upgrade = 100,
     draw = "company",
     phrase = {
-      'Вам пришла СМС от мамы: Срочно положи % на этот номер. Вы заплатили не мешкая.',
-      'Вы случайно позвонили во Владивосток. Пока вы выясняли, кто на другом конце провода, счет вырос до %',
-      'Вы купили своему ребенку его первый мобильный телефон. В скоре вам пришел счет за мобильные услуги в размере %',
-      'Случайно попав на неприличный сайт, вы подхватили вирус, который требовал отправить смс на номер. Отправив смс, ваш счет вырос на %'
+      'You talked on the phone to Antarctica. Pay %',
     }
   },
   sport = {
@@ -119,9 +90,7 @@ rules_group =
     upgrade = 100,
     draw = "company",
     phrase = {
-      'Ваша любимая спортивная команда проиграла. Стоимость разбитого телевизора - %',
-      'Вы зашли в магазин спорттоваров за удочкой, однако вас уговорили ещё купить лодку за %',
-      'В коем-то веке вы зашли в спортзал потягать штангу. И не рассчитали своих сил. Лечение составило %'
+      'Your favorite sports team lost. Costs of the broken TV - %',
     }
   },
   clock = {
@@ -129,9 +98,7 @@ rules_group =
     upgrade = 150,
     draw = "company",
     phrase = {
-      'У ваших золотых часов сломалась секундная стрелка. Установка новой обошлась в %',
-      'Часы, купленные вами за % в метро, оказались позолоченными, а на второй день и вовсе сломались.',
-      'Вы прочитали в интернете, что у часов оказывается должны быть стрелки. Теперь понятно, в чем заключалась проблема. Пришлось купить новые за %'
+      'Your watch is broken. Had to buy new for %',
     }
   },
   chance = {
@@ -146,11 +113,7 @@ rules_group =
     image = nil,
     draw = "nalog",
     phrase = {
-      'Неожиданно пришла налоговая. Вы не успели спрятать документы. заплатите штраф %',
-      'Друзья много болтали о ваших успехах и налоговая тоже услышала. Пришлось дать взятку %',
-      'У вас нашли ошибки в декларации о налогах. Заплатите штраф %',
-      'Ваши конкуренты сдали вас. Проверки и обыски нашли нарушения. Заплатите штраф %',
-      'С вас требуют взятку. Лучше все-таки дать эту взятку... Заплатите %'
+      'Pay tax %',
     }
   },
   big = {
@@ -158,7 +121,7 @@ rules_group =
   }
 }
 
---список клеток с компаниями, шансом, казной, стартом, таможней, тюрьмой и парковкой
+--list of companies
 
 rules_company =
 {
@@ -169,10 +132,10 @@ rules_company =
   },
 
   {
-    name = "McDonald's",                    --название компании
-    type = "company",                       --тип (это под вопросом)
-    group = "food",                         --группа - монополия
-    money = {60, 2, 10, 30, 90, 160, 250},  --цены: стоимость, доход: без акций, с 1,2,3,4,5 акциями
+    name = "McDonald's",                    --company name
+    type = "company",                       --type
+    group = "food",                         --group - monopoly
+    money = {60, 2, 10, 30, 90, 160, 250},  --costs: prise, rent: without actions (houses), with 1,2,3,4,5 actions
     action = action_company
   },
 
@@ -463,71 +426,57 @@ rules_chance = {
   type = "chance",
   action = cashback,
   money = 150,
-  text = "Возврат займа\nполучите $ 150 К"
+  text = "Loan repayment\get $ 150 К"
  },
 
 {
 type = "chance",
 action =  cashback,
 money = 100,
-text = "Вы выиграли чемпионат по шахматам\nполучите $ 100 К"
+text = "You won the Chess Championship\nget $ 100 К"
 },
 
  {
   type = "chance",
   action = cashback,
   money = 50,
-  text = "Банковские дивиденты\nполучите $ 50 К"
+  text = "Bank dividends\nget $ 50 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = -15,
-  text = "Штраф за превышение скорости\nзаплатите $ 15 К"
+  text = "Penalty for speeding\npay $ 15 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = -20,
-  text = "Вождение в нетрезвом виде\nштраф $ 20 К"
+  text = "Drunk driving\npay $ 20 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = -150,
-  text = "Оплата курсов водителей\nзаплатите $ 150 К"
- },
-
- {
-  type = "chance",
-  action = cashback,
-  money = -120,
-  text = "На вашей машине написали: \"ПАМОЙ МИНЯ\"... гвоздем\nремонт обошелся в $ 120 К"
+  text = "Payment of drivers courses\npay $ 150 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = 80,
-  text = "Найденный лотерейный билет выиграл\nполучите $ 80 К"
+  text = "Lottery ticket won\nget $ 80 К"
  },
 
  {
   type = "chance",
   action = cashback,
   money = 3,
-  text = "Вы усердно работали и получили премию\nполучите $ 3 К"
+  text = "You worked hard and were awarded\nget $ 3 К"
  },
-
- {
-  type = "chance",
-  action = cashback,
-  money = 50,
-  text = "Вы нашли чемодан денег и сдали его в милицию. На радостях милиционеры дали вам премию\nполучите $ 50 К"
- }
 }
 
 --Chest
@@ -536,84 +485,77 @@ rules_treasury = {
   type = "treasury",
   action = cashback,
   money = 200,
-  text = "Банковская ошибка в вашу пользу\nполучите $ 200 К"
+  text = "Bank error in your favor\nget $ 200 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Выгодная продажа акций\nполучите $ 25 К"
+  text = "Profitable sale of shares\nget $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -50,
-  text = "Оплата страховки\nзаплатите $ 50 К"
- },
-
- {
-  type = "treasury",
-  action = cashback,
-  money = 25,
-  text = "Выгодная продажа акций\nполучите $ 25 К"
+  text = "Payment of insurance\npay $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 100,
-  text = "Сбор ренты\nполучите $ 100 К"
+  text = "Collecting rent\nget $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 25,
-  text = "Возмещение налога\nполучите $ 25 К"
+  text = "Tax Refund\nget $ 25 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 100,
-  text = "Вы получили наследство\nполучите $ 100 К"
+  text = "You received an inheritance\nget $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -50,
-  text = "Оплата услуг доктора\nзаплатите $ 50 К"
+  text = "Payment for the services of doctor\npay $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -100,
-  text = "Оплата лечения\nзаплатите $ 100 К"
+  text = "Payment for treatment\npay $ 100 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = 50,
-  text = "Выгодная продажа облигаций\nполучите $ 50 К"
+  text = "Profitable sale of bonds\nget $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -50,
-  text = "Вы потеряли бумажник\nпропало $ 50 К"
+  text = "You lost wallet\nlost $ 50 К"
  },
 
  {
   type = "treasury",
   action = cashback,
   money = -100,
-  text = "Оставленную вами дома кредитную карточку взяли дети поиграть\nзаплатите $ 100 К"
+  text = "Your credit card take kids to play\npay $ 100 К"
  }
 }
 
