@@ -503,8 +503,8 @@ human_click_company = function(company)
   elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
   else
-    buy_company(pl, company.num)
-    company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+    --buy_company(pl, company.num)
+    --company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
   end
 end
 
