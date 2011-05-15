@@ -668,12 +668,44 @@ auction2 = function(pl, company)
   end
 end
 
+
 auction_ai = function(pl)
   local new_sum = auction_buyer[2]
   if auction_buyer[1] ~= 0 then
     new_sum = math.floor(auction_buyer[2] + 0.1*auction_buyer[2])
   end
-  if pl.cash >= new_sum and new_sum <= (rules_company[auction_company].money[1] + rules_company[auction_company].money[1]*0.5) then
+  --этот жопный иф, очевидно, отвечает за принятие решения о ставке
+  local buy = false
+  local gr = rules_company[auction_company].group
+  local enemy_count = 0
+  local different_owners = 0
+  local owner_yourself = 0
+  local last_owner = nil
+  local gr_count = 0
+  for k, v in pairs(rules_company) do
+    if v.group == gr then 
+      gr_count = gr_count + 1
+      if v.owner then
+	if v.owner == pl then
+	  owner_yourself = owner_yourself + 1
+	else
+	  enemy_count = enemy_count + 1
+	end
+	if not last_owner or last_owner ~= v.owner then
+	  last_owner = v.owner
+	  different_owners = different_owners + 1
+	end
+      end
+    end
+  end
+  local c = rules_company[auction_company].money[1]
+  if different_owners < 2 and pl.cash >= new_sum and
+     (
+      enemy_count == gr_count - 1 and new_sum <= (c + c * 0.5) or
+      owner_yourself == gr_count - 1 and new_sum <= c * 2 or
+      new_sum == c
+     ) then
+  --if pl.cash >= new_sum and new_sum <= (rules_company[auction_company].money[1] + rules_company[auction_company].money[1]*0.5) then
     num = #player._child - 1
     auction_buyer = {pl.k, new_sum}
     bid_sum = new_sum

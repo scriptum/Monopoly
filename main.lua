@@ -1,6 +1,6 @@
 --определяем язык
 lang = 'en'
-if arg[1] then lang = arg[1] end
+if arg[2] then lang = arg[1] end
 require('lib.lquery')
 require('lib.serialize')
 require('game.start')
@@ -13,6 +13,7 @@ require('lib.ui.list')
 require('lib.ui.slider')
 require('lib.ui.menu')
 require('lib.sound')
+print(lang)
 require('languages.'..lang)
 --require('lib.scale')
 require('rules.classic.action')
