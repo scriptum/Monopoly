@@ -502,9 +502,9 @@ human_click_company = function(company)
     end
   elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
-  else
-    --buy_company(pl, company.num)
-    --company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+--  else
+--    buy_company(pl, company.num)
+--    company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
   end
 end
 
@@ -604,7 +604,8 @@ human_shares_done = function()
   end
   if manuauction_getvisible == true then
     manuauction_getvisible = false
-    manuauction:show()
+    auction_human(player._child[current_player])
+
   end
 end
 
@@ -616,7 +617,7 @@ human_mortgage_done = function()
   end
   if manuauction_getvisible == true then
     manuauction_getvisible = false
-    manuauction:show()
+    auction_human(player._child[current_player])
   end
 end
 
@@ -628,12 +629,11 @@ human_unmortgage_done = function()
   end
   if manuauction_getvisible == true then
     manuauction_getvisible = false
-    manuauction:show()
+    auction_human(player._child[current_player])
   end
 end
 
 --////////////////*****************************AUCTION*****************************////////////////
-
 auction = function(pl, company)
   if company then
     auction_company = company
@@ -658,7 +658,7 @@ auction = function(pl, company)
       buy_company(player._child[auction_buyer[1]], auction_company, auction_buyer[2])
       companys._child[auction_company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
       gui_text.text = rules_players_names[auction_buyer[1]]..' игрок купил компанию '..rules_company[auction_company].name..' за '..money(auction_buyer[2])
-    end
+    else gui_text.text = 'Все участники отказались от покупки компании '..rules_company[auction_company].name end
     not_buy = true
     num = #player._child - 1
     auction_buyer = {0,0}
@@ -725,10 +725,7 @@ auction_ai = function(pl)
   end
 end
 
-auction_human_pl = 0
-
 auction_human = function(pl)
-  auction_human_pl = pl
   manuauction._child[1].text = '$ '..bid_sum..' K'
   if pl.cash >= auction_buyer[2] + 1 then manuauction._child[2].disabled = false
   else manuauction._child[2].disabled = true end
@@ -752,71 +749,72 @@ end
 
 click_manuauction_button_bid = function()
     num = #player._child - 1
-    auction_buyer = {auction_human_pl.k, bid_sum}
+    auction_buyer = {current_player, bid_sum}
     manuauction:hide()
-    gui_text.text = 'Игрок '..auction_human_pl.k..' сделал ставку '..money(bid_sum)
-    auction(auction_human_pl)
+    gui_text.text = 'Игрок '..current_player..' сделал ставку '..money(bid_sum)
+    auction(player._child[current_player])
 end
 
 click_manuauction_button_pass = function()
     num = num - 1
     manuauction:hide()
-    auction(auction_human_pl)
+    auction(player._child[current_player])
 end
 
-click_manuauction_button = function(s)
+click_manuauction_button = function(s, temp_money)
   loadstring("bid_sum = bid_sum "..s.text)()
   manuauction._child[1].text = '$ '..bid_sum..' K'
   local difference = bid_sum - auction_buyer[2]
+  local pl = player._child[current_player]
   menuplayer:show()
   menuplayer._child[1]:hide()
   menuplayer._child[2]:hide()
   if difference > 0 then
 --*******************************************************************--
     if difference < 10 then
-    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    if pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
     else manuauction._child[2].disabled = true end
       manuauction._child[3].disabled = false
-    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    if pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
     else manuauction._child[4].disabled = true end
       manuauction._child[5].disabled = true
-    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    if pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
     else manuauction._child[6].disabled = true end
       manuauction._child[7].disabled = true
       manuauction._child[8].disabled = false
 --*******************************************************************--
     elseif difference < 100 then
-    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    if pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
     else manuauction._child[2].disabled = true end
       manuauction._child[3].disabled = false
-    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    if pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
     else manuauction._child[4].disabled = true end
       manuauction._child[5].disabled = false
-    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    if pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
     else manuauction._child[6].disabled = true end
       manuauction._child[7].disabled = true
       manuauction._child[8].disabled = false
 --*******************************************************************--
     else
-    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    if pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
     else manuauction._child[2].disabled = true end
       manuauction._child[3].disabled = false
-    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    if pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
     else manuauction._child[4].disabled = true end
       manuauction._child[5].disabled = false
-    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    if pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
     else manuauction._child[6].disabled = true end
       manuauction._child[7].disabled = false
       manuauction._child[8].disabled = false
     end
   else
-    if auction_human_pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
+    if pl.cash >= bid_sum + 1 then manuauction._child[2].disabled = false
     else manuauction._child[2].disabled = true end
     manuauction._child[3].disabled = true
-    if auction_human_pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
+    if pl.cash >= bid_sum + 10 then manuauction._child[4].disabled = false
     else manuauction._child[4].disabled = true end
     manuauction._child[5].disabled = true
-    if auction_human_pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
+    if pl.cash >= bid_sum + 100 then manuauction._child[6].disabled = false
     else manuauction._child[6].disabled = true end
     manuauction._child[7].disabled = true
     if auction_buyer[1] == 0 then manuauction._child[8].disabled = false
