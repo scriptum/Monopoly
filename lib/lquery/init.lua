@@ -172,7 +172,7 @@ function love.run()
       end
       if MousePressed == false and MousePressedOwner then
         if MousePressedOwner._mouserelease then MousePressedOwner._mouserelease(v, mX, mY) end
-        if MousePressedOwner._click then MousePressedOwner._click(MousePressedOwner, mX, mY, MouseButton) end
+        if MousePressedOwner._hasMouse == true and MousePressedOwner._click then MousePressedOwner._click(MousePressedOwner, mX, mY, MouseButton) end
         MousePressedOwner = nil
       end
       if love.draw then love.draw() end
