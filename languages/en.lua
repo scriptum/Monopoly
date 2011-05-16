@@ -33,5 +33,6 @@ all_refused = 'All the participants refused to buy the company',
 player_bought = 'player bought the company',
 forr = 'for',
 player_puts_the_company = 'player puts the company',
-at_auction_for = 'at auction for'
+at_auction_for = 'at auction for',
+you_caught = 'You caught podtosovke result throws. Go to jail'
 }
