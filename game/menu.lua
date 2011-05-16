@@ -37,12 +37,12 @@ menuvsettings = E:new(gamemenu):hide()
 --меню игры
 local modes = G.getModes()
 table.sort(modes, function(a, b) return a.width < b.width end)
-local dislay_modes = {}
+local display_modes = {}
 for _, v in pairs(modes) do
-	table.insert(dislay_modes, v.width .. 'x' .. v.height)
+	table.insert(display_modes, v.width .. 'x' .. v.height)
 end
 
-local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, dislay_modes, dislay_modes, {'gameoptions', 'mode'})
+local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, display_modes, display_modes, {'gameoptions', 'mode'})
 local screenmode = E:new(menuvsettings):move(200, 200):list(l.screen_mode, {true, false}, {l.fullscreen, l.windowed}, {'gameoptions', 'fullscreen'})
 local apply = E:new(menuvsettings):move(130, 400):button(l.apply, function(s) 
 	local p = screenlist._pos
@@ -71,9 +71,8 @@ menumain = E:new(gamemenu):menu({
 
 menusingle = E:new(gamemenu):hide()
 
-local singleplayer_options = {l.human, l.computer, l.empty}
 for i = 1, 5 do
-	E:new(menusingle):move(200, 100+i*50):list(l.player, singleplayer_options, singleplayer_options, {'initplayers', i})
+	E:new(menusingle):move(200, 100+i*50):list(l.player, {'Human', 'Computer', 'Empty'}, {l.human, l.computer, l.empty}, {'initplayers', i})
 	E:new(menusingle):image(rules_player_images[i]):move(280, 100+i*50):scale(40/64, 40/64)
 end
 E:new(menusingle):move(130, 400):button(l.start, new_game)
