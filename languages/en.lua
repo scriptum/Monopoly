@@ -27,5 +27,11 @@ fullscreen = 'fullscreen',
 windowed = 'windowed',
 mortgage_help = 'Click on the companies that want to mortgage. If a company has shares, clicking sells one share. Click "Done" at the end.',
 unmortgage_help = 'Click on the companies that want to unmortgage. Click "Done" at the end.',
-shares_help = 'Click on the company to buy one share. Click "Done" at the end.'
+shares_help = 'Click on the company to buy one share. Click "Done" at the end.',
+player_made_a_bet = 'player made a bet',
+all_refused = 'All the participants refused to buy the company',
+player_bought = 'player bought the company',
+forr = 'for',
+player_puts_the_company = 'player puts the company',
+at_auction_for = 'at auction for'
 }

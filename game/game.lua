@@ -639,7 +639,7 @@ auction = function(pl, company)
     auction_company = company
     auction_buyer[2] = rules_company[auction_company].money[1]
     bid_sum = auction_buyer[2]
-    gui_text.text = rules_players_names[pl.k]..' игрок выставляет компанию '..rules_company[auction_company].name..' на аукцион за '..money(auction_buyer[2])
+    gui_text.text = rules_players_names[pl.k]..' '..l.player_puts_the_company..' '..rules_company[auction_company].name..' '..l.at_auction_for..' '..money(auction_buyer[2])
   end
   if current_player_temp == 0 then current_player_temp = current_player end
   if num > 0 then
@@ -657,8 +657,8 @@ auction = function(pl, company)
     if auction_buyer[1] ~= 0 then
       buy_company(player._child[auction_buyer[1]], auction_company, auction_buyer[2])
       companys._child[auction_company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
-      gui_text.text = rules_players_names[auction_buyer[1]]..' игрок купил компанию '..rules_company[auction_company].name..' за '..money(auction_buyer[2])
-    else gui_text.text = 'Все участники отказались от покупки компании '..rules_company[auction_company].name end
+      gui_text.text = rules_players_names[auction_buyer[1]]..' '..l.player_bought..' '..rules_company[auction_company].name..' '..l.forr..' '..money(auction_buyer[2])
+    else gui_text.text = l.all_refused..' '..rules_company[auction_company].name end
     not_buy = true
     num = #player._child - 1
     auction_buyer = {0,0}
@@ -717,7 +717,7 @@ auction_ai = function(pl)
     num = #player._child - 1
     auction_buyer = {pl.k, new_sum}
     bid_sum = new_sum
-    gui_text.text = rules_players_names[pl.k]..' игрок сделал ставку '..money(new_sum)
+    gui_text.text = rules_players_names[pl.k]..' '..l.player_made_a_bet..' '..money(new_sum)
     auction(pl)
   else
     num = num - 1
@@ -751,7 +751,7 @@ click_manuauction_button_bid = function()
     num = #player._child - 1
     auction_buyer = {current_player, bid_sum}
     manuauction:hide()
-    gui_text.text = 'Игрок '..current_player..' сделал ставку '..money(bid_sum)
+    gui_text.text = rules_players_names[current_player]..' '..l.player_made_a_bet..' '..money(bid_sum)
     auction(player._child[current_player])
 end
 
