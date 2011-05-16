@@ -816,21 +816,6 @@ click_manuauction_button = function(s, temp_money)
 end
 
 function love.keyreleased( key, unicode )
-   if key == "1" then
-      player._child[1].cash = player._child[1].cash - 1000
-   end
-   if key == "n" then
-      new_game()
-   end
-     if key == "q" then
-      player._child[1].cash = player._child[1].cash + 100
-   end
-   if key == "2" then
-      player._child[2].cash = player._child[2].cash - 1500
-   end
-   if key == "3" then
-      player._child[3].cash = player._child[3].cash - 1000
-   end
    if key == "f" then 
      lquery_fx = not lquery_fx 
    end
