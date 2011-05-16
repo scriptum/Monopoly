@@ -4,7 +4,7 @@ start_new_game = function()
   player:stop()
   for k = 1, 5 do
     x, y = getplayerxy(1, k)
-    player._child[k]:stop():set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), blend_alpha = 0, cash = 1500})
+    player._child[k]:stop():set({pos = 1, w = 30, h = 30, k = k, x = x, y = y, jail = 0, ingame = (initplayers[k] ~= 'Empty'), cash = 1500})
   end
   for k = 1, max do
     if rules_company[k].type == "company" then
@@ -313,7 +313,6 @@ ai = function(pl)
   end
   not_buy = false
   player:delay({callback=gogo})
-  player:delay({speed = 0, cb = function()pl:stop('blend'):set({blend_alpha = 0})end})
 end
 
 --////////////////*****************************HUMAN_PLAY*****************************////////////////
@@ -368,11 +367,7 @@ gogo = function()
     __i = __i + 1
     if __i > #player._child then __i = 1 end
     gogo()
-  else 
-    player:delay({speed = 0, cb = function()
-      buf:animate({blend_alpha = 150}, {loop = true, queue = 'blend'})
-      buf:animate({blend_alpha = 0}, {loop = true, queue = 'blend'})
-    end})
+  else
     current_player = __i
     if lquery_fx == true then
       --звук костей
@@ -439,7 +434,7 @@ gogo = function()
 	buf.pos = cell_jail
 	if jquery_fx then sound_jail:play() end
 	local x, y = getplayerxy(cell_jail, buf.k)
-	buf:stop('main'):animate({x=x,y=y}):stop('blend'):set({blend_alpha = 0})
+	buf:stop('main'):animate({x=x,y=y})
 	gui_text.text = '¬ас поймали на подтосовке результата бросков. ќтправл€йтесь в тюрьму'
 	player:delay({callback=gogo})
 	double = 1
@@ -516,7 +511,6 @@ end
 turn = function()
   menuplayer:hide()
   local pl = player._child[current_player]
-  pl:stop('blend'):set({blend_alpha = 0})
   click_end_move = false
   not_buy = false
   gui_pay50k:hide()
@@ -527,7 +521,6 @@ end
 game_ower = function()
   menuplayer:hide()
   local pl = player._child[current_player]
-  pl:stop('blend'):set({blend_alpha = 0})
   for k,v in pairs(rules_company) do
     if v.owner == pl then
       v.owner = nil

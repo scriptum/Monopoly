@@ -325,12 +325,13 @@ player_draw = function(s)
       Gprint(money(s.cash), ch+45, ch+55 + s.k*36)
       G.draw(rules_player_images[s.k], ch+10, ch+55 + s.k*36, 0, sx)
     end
-    G.setBlendMode('additive')
-    G.setColor(255,255,255,s.blend_alpha)
-    G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
-    
-    if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+55 + s.k*36, 0, sx) end
-    G.setBlendMode('alpha')
+    if s.k == current_player then
+      G.setBlendMode('additive')
+      G.setColor(255,255,255,(math.sin(time*7)+1)*90)
+      G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
+      if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+55 + s.k*36, 0, sx) end
+      G.setBlendMode('alpha')
+    end
     
     if s.jail > 0 then 
       G.setColor(255,255,255,255)
