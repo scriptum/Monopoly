@@ -34,5 +34,5 @@ player_bought = 'player bought the company',
 forr = 'for',
 player_puts_the_company = 'player puts the company',
 at_auction_for = 'at auction for',
-you_caught = 'Three dices in a row. Go to jail'
+you_caught = 'You caught rigging throws. Go to jail'
 }
