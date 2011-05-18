@@ -238,15 +238,20 @@ moove = function(pl, x)
       if pl.pos > max then
 	pl.pos = pl.pos-max
       end
-      if table.find(angles, pl.pos) > 0 then
-	pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-	pl:animate({x=pl_x, y=pl_y},{speed=0.7})
-	last_cell = pl.pos
-      end
+      --~ if table.find(angles, pl.pos) > 0 then
+	--~ pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+	--~ pl:animate({x=pl_x, y=pl_y},{speed=0.7})
+	--~ last_cell = pl.pos
+      --~ end
+      --второй вариант анимации
+      pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+      pl:animate({x=pl_x, y=pl_y},{speed=0.2, easing='linear'})
     end
     if pl.pos ~= last_cell then
       pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-      pl:animate({x=pl_x, y=pl_y},{speed=0.7})
+      --pl:animate({x=pl_x, y=pl_y},{speed=0.7})
+      --второй вариант анимации
+      pl:animate({x=pl_x, y=pl_y},{speed=0.2})
     end
   end
 end

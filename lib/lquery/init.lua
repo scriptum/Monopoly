@@ -58,6 +58,7 @@ local function animate(ent)
         end
         table.remove(j, 1)
         if aq.callback then aq.callback(ent) end
+        animate(ent)
       else
         for k, v in pairs(aq._keys) do
           if ent[k] and type(ent[k]) == 'number' then ent[k] = easing[aq.easing](time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed) end
