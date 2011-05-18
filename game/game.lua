@@ -369,7 +369,8 @@ gogo = function()
     gogo()
   else
     current_player = __i
-    if lquery_fx == true then
+    if lquery_fx == true then 
+      buf:delay({queue = 'roll', speed = 0.5}) --пауза между ходами
       --звук костей
       local i = math.random(1,6)
       sound_dice[i]:setPitch(0.8 + math.random()/3)
@@ -385,7 +386,7 @@ gogo = function()
       buf:delay({queue = 'roll', speed = 0, callback = roll})
     end
 
-    buf:delay({queue = 'roll', speed = 1, callback = function(s)
+    buf:delay({queue = 'roll', speed = 1.3, callback = function(s)
       local fromjail = false
       if buf.jail > 0 then
 	if ds1 == ds2 then
@@ -410,13 +411,13 @@ gogo = function()
 	add_money = true
       end
       moove(buf, ds1+ds2)
-      buf:delay({speed=0, callback = function(s)
+      buf:delay({speed=0.4, callback = function(s)
 	if add_money == true then
 	  money_transfer(200, buf)
 	end
 	local cell = rules_company[buf.pos]
 	if cell.action then cell.action(buf) end
--- выбор игрок живой илди комп
+-- выбор игрок живой или комп
 	if initplayers[buf.k] == 'Computer' then
 	  ai(buf)
 	else
