@@ -34,5 +34,9 @@ player_bought = 'player bought the company',
 forr = 'for',
 player_puts_the_company = 'player puts the company',
 at_auction_for = 'at auction for',
-you_caught = 'You caught rigging throws. Go to jail'
+you_caught = 'You caught rigging throws. Go to jail',
+mortgage_for = 'Mortgage company ',
+unmortgage_for = 'Unmortgage company ',
+shares_for = 'Buy shares of company ',
+shares_next = '\nNew rent will be ',
 }

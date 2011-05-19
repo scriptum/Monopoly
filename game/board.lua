@@ -81,9 +81,9 @@ end
 --ф-я формата денег
 money = function(m)
   if m >= 1000 then
-    return '$ ' .. m/1000 .. ' M'
+    return '$' .. m/1000 .. 'M'
   else
-    return '$ ' .. m .. ' K'
+    return '$' .. m .. 'K'
   end
 end
 
@@ -123,13 +123,14 @@ render.company = function(s)
     G.setColor(c)
     draw_fuzzy(x, y, sx, sy, s.side)
   end
+  G.setColor(255, 255, 255, s.logo_hover/5)
+  G.setBlendMode('additive')
+  draw_fuzzy(x, y, sx, sy, s.side)
+  G.setBlendMode('alpha')
   G.setColor(255, 255, 255)
   sx = (cw - cell_padding * 2) / 128
   G.draw(rules_company_images[s.num], x, y, 0, sx)
-  G.setColor(255, 255, 255, s.logo_hover)
-  G.setBlendMode('additive')
-  G.draw(rules_company_images[s.num], x, y, 0, sx)
-  G.setBlendMode('alpha')
+  
   G.setColor(255, 255, 255)
   --отрисовка группы
   if com.group then 
@@ -147,34 +148,9 @@ render.company = function(s)
     end
   end
   
-  --цена
-  G.setColor(0,0,0)
-  G.setFont(console)
-  G.fontSize = 10
-  if s.side == 3 then
-    y = 600 - cw*2 + cell_padding * 4 - font_size
-  end
+
   
-  if com.level > 0 then 
-    if not com.owner then 
-      txt = money(com.money[1])
-    elseif com.group == 'bank' then 
-      if com.level == 3 then
-        txt = '$ '.. com.money[2] ..' K*N'
-      else
-        txt = '$ '.. com.money[3] ..' K*N'
-      end
-    elseif com.group == 'oil' then
-      txt = money(com.money[2] * 2^(com.level - 3))
-    elseif com.level == 1 then
-      txt = money(com.money[2])
-    elseif com.level == 2 then
-      txt = money(com.money[2]*2)
-    else
-      txt = money(com.money[com.level])
-    end
-    Gprintf(txt, x - cell_padding, y + cw - cell_padding * 2, cw, 'center')
-  end
+  
   
   G.setColor(0,0,0,185*math.max(s.mortgage_alpha, s.all_alpha)/255)
   draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
@@ -183,7 +159,10 @@ render.company = function(s)
     
     G.setColor(255,255,255,s.mortgage_alpha)
     if s.side == 3 then y = 600 - cw end
-    if com.level == 0 and s.all_alpha == 0 then G.draw(lock, x - 4, y, 0, cw/128) end
+    if com.level == 0 then 
+      G.setColor(255,255,255,255 - s.all_alpha)
+      G.draw(lock, x - 4, y, 0, cw/128) 
+    end
   elseif com.level and com.level > 2 then
     G.setColor(255,255,255)
     --акции
@@ -217,6 +196,41 @@ render.company = function(s)
     end
   end
   
+    --цена
+  G.setColor(0,0,0)
+  G.setFont(console)
+  G.fontSize = 11
+  if s.side == 3 then
+    y = 600 - cw*2 + cell_padding * 4 - font_size
+  end
+  local txt = nil
+  if gui_mortgage_done._visible == true and com.owner and com.owner.k == current_player and com.level > 0 then
+    txt = money(com.money[1]/2)
+  --~ elseif gui_shares_done._visible == true and com.owner and com.owner.k == current_player and com.level > 1 then
+    --~ txt = money(rules_group[com.group].upgrade)
+  elseif gui_unmortgage_done._visible == true and com.owner and com.owner.k == current_player and com.level == 0 then
+    txt = money(com.money[1])
+    G.setColor(255,255,255)
+  elseif com.level > 0 then 
+    if not com.owner then 
+      txt = money(com.money[1])
+    elseif com.group == 'bank' then 
+      if com.level == 3 then
+        txt = '$'.. com.money[2] ..'K*N'
+      else
+        txt = '$'.. com.money[3] ..'K*N'
+      end
+    elseif com.group == 'oil' then
+      txt = money(com.money[2] * 2^(com.level - 3))
+    elseif com.level == 1 then
+      txt = money(com.money[2])
+    elseif com.level == 2 then
+      txt = money(com.money[2]*2)
+    else
+      txt = money(com.money[com.level])
+    end
+  end
+  if txt then Gprintf(txt, x - cell_padding, y + cw - cell_padding * 2, cw, 'center') end
 end
 
 --ф-я рендеринга для больших спецклеток по углам
@@ -293,11 +307,24 @@ for i = 1, field_width*2 + field_height*2 + 4 do
       side = side + 1
     end
     x, y = get_xy(c, side)
+    if side == 1 then
+      w = cw - cell_padding * 2
+      h = ch - cell_padding * 2
+    elseif side == 2 then 
+      x = x - ch + cw
+      w = ch - cell_padding * 2
+      h = cw - cell_padding * 2
+    elseif side == 3 then 
+      y = y - ch + cw
+      w = cw - cell_padding * 2
+      h = ch - cell_padding * 2
+    elseif side == 4 then
+      w = ch - cell_padding * 2
+      h = cw - cell_padding * 2
+    end
     E:new(companys)
-    :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0, x = x, y = y, w = cw - cell_padding * 2, h = cw - cell_padding * 2, logo_hover = 0})
+    :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0, x = x, y = y, w = w, h = h, logo_hover = 0})
     :draw(render[rules_group[rules_company[i].group].draw])
-    :mouseover(function(s) s:animate({logo_hover = 255}) end)
-    :mouseout(function(s) s:animate({logo_hover = 0}) end)
     c = c + 1
   end
 end

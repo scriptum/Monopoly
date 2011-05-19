@@ -488,6 +488,7 @@ human_click_company = function(company)
   local pl = player._child[current_player]
   if gui_shares_done._visible == true then
     buybons_company(pl, rules_company[company.num])
+    company._mouseover(company)
   elseif gui_mortgage_done._visible == true then
     mortgage_company(pl, rules_company[company.num], company.num)
     if pl.cash > 0 then
@@ -505,14 +506,39 @@ human_click_company = function(company)
     end
   elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
---  else
---    buy_company(pl, company.num)
---    company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+  else
+    buy_company(pl, company.num)
+    company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+  end
+end
+
+human_mouseover_company = function(company)
+  local c = rules_company[company.num]
+  company:animate({logo_hover = 255})
+  if gui_mortgage_done._visible == true and c.owner and c.owner.k == current_player and c.level > 0 then
+    gui_text.text = l.mortgage_for .. c.name .. ' ' .. l.forr .. ' ' .. money(c.money[1]/2)
+  elseif gui_shares_done._visible == true and c.owner and c.owner.k == current_player and c.level > 1 and c.level < 7 then
+    gui_text.text = l.shares_for .. c.name .. ' ' .. l.forr .. ' ' .. money(rules_group[c.group].upgrade) .. l.shares_next .. money(c.money[c.level+1])
+  elseif gui_unmortgage_done._visible == true and c.owner and c.owner.k == current_player and c.level == 0 then
+    gui_text.text = l.unmortgage_for .. c.name .. ' ' .. l.forr .. ' ' .. money(c.money[1])
+  end
+end
+
+human_mouseout_company = function(company)
+  company:animate({logo_hover = 0})
+  if gui_mortgage_done._visible == true then
+      gui_text.text = l.mortgage_help
+  elseif gui_shares_done._visible == true then
+    gui_text.text = l.shares_help
+  elseif gui_unmortgage_done._visible == true then
+    gui_text.text = l.unmortgage_help
   end
 end
 
 for k, v in pairs(companys._child) do
-  v:click(human_click_company)
+  v :click(human_click_company)
+    :mouseover(human_mouseover_company)
+    :mouseout(human_mouseout_company)
 end 
 
 -- Обработка кнопки переход хода
