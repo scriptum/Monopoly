@@ -231,27 +231,29 @@ angles = {1, 13, 20, 32}
 moove = function(pl, x)
   if pl.jail == 0 then
     local pl_x, pl_y
-    local last_cell = 0
+    local last_cell = pl.pos
+    local last_i = 1
     -- добавляем все углы, по которым проходим
     for i=1, x do
       pl.pos = pl.pos + 1
       if pl.pos > max then
 	pl.pos = pl.pos-max
       end
-      --~ if table.find(angles, pl.pos) > 0 then
-	--~ pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-	--~ pl:animate({x=pl_x, y=pl_y},{speed=0.7})
-	--~ last_cell = pl.pos
-      --~ end
+      if table.find(angles, pl.pos) > 0 then
+	pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+	pl:animate({x=pl_x, y=pl_y},{speed=(i + 1 - last_i)/5})
+	last_cell = pl.pos
+	last_i = i
+      end
       --второй вариант анимации
-      pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-      pl:animate({x=pl_x, y=pl_y},{speed=0.2, easing='linear'})
+      --pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+      --pl:animate({x=pl_x, y=pl_y},{speed=0.2, easing='linear'})
     end
     if pl.pos ~= last_cell then
       pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-      --pl:animate({x=pl_x, y=pl_y},{speed=0.7})
+      pl:animate({x=pl_x, y=pl_y},{speed=(x + 1 - last_i)/5})
       --второй вариант анимации
-      pl:animate({x=pl_x, y=pl_y},{speed=0.2})
+      --pl:animate({x=pl_x, y=pl_y},{speed=0.2})
     end
   end
 end
