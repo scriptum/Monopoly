@@ -462,7 +462,8 @@ for k = 1, 5 do
   :draw(player_draw)
 end
 
-start_new_game()
+--start_new_game()
+--gamemenu:show()
 
 -- Обработка клика покупки компании
 human_buy_company = function()
@@ -626,19 +627,36 @@ end
 human_shares_done = function() 
   gui_text.text = ''
   gui_shares_done:menutoggle(menuplayer)
+  local pl = player._child[current_player]
+  local company = rules_company[pl.pos]
+  if company.type == "company" then
+    if not company.owner and pl.cash >= company.money[1] then
+      menuplayer._child[1]:show()
+    else
+      menuplayer._child[1]:hide()
+    end
+  end
   for k, v in pairs(companys._child) do
     v:animate({all_alpha = 0})
   end
   if manuauction_getvisible == true then
     manuauction_getvisible = false
     auction_human(player._child[current_player])
-
   end
 end
 
 human_mortgage_done = function() 
   gui_text.text = ''
   gui_mortgage_done:menutoggle(menuplayer)
+  local pl = player._child[current_player]
+  local company = rules_company[pl.pos]
+  if company.type == "company" then
+    if not company.owner and pl.cash >= company.money[1] then
+      menuplayer._child[1]:show()
+    else
+      menuplayer._child[1]:hide()
+    end
+  end
   for k, v in pairs(companys._child) do
     v:animate({all_alpha = 0})
   end
@@ -651,6 +669,15 @@ end
 human_unmortgage_done = function() 
   gui_text.text = ''
   gui_unmortgage_done:menutoggle(menuplayer)
+  local pl = player._child[current_player]
+  local company = rules_company[pl.pos]
+  if company.type == "company" then
+    if not company.owner and pl.cash >= company.money[1] then
+      menuplayer._child[1]:show()
+    else
+      menuplayer._child[1]:hide()
+    end
+  end
   for k, v in pairs(companys._child) do
     v:animate({all_alpha = 0})
   end
