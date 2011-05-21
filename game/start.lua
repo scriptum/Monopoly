@@ -9,5 +9,5 @@ if not gameoptions then
 end
 
 local modes = gameoptions.mode:split('x')
-G.setMode(modes[1], modes[2], gameoptions.fullscreen)
+G.setMode(modes[1], modes[2], gameoptions.fullscreen, false)
 A.setVolume(gameoptions.volume/100)

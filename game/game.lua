@@ -59,11 +59,11 @@ getplayerxy = function(n, k)
     x = x + math.cos(k*math.pi)*14 + 8
     y = y + k*12 - 3
   elseif side == 2 then
-    x = x + k*14 - 55
+    x = x + k*14 - 12
     y = y + math.cos(k*math.pi)*12 + 12
   elseif side == 3 then
     x = x + math.cos(k*math.pi)*12 + 8
-    y = y + k*12 - 55
+    y = y + k*12 - 12
   elseif side == 4 then
     x = x + k*14 -15
     y = y + math.cos(k*math.pi)*12 + 12
@@ -225,7 +225,7 @@ buybons_company = function(pl, company)
   return false
 end
 
-angles = {1, 13, 20, 32}
+angles = {1, field_width + 2, field_width + field_height + 3, field_width * 2 + field_height + 4}
 
 --функция движения по полю
 moove = function(pl, x)
@@ -506,9 +506,9 @@ human_click_company = function(company)
     end
   elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
-  else
-    buy_company(pl, company.num)
-    company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+  --~ else
+    --~ buy_company(pl, company.num)
+    --~ company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
   end
 end
 

@@ -274,6 +274,12 @@ rules_company =
     money = {140, 10, 50, 150, 450, 625, 750},
     action = action_company
   },
+  
+  {
+    name = "Шанс",
+    group = "chance",
+    action = cashback_chance
+  },
 
   {
     name = "Мегафон",
@@ -421,6 +427,12 @@ rules_company =
     money = {320, 28, 150, 450, 1000, 1200, 1400},
     action = action_company
   },
+  
+  {
+    name = "Казна",
+    group = "treasury",
+    action = cashback_treasury
+  },
 
   {
     name = "IBM",
@@ -433,7 +445,7 @@ rules_company =
   {
     name = "Налог",
     group = "nalog",
-    money = 150,
+    money = 200,
     action = action_nalog
   },
 

@@ -3,7 +3,7 @@
 
 cw = 56 --расчет ширины клетки компании
 ch = (800-cw*field_width)/2 --расчет высоты клетки компании
-local a = (600-ch*2)/field_height - cw --добавочный параметр дл€ высоты боковых компаний
+a = (600-ch*2)/field_height - cw --добавочный параметр дл€ высоты боковых компаний
 cell_padding = 2 --отступ внутри €чейки
 font_size = 10
 board = E:new(screen) --игрова€ доска
@@ -49,43 +49,40 @@ end
 E:new(board):draw(sep_draw)
 
 
---получает смещение в зависимости от позции компании
+--получает координаты левого верхнего угла клетки в зависимости от позции компании
 get_xy = function(i, side)
   if side == 1 then
-    x = ch - cw + cell_padding + cw * i
+    x = ch - cw + cw * i
     y = 0
   elseif side == 2 then
-    x = 800 - cw
-    y = ch - cw - a + (cw + a) * i + cell_padding
+    x = 800 - ch
+    y = ch - cw - a + (cw + a) * i
   elseif side == 3 then
-    x = 800 - ch + cell_padding - cw * i
-    y = 600 - cw + cell_padding * 2
+    x = 800 - ch - cw * i
+    y = 600 - ch
   elseif side == 4 then
-    x = cell_padding
-    y = 600 - ch - (cw + a) * i + cell_padding
+    x = 0
+    y = 600 - ch - (cw + a) * i
   else
     if i == 1 or i == 4 then
-      x = cell_padding * 2
+      x = 0
     else
-      x = 800 - ch + cell_padding * 2
+      x = 800 - ch
     end
     if i == 1 or i == 2 then
-      y = cell_padding * 2
+      y = 0
     else
-      y = 600 - ch + cell_padding * 2
+      y = 600 - ch
     end
   end
   return x, y
 end
 
---ф-€ формата денег
-money = function(m)
-  if m >= 1000 then
-    return '$' .. m/1000 .. 'M'
-  else
-    return '$' .. m .. 'K'
-  end
-end
+--грузим массивы смещений внутри клетки
+loadfile('rules/classic/offsets.lua')()
+
+--грузим функцию форматировани€ денег
+require('rules/classic/money.lua')
 
 render = {} --массив с функци€ми рендеринга клеток, дл€ каждого типа сво€
 
@@ -98,7 +95,7 @@ local draw_fuzzy = function(x, y, sx, sy, side)
     x = x - cell_padding
     G.draw(fuzzy, x, y, 0, sx, sy)
   elseif side == 2 then
-    G.draw(fuzzy, x + cw, y - cell_padding, math.pi/2, sx2, sy)
+    G.draw(fuzzy, x + ch + cell_padding*2, y - cell_padding, math.pi/2, sx2, sy)
   elseif side == 3 then 
     x = x - cell_padding
     y = 600 - ch
@@ -117,6 +114,7 @@ render.company = function(s)
   local sx = (cw - cell_padding*2)/16
   local sy = (ch - cell_padding*2)/16
   local com = rules_company[s.num]
+  --закраска клетки владельцем
   if com.owner then 
     local c = rules_player_colors[com.owner.k]
     c[4] = s.owner_alpha
@@ -128,29 +126,10 @@ render.company = function(s)
   draw_fuzzy(x, y, sx, sy, s.side)
   G.setBlendMode('alpha')
   G.setColor(255, 255, 255)
-  sx = (cw - cell_padding * 2) / 128
-  G.draw(rules_company_images[s.num], x, y, 0, sx)
-  
-  G.setColor(255, 255, 255)
+  --отрисовка картинки компании
+  G.draw(rules_company_images[s.num], x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w / rules_company_images[s.num]:getWidth())
   --отрисовка группы
-  if com.group then 
-    local width = math.min(cw, (ch - cw))
-    sx = width / 64
-    local group = com.group
-    if s.side == 1 then
-      G.draw(rules_group_images[group], x + (cw - sx * 64 - cell_padding*2) / 2, cw + font_size - cell_padding * 2, 0, sx)
-    elseif s.side == 2 then
-      G.draw(rules_group_images[group], x - width, y + (cw + a - sx * 64 - cell_padding*2) / 2, 0, sx)
-    elseif s.side == 3 then
-      G.draw(rules_group_images[group], x + (cw - sx * 64 - cell_padding*2) / 2, 600 - cw - width * 0.8 - font_size + cell_padding * 2, 0, sx)
-    elseif s.side == 4 then
-      G.draw(rules_group_images[group], x + cw - cell_padding, y + (cw + a - sx * 64) / 2 - cell_padding, 0, sx)
-    end
-  end
-  
-
-  
-  
+  if com.group then G.draw(rules_group_images[com.group], x + offset_group[s.side].x, y + offset_group[s.side].y, 0, offset_group[s.side].w / rules_group_images[com.group]:getWidth()) end
   
   G.setColor(0,0,0,185*math.max(s.mortgage_alpha, s.all_alpha)/255)
   draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
@@ -176,11 +155,6 @@ render.company = function(s)
       sx = 16/32
       offset_y = -2
     end
-    --~ if com.group == 'oil' then 
-      --~ img = rules_group_images.oil 
-      --~ sx = 16/64 
-      --~ G.setBlendMode('multiplicative')
-    --~ end
     offset = cw/2 - cell_padding - 10 - lvl*10/2 - 3
     for i = 1, lvl do 
       if s.side == 1 then
@@ -197,12 +171,9 @@ render.company = function(s)
   end
   
     --цена
-  G.setColor(0,0,0)
+  G.setColor(offset_rent_color)
   G.setFont(console)
-  G.fontSize = 11
-  if s.side == 3 then
-    y = 600 - cw*2 + cell_padding * 4 - font_size
-  end
+  G.fontSize = offset_rent[s.side].size
   local txt = nil
   if gui_mortgage_done._visible == true and com.owner and com.owner.k == current_player and com.level > 0 then
     txt = money(com.money[1]/2)
@@ -230,56 +201,33 @@ render.company = function(s)
       txt = money(com.money[com.level])
     end
   end
-  if txt then Gprintf(txt, x - cell_padding, y + cw - cell_padding * 2, cw, 'center') end
+  if txt then Gprintf(txt, x + offset_rent[s.side].x, y + offset_rent[s.side].y, offset_rent[s.side].w, 'center') end
 end
 
 --ф-€ рендеринга дл€ больших спецклеток по углам
 render.big_cell = function(s)
-  if s.pos == 1 or s.pos == 4 then
-    x = cell_padding * 2
-  else
-    x = 800 - ch + cell_padding * 2
-  end
-  if s.pos == 1 or s.pos == 2 then
-    y = cell_padding * 2
-  else
-    y = 600 - ch + cell_padding * 2
-  end
-  G.draw(rules_company_images[s.num], x, y, 0, (ch - cell_padding * 4) / 128)
+  local x, y = get_xy(s.pos, s.side)
+  G.draw(rules_company_images[s.num], x + cell_padding, y + cell_padding, 0, (ch - cell_padding * 4) / rules_company_images[s.num]:getWidth())
 end
 
 --ф-€ рендеринга казны и шанса
 render.chance = function(s)
-  x, y = get_xy(s.pos, s.side)
-  sx = (cw - cell_padding * 2) / 128
-  G.draw(rules_company_images[s.num], x, y, 0, sx)
-  if s.side == 1 then
-    y = y + cw
-  else
-    y = y - 16 - cell_padding * 2
-  end
-  G.setColor(0,0,0)
+  local x, y = get_xy(s.pos, s.side)
+  G.draw(rules_company_images[s.num], x + offset_chest[s.side].x, y + offset_chest[s.side].y, 0, offset_chest[s.side].w / rules_company_images[s.num]:getWidth())
+  G.setColor(offset_rent_color)
   G.setFont(console)
-  G.fontSize = 15
-  Gprintf(rules_company[s.num].name, x - cell_padding, y, cw+6, 'center')
-  --G.rectangle('line', x,y,cw- cell_padding * 2,12)
+  G.fontSize = offset_chest_text[s.side].size
+  Gprintf(rules_company[s.num].name, x + offset_chest_text[s.side].x, y + offset_chest_text[s.side].y, offset_chest_text[s.side].w, 'center')
 end
 
 --ф-€ рендеринга налога
 render.nalog = function(s)
-  x, y = get_xy(s.pos, s.side)
-  if s.side == 2 then
-    x = 800 - ch
-    y = ch + s.pos * cw
-  else
-    x = 0
-    y = 600 - ch - 16*2 - s.pos * cw
-  end
-  G.setColor(0,0,0)
+  local x, y = get_xy(s.pos, s.side)
+  G.draw(rules_company_images[s.num], x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w / rules_company_images[s.num]:getWidth())
+  G.setColor(offset_rent_color)
   G.setFont(console)
-  G.fontSize = 15
-  Gprintf(rules_company[s.num].name .. '\n' .. money(rules_company[s.num].money), x, y, ch, 'center')
-  --G.rectangle('line', x,y,ch, cw)
+  G.fontSize = offset_chest_text[s.side].size
+  Gprintf(money(rules_company[s.num].money), x + offset_rent[s.side].x, y + offset_rent[s.side].y, offset_rent[s.side].w, 'center')
 end
 
 local c = 1
@@ -307,20 +255,12 @@ for i = 1, field_width*2 + field_height*2 + 4 do
       side = side + 1
     end
     x, y = get_xy(c, side)
-    if side == 1 then
-      w = cw - cell_padding * 2
-      h = ch - cell_padding * 2
-    elseif side == 2 then 
-      x = x - ch + cw
-      w = ch - cell_padding * 2
-      h = cw - cell_padding * 2
-    elseif side == 3 then 
-      y = y - ch + cw
-      w = cw - cell_padding * 2
-      h = ch - cell_padding * 2
-    elseif side == 4 then
-      w = ch - cell_padding * 2
-      h = cw - cell_padding * 2
+    if side == 1 or side == 3 then
+      w = cw
+      h = ch
+    else
+      w = ch
+      h = cw
     end
     E:new(companys)
     :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0, x = x, y = y, w = w, h = h, logo_hover = 0})
@@ -445,12 +385,14 @@ G.draw(s.fb, s.x, s.y, 0, 1/screen_scale)
 end):mousepress(drag_start):mouserelease(drag_end)
 rag_upd(frame)
 ]]
+--~ local fupd = loadfile('rules/classic/offsets.lua')
 --~ E:new(board_gui):move(200, 400):slider('Cell width', 50, 60, {'cw'}, 
 --~ function(v) 
   --~ ch = (800-cw*field_width)/2 
   --~ a = (600-ch*2)/field_height - cw 
   --~ scaley = (ch-sep_padding*2)/16 
   --~ burn:size(800 - ch*2+10,600 - ch*2 +10):move(ch - 5,ch - 5) 
+  --~ fupd()
 --~ end)
---~ E:new(board_gui):move(200, 440):slider('Cell padding', 0, 10, {'cell_padding'})
---E:new(screen):move(300, 250):slider('ch', 20, 200, {'ch'}, function(v) a = (600-ch*2)/field_height - cw print(a) end)
+--~ E:new(board_gui):move(200, 440):slider('Cell padding', 0, 10, {'cell_padding'}, fupd)
+--~ --E:new(screen):move(300, 250):slider('ch', 20, 200, {'ch'}, function(v) a = (600-ch*2)/field_height - cw print(a) end)

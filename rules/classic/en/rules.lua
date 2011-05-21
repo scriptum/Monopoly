@@ -237,6 +237,12 @@ rules_company =
     money = {140, 10, 50, 150, 450, 625, 750},
     action = action_company
   },
+  
+  {
+    name = "Chance",
+    group = "chance",
+    action = cashback_chance
+  },
 
   {
     name = "AT&T",
@@ -385,6 +391,12 @@ rules_company =
     money = {320, 28, 150, 450, 1000, 1200, 1400},
     action = action_company
   },
+  
+  {
+    name = "Chest",
+    group = "treasury",
+    action = cashback_treasury
+  },
 
   {
     name = "IBM",
@@ -393,11 +405,11 @@ rules_company =
     money = {350, 35, 175, 500, 1100, 1300, 1500},
     action = action_company
   },
-
+  
   {
     name = "Tax",
     group = "nalog",
-    money = 150,
+    money = 200,
     action = action_nalog
   },
 
@@ -412,7 +424,6 @@ rules_company =
   {
     name = "Apple",
     type = "company",
-    image = "Apple-logo.png",
     group = "it",
     money = {400, 50, 200, 600, 1400, 1700, 2000},
     action = action_company
