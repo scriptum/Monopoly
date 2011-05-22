@@ -31,7 +31,10 @@ E:new(manuauction):size(w, h):move(sx+(w+10)*2, 400):button('-100', click_manuau
 E:new(manuauction):size(w, h):move(sx+(w+10)*3, 360):button('Bid', click_manuauction_button_bid):set({disabled = true})
 E:new(manuauction):size(w, h):move(sx+(w+10)*3, 400):button('Pass', click_manuauction_button_pass)
 
-gamemenu = E:new(screen):hide()
+gamemenu = E:new(screen):show()
+
+if iflinux then gamemenu:hide() end
+
 menuvsettings = E:new(gamemenu):hide()
 
 --меню игры

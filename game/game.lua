@@ -1,5 +1,17 @@
 max = field_width*2 + field_height*2 + 4
 
+
+function osdetect()
+  fh,err = io.popen("uname -o 2>/dev/null","r")
+  if fh then
+    osname = fh:read()
+  end
+  if osname then return true end
+  return false
+end
+
+iflinux = osdetect()
+
 start_new_game = function()
   player:stop()
   for k = 1, 5 do
@@ -462,7 +474,7 @@ for k = 1, 5 do
   :draw(player_draw)
 end
 
---start_new_game()
+if iflinux then start_new_game() end
 --gamemenu:show()
 
 -- Обработка клика покупки компании
@@ -507,9 +519,9 @@ human_click_company = function(company)
     end
   elseif gui_unmortgage_done._visible == true then
     buyout_company(pl, rules_company[company.num], company.num)
-  --~ else
-    --~ buy_company(pl, company.num)
-    --~ company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+  elseif iflinux then
+    buy_company(pl, company.num)
+    company:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
   end
 end
 
@@ -879,6 +891,21 @@ end
 function love.keyreleased( key, unicode )
    if key == "f" then 
      lquery_fx = not lquery_fx 
+   end
+   if key == "1" and iflinux then
+      player._child[1].cash = player._child[1].cash - 1000
+   end
+   if key == "q" and iflinux then
+      player._child[1].cash = player._child[1].cash + 100
+   end
+   if key == "2" and iflinux then
+      player._child[2].cash = player._child[2].cash - 1500
+   end
+   if key == "w" and iflinux then
+      player._child[2].cash = player._child[2].cash + 100
+   end
+   if key == "3" and iflinux then
+      player._child[3].cash = player._child[3].cash - 1000
    end
    if key == "escape" then
      gamemenu:toggle()
