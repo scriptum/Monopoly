@@ -79,7 +79,7 @@ get_xy = function(i, side)
 end
 
 --грузим массивы смещений внутри клетки
-loadfile('rules/classic/offsets.lua')()
+require('rules/classic/offsets.lua')
 
 --грузим функцию форматирования денег
 require('rules/classic/money.lua')
