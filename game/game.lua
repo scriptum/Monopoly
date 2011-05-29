@@ -223,7 +223,7 @@ buyout_company = function(pl, company, num)
 end
 
 -- Прокачка компаний
-buybons_company = function(pl, company)
+buyshares_company = function(pl, company)
   if company.owner == pl and company.level >= 2 and company.level < 7 and company.group ~= "oil" and 
 	    company.group ~= "bank" and pl.cash > rules_group[company.group].upgrade then
     if initplayers[current_player] == 'Human' then
@@ -315,7 +315,7 @@ ai = function(pl)
 -- прокачка компаний
   for k,v in pairs(rules_company) do
     if v.type == "company" and v.owner == pl and pl.cash >= (rules_group[v.group].upgrade) then
-      if buybons_company(pl, v) == true then
+      if buyshares_company(pl, v) == true then
 	player:delay({speed = 0, cb = function() ai(pl) end})
 	return
       end
@@ -500,7 +500,7 @@ human_click_company = function(company)
 --company имеет тип Entity!!!
   local pl = player._child[current_player]
   if gui_shares_done._visible == true then
-    buybons_company(pl, rules_company[company.num])
+    buyshares_company(pl, rules_company[company.num])
     company._mouseover(company)
   elseif gui_mortgage_done._visible == true then
     mortgage_company(pl, rules_company[company.num], company.num)

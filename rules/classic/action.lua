@@ -120,8 +120,25 @@ cashback_chance = function(player)
 	math.randomseed(os.time() + time + math.random(99999))
 	local chance = math.random(1, #rules_chance)
 	gui_text.text = rules_chance[chance].text
-	money_transfer(rules_chance[chance].money, player)
+	rules_chance[chance].action(player, rules_chance[chance])
 -- print("Chance: "..rules_chance[chance].money)
+end
+
+cashback = function(player, chance)
+  money_transfer(chance.money, player)
+end
+
+action_birthday = function(pl, card)
+  local m = card.money
+  for i = 1, __max do
+    if player._child[i].ingame == true and player._child[i] ~= pl then
+      money_transfer(m, player._child[i], pl)
+    end
+  end
+end
+
+tax_on_shares = function(pl, card)
+
 end
 
 -- Ёкшн казны
@@ -129,7 +146,7 @@ cashback_treasury = function(player)
 	math.randomseed(os.time() + time + math.random(99999))
 	local treasury = math.random(1, #rules_treasury)
 	gui_text.text = rules_treasury[treasury].text
-	money_transfer(rules_treasury[treasury].money, player)
+	rules_treasury[treasury].action(player, rules_treasury[treasury])
 -- print("Treasury: "..rules_chance[treasury].money)
 end
 
