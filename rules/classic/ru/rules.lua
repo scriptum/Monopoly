@@ -545,6 +545,13 @@ rules_chance = {
   action = action_birthday,
   money = 50,
   text = "Поздравляем! У вас День Рождения\nполучите $ 50 К от каждого игрока"
+ },
+
+ {
+  type = "chance",
+  action = tax_on_shares,
+  money = 10,
+  text = "Реструктуризация компании\nзаплатите $ 10 К за каждую акцию"
  }
 }
 
@@ -632,6 +639,13 @@ rules_treasury = {
   action = cashback,
   money = -100,
   text = "Оставленную вами дома кредитную карточку взяли дети поиграть\nзаплатите $ 100 К"
+ },
+
+ {
+  type = "treasury",
+  action = tax_on_shares,
+  money = 40,
+  text = "Повышен налог на частную собственность\nзаплатите $ 40 К за каждую акцию"
  }
 }
 

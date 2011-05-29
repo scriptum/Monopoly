@@ -124,10 +124,12 @@ cashback_chance = function(player)
 -- print("Chance: "..rules_chance[chance].money)
 end
 
+-- Отъем денег. функция для карточек
 cashback = function(player, chance)
   money_transfer(chance.money, player)
 end
 
+-- День рождения игрока. функция для карточек
 action_birthday = function(pl, card)
   local m = card.money
   for i = 1, __max do
@@ -137,8 +139,19 @@ action_birthday = function(pl, card)
   end
 end
 
+-- Оплата каждой акции. функция для карточек
 tax_on_shares = function(pl, card)
-
+  local company
+  local number_of_shares = 0
+  for i = 1, max do
+    company = rules_company[i]
+    if company.type == "company" and company.owner == pl and company.group ~= "bank" and company.group ~= "oil" and company.level > 2 then
+      number_of_shares = number_of_shares + company.level - 2
+    end
+  end
+  if number_of_shares > 0 then
+    money_transfer(-card.money * number_of_shares, pl)
+  end
 end
 
 -- Экшн казны

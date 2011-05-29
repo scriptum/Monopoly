@@ -530,7 +530,7 @@ human_mouseover_company = function(company)
   company:animate({logo_hover = 255})
   if gui_mortgage_done._visible == true and c.owner and c.owner.k == current_player and c.level > 0 then
     gui_text.text = l.mortgage_for .. c.name .. ' ' .. l.forr .. ' ' .. money(c.money[1]/2)
-  elseif gui_shares_done._visible == true and c.owner and c.owner.k == current_player and c.level > 1 and c.level < 7 then
+  elseif gui_shares_done._visible == true and c.owner and c.owner.k == current_playerand and c.group ~= 'oil' and c.group ~= 'bank' and c.level > 1 and c.level < 7 then
     gui_text.text = l.shares_for .. c.name .. ' ' .. l.forr .. ' ' .. money(rules_group[c.group].upgrade) .. l.shares_next .. money(c.money[c.level+1])
   elseif gui_unmortgage_done._visible == true and c.owner and c.owner.k == current_player and c.level == 0 then
     gui_text.text = l.unmortgage_for .. c.name .. ' ' .. l.forr .. ' ' .. money(c.money[1])
