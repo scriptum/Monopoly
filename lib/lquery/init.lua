@@ -140,8 +140,7 @@ function love.run()
             return
           end
         end
-        if e == "mp" then 
-        print('pressed', e, a)
+        if e == "mp" then
           MousePressed = true 
           MouseButton = c
         end
