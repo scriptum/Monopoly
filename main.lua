@@ -83,19 +83,13 @@ debug_keypressed = function(key, unicode)
     s.cursor = s.input:len()
     s.tabupdate(s)
   elseif key == "tab" then 
-    local needle = s.tabstr:gsub(".*[ {(\[=+*/#-]", "")
+    local needle = s.tabstr:gsub(".*[ {}()\%[=+*/#-]", "")
     local arr = _G
     local buf = needle:split2("[.]")
     local k, v
     for k,v in ipairs(buf or {}) do
-      if k + 0 == #buf then
-        needle = v
-      else
-        if arr[v] then
-          arr = arr[v]
-        else
-          return
-        end
+      if k + 0 == #buf then needle = v
+      else if arr[v] then arr = arr[v] else return end
       end
     end
     buf = needle:split2(":")
@@ -111,10 +105,11 @@ debug_keypressed = function(key, unicode)
     k, v = table.findindex(arr, needle)
     if k then 
       buf = 0
-      if type(v) == 'function' then k = k .. '()' buf = 1 end
-      s.input = s.tabstr:sub(1, s.tabstr:len() - needle:len()) .. k
+      if type(v) == 'function' then k = k .. '()' buf = 1 end 
+      local buf2 = s.tabstr:sub(1, s.tabstr:len() - needle:len()) .. k
+      s.input = buf2 .. s.tabstr2
       s.history[#s.history] = s.input
-      s.cursor = s.input:len() - buf
+      s.cursor = buf2:len() - buf
     end
 	elseif key == "right" then
 		s.cursor = s.cursor + 1
@@ -124,8 +119,8 @@ debug_keypressed = function(key, unicode)
     s.tabupdate(s)
   elseif key == "backspace" then 
     if s.tabindex ~= 1 then
-      s.input = s.tabstr
-      s.cursor = s.input:len()
+      s.input = s.tabstr .. s.tabstr2
+      s.cursor = s.tabstr:len()
       s.tabupdate(s)
     else
       if s.cursor > 0 then
@@ -173,7 +168,7 @@ end
 Console = E:new()
 :size(800, 200)
 :move(0, 627)
-:set({lines = {}, input = "", cursor = 0, disabled = true, history = gameoptions.console_history, history_cursor = #gameoptions.console_history, tabindex = 1, tabstr = "", tabupdate = function(s) s.tabstr = s.input:sub(1, s.cursor) s.tabindex = 1 end})
+:set({lines = {}, input = "", cursor = 0, disabled = true, history = gameoptions.console_history, history_cursor = #gameoptions.console_history, tabindex = 1, tabstr = "", tabstr2 = "", tabupdate = function(s) s.tabstr = s.input:sub(1, s.cursor) s.tabstr2 = s.input:sub(s.cursor + 1, s.input:len()) s.tabindex = 1 end})
 :draw(function(s)
   G.setColor(0,0,0,190)
   G.rectangle("fill", s.x, s.y, s.w, s.h)
