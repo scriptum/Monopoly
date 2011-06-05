@@ -35,13 +35,13 @@ local function animate(ent)
       if not aq._keys then
         if type(aq.keys) == 'function' then
           aq._keys = aq.keys()
-        else
+        elseif type(aq.keys) == 'table' then
           aq._keys = aq.keys
         end
       end
       if not aq.lasttime then
         aq.lasttime = time
-        for k, v in pairs(aq._keys) do
+        for k, v in pairs(aq._keys or {}) do
           aq.old[k] = ent[k]
         end
       end
@@ -54,13 +54,13 @@ local function animate(ent)
           aq._keys = nil
           aq.lasttime = nil
           aq.old = {}
-          table.insert(j, aq) 
+          table.insert(j, aq)
         end
         table.remove(j, 1)
         if aq.callback then aq.callback(ent) end
         animate(ent)
       else
-        for k, v in pairs(aq._keys) do
+        for k, v in pairs(aq._keys or {}) do
           if ent[k] and type(ent[k]) == 'number' then ent[k] = easing[aq.easing](time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed) end
         end
       end --if aq.lasttime + vv.speed <= time

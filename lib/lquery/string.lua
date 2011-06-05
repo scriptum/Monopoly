@@ -30,3 +30,11 @@ function string.split(str, pat)
   end
   return t
 end
+
+--split with empty parts
+function string.split2(str, pat)
+  local t = {}
+  local function helper(line) table.insert(t, line) return "" end
+  helper((str:gsub("(.-)"..pat, helper)))
+  return t
+end
