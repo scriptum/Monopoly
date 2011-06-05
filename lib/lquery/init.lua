@@ -141,11 +141,41 @@ function love.run()
           end
         end
         if e == "mp" then 
+        print('pressed', e, a)
           MousePressed = true 
           MouseButton = c
         end
         if e == "mr" then MousePressed = false end
+        if e == "kr" then --Keypress
+          if a == "`" and debug_screen then 
+            if debug_screen.disabled == true then
+              love.keypressed = nil
+              love.keyreleased = nil
+              debug_screen:stop():animate({y = 400})
+            else
+              love.keypressed = debug_oldkeypressed
+              love.keyreleased = debug_oldkeyreleased
+              debug_screen:stop():animate({y = 627})
+            end
+            debug_screen.disabled = not debug_screen.disabled
+          end
+          KeyPressed = false
+				end
+        if e == "kp" then 
+          KeyPressed = true 
+          KeyPressedCounter = 1
+          KeyPressedKey = a
+          KeyPressedUni = b
+        end
         love.handlers[e](a,b,c)
+      end
+      if KeyPressed == true and 
+          (KeyPressedCounter == 1 or 
+           KeyPressedCounter == 2 and time - KeyPressedTime > 0.3 or
+           KeyPressedCounter > 2 and time - KeyPressedTime > 0.05) then 
+        KeyPressedTime = time
+        KeyPressedCounter = KeyPressedCounter + 1
+        debug_keypressed(KeyPressedKey,KeyPressedUni)
       end
     end
     mX, mY = getMouseXY()
@@ -159,6 +189,8 @@ function love.run()
 
       __mousepress, __mouseover = nil, nil
       if screen then process_entities(screen) end
+      if debug_screen then process_entities(debug_screen) end
+      
       --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
       --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
       if __mousemove then
