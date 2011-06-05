@@ -134,7 +134,7 @@ debug_keypressed = function(key, unicode)
     end
   elseif key:len() == 1 then
     if unicode ~= nil and unicode ~= 0 then
-      local char = string.char(unicode)
+      local char = string.char(unicode%255)
       if s.cursor == s.input:len() then
         s.input = s.input .. char
       else
