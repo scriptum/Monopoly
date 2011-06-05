@@ -146,17 +146,17 @@ function love.run()
         end
         if e == "mr" then MousePressed = false end
         if e == "kr" then --Keypress
-          if a == "`" and debug_screen then 
-            if debug_screen.disabled == true then
+          if a == "`" and Console then 
+            if Console.disabled == true then
               love.keypressed = nil
               love.keyreleased = nil
-              debug_screen:stop():animate({y = 400})
+              Console:stop():animate({y = 400})
             else
               love.keypressed = debug_oldkeypressed
               love.keyreleased = debug_oldkeyreleased
-              debug_screen:stop():animate({y = 627})
+              Console:stop():animate({y = 627})
             end
-            debug_screen.disabled = not debug_screen.disabled
+            Console.disabled = not Console.disabled
           end
           KeyPressed = false
 				end
@@ -168,7 +168,7 @@ function love.run()
         end
         love.handlers[e](a,b,c)
       end
-      if KeyPressed == true and debug_screen and debug_screen.disabled == false and 
+      if KeyPressed == true and Console and Console.disabled == false and 
           (KeyPressedCounter == 1 or 
            KeyPressedCounter == 2 and time - KeyPressedTime > 0.3 or
            KeyPressedCounter > 2 and time - KeyPressedTime > 0.05) then 
@@ -188,7 +188,7 @@ function love.run()
 
       __mousepress, __mouseover = nil, nil
       if screen then process_entities(screen) end
-      if debug_screen then process_entities(debug_screen) end
+      if Console then process_entities(Console) end
       
       --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
       --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
