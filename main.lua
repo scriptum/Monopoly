@@ -26,6 +26,7 @@ small = G.newFont(12)
 function table.findindex(arr, needle)
   local i = 1, m
   local l = needle:len()
+  if type(arr) ~= table then return nil, nil end
   for m = 1, 3 do
     for k, v in pairs(arr) do
       if string.sub(k, 1, l) == needle then
