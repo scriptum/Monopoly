@@ -154,7 +154,7 @@ function love.run()
             else
               love.keypressed = debug_oldkeypressed
               love.keyreleased = debug_oldkeyreleased
-              Console:stop():animate({y = 627})
+              Console:stop():animate({y = 600 + (30 + 1) / screen_scale})
             end
             Console.disabled = not Console.disabled
           end
