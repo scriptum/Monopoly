@@ -56,12 +56,24 @@ debug_keypressed = function(key, unicode)
   if key == "`" or key == "escape" then
   elseif key =="return" then
     table.insert(s.lines, '> ' .. s.input)
+    if s.history_cursor == #s.history then table.insert(s.history, "") end
+    s.history_cursor = #s.history
     xpcall(loadstring(s.input), 'Error!')
     s.input = ""
     s.cursor = 0
   elseif key == "left" then
 		s.cursor = s.cursor - 1
 		if s.cursor < 0 then s.cursor = 0 end
+  elseif key == "up" then
+    s.history_cursor = s.history_cursor - 1
+    if s.history_cursor < 1 then s.history_cursor = 1 end
+    s.input = s.history[s.history_cursor]
+    s.cursor = s.input:len()
+  elseif key == "down" then 
+    s.history_cursor = s.history_cursor + 1
+    if s.history_cursor > #s.history then s.history_cursor = #s.history end
+    s.input = s.history[s.history_cursor]
+    s.cursor = s.input:len()
   elseif key == "home" then
     s.cursor = 0
   elseif key == "end" then
@@ -90,12 +102,14 @@ debug_keypressed = function(key, unicode)
       end
       s.cursor = s.cursor + 1
     end
+    s.history_cursor = #s.history
+    s.history[#s.history] = s.input
   end
 end
 debug_screen = E:new()
 :size(800, 200)
 :move(0, 627)
-:set({lines = {}, input = "", cursor = 0, disabled = true, history = {}})
+:set({lines = {}, input = "", cursor = 0, disabled = true, history = gameoptions.console_history, history_cursor = #gameoptions.console_history})
 :draw(function(s)
   G.setColor(0,0,0,190)
   G.rectangle("fill", s.x, s.y, s.w, s.h)
@@ -107,7 +121,7 @@ debug_screen = E:new()
   G.setFont(small)
   G.setColor(255,255,255,255)
   G.line(s.x, s.y + 186, s.w, s.y + 186)
-  Gprintf('fps: '..love.timer.getFPS() .. '\nMemory: ' .. gcinfo(),s.x,s.y - 24,s.w, "right")
+  Gprintf('fps: '..love.timer.getFPS() .. '\nMemory: ' .. gcinfo(), s.x, s.y - 24, s.w, "right")
   Gprintf('> ' .. s.input,s.x,s.y + 188,s.w)
   if math.sin(time*6) > 0 then
     Gprint('|', (small:getWidth('> ') + small:getWidth(string.sub(s.input, 0, s.cursor)) - 2) / screen_scale, s.y + 188)

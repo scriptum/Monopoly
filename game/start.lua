@@ -4,7 +4,8 @@ if not gameoptions then
 	gameoptions = {
 		mode = '800x600',
 		fullscreen = false,
-		volume = 70
+		volume = 70,
+		console_history = {""}
 	}
 end
 

@@ -168,7 +168,7 @@ function love.run()
         end
         love.handlers[e](a,b,c)
       end
-      if KeyPressed == true and 
+      if KeyPressed == true and debug_screen and debug_screen.disabled == false and 
           (KeyPressedCounter == 1 or 
            KeyPressedCounter == 2 and time - KeyPressedTime > 0.3 or
            KeyPressedCounter > 2 and time - KeyPressedTime > 0.05) then 
