@@ -225,7 +225,7 @@ end
 -- Прокачка компаний
 buyshares_company = function(pl, company)
   if company.owner == pl and company.level >= 2 and company.level < 7 and company.group ~= "oil" and 
-	    company.group ~= "bank" and pl.cash > rules_group[company.group].upgrade then
+	    company.group ~= "bank" and pl.cash >= rules_group[company.group].upgrade then
     if initplayers[current_player] == 'Human' then
       company.level = company.level + 1
     else
