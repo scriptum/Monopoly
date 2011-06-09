@@ -21,7 +21,7 @@ require('rules.classic.'..lang..'.rules')
 
 require('data')
 require('game')
-
+--test
 small = G.newFont(12)
 function table.findindex(arr, needle)
   local i = 1, m
