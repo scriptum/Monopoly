@@ -1,4 +1,5 @@
 --получение переменной по ссылке и задание ей значения невозможны в луа, так что костыли
+--TODO заюзать динамические функции!!
 var_by_reference = function(var, value)
   if type(var) == 'table' then
     if #var == 1 then
@@ -16,16 +17,27 @@ end
 lquery_fx = true
 lquery_hooks = {}
 
-local easing = require("lib.lquery.easing")
-require("lib.lquery.string")
-require("lib.lquery.table")
-require("lib.lquery.entity")
-
+local easing = require("lib/lquery/easing")
+require("lib/lquery/entity")
+S = scrupp
+love = {}
+love.graphics = {
+  newImage = S.newImage,
+  setColor = S.setColor,
+  setBlendMode = S.setBlendMode,
+  rectangleFilled = S.rectangleFilled,
+  rectangle = S.rectangle,
+  line = S.line,
+  point = S.point,
+}
+love.audio = {newImage = scrupp.addImage}
+love.filesystem = {newImage = scrupp.addImage}
 G = love.graphics --graphics
 A = love.audio --audio
 F = love.filesystem --files
+
 getMouseXY = function()
-  return love.mouse.getX(), love.mouse.getY()
+  return S.getMousePos()
 end
 
 local function animate(ent)
@@ -35,13 +47,13 @@ local function animate(ent)
       if not aq._keys then
         if type(aq.keys) == 'function' then
           aq._keys = aq.keys()
-        elseif type(aq.keys) == 'table' then
+        else
           aq._keys = aq.keys
         end
       end
       if not aq.lasttime then
         aq.lasttime = time
-        for k, v in pairs(aq._keys or {}) do
+        for k, v in pairs(aq._keys) do
           aq.old[k] = ent[k]
         end
       end
@@ -54,13 +66,13 @@ local function animate(ent)
           aq._keys = nil
           aq.lasttime = nil
           aq.old = {}
-          table.insert(j, aq)
+          table.insert(j, aq) 
         end
         table.remove(j, 1)
         if aq.callback then aq.callback(ent) end
         animate(ent)
       else
-        for k, v in pairs(aq._keys or {}) do
+        for k, v in pairs(aq._keys) do
           if ent[k] and type(ent[k]) == 'number' then ent[k] = easing[aq.easing](time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed) end
         end
       end --if aq.lasttime + vv.speed <= time
@@ -103,8 +115,8 @@ local function process_entities(ent)
       events(ent)
     end
     if ent._draw then 
-      G.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
-      if ent.blendMode then G.setBlendMode(ent.blendMode) else G.setBlendMode('alpha') end
+      S.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
+      if ent.blendMode then S.setBlendMode(ent.blendMode) else S.setBlendMode('alpha') end
       ent._draw(ent) 
     end
     if ent._child then 
@@ -115,100 +127,74 @@ local function process_entities(ent)
   end
 end
 
-function love.run()
-  if love.load then love.load(arg) end
 
-  local dt = 0
-  time = 0
-  -- Main loop time.
-  while true do
-    if love.timer then
-      love.timer.step()
-      dt = love.timer.getDelta()
-    end
-    if love.update then
-      love.update(dt)
-    end
-    -- Process events.
-    if love.event then
-      for e,a,b,c in love.event.poll() do
-        if e == "q" then
-          if not love.quit or not love.quit() then
-            if love.audio then
-              love.audio.stop()
-            end
-            return
-          end
-        end
-        if e == "mp" then
-          MousePressed = true 
-          MouseButton = c
-        end
-        if e == "mr" then MousePressed = false end
-        if e == "kr" then --Keypress
-          if a == "`" and Console then 
-            if Console.disabled == true then
-              love.keypressed = nil
-              love.keyreleased = nil
-              Console:stop():animate({y = 400})
-            else
-              love.keypressed = debug_oldkeypressed
-              love.keyreleased = debug_oldkeyreleased
-              Console:stop():animate({y = 600 + (30 + 1) / screen_scale})
-            end
-            Console.disabled = not Console.disabled
-          end
-          KeyPressed = false
-				end
-        if e == "kp" then 
-          KeyPressed = true 
-          KeyPressedCounter = 1
-          KeyPressedKey = a
-          KeyPressedUni = b
-        end
-        love.handlers[e](a,b,c)
-      end
-      if KeyPressed == true and Console and Console.disabled == false and 
-          (KeyPressedCounter == 1 or 
-           KeyPressedCounter == 2 and time - KeyPressedTime > 0.3 or
-           KeyPressedCounter > 2 and time - KeyPressedTime > 0.05) then 
-        KeyPressedTime = time
-        KeyPressedCounter = KeyPressedCounter + 1
-        debug_keypressed(KeyPressedKey,KeyPressedUni)
-      end
-    end
-    mX, mY = getMouseXY()
-    if G then
-      G.clear()
-      time = love.timer.getTime()
-      
-      for _, v in pairs(lquery_hooks) do
-        v()
-      end
+lasttimer = 0
 
-      __mousepress, __mouseover = nil, nil
-      if screen then process_entities(screen) end
-      if Console then process_entities(Console) end
-      
-      --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
-      --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
-      if __mousemove then
-        __mousemove._mousemove(__mousemove, mX, mY, MouseButton)
+
+main ={
+	render = function()
+    --if love.load then love.load(arg) end
+    time = 0
+    -- Main loop time.
+    --while true do
+      mX, mY = getMouseXY()
+
+    time = scrupp.getTicks() / 1000
+    if lasttimer + 1 < time then
+      lasttimer = time
+    end
+    
+    for _, v in pairs(lquery_hooks) do
+      v()
+    end
+
+    __mousepress, __mouseover = nil, nil
+    
+    if screen then process_entities(screen) end
+    if Console then process_entities(Console) end
+    
+    --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
+    --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
+    if __mousemove then
+      __mousemove._mousemove(__mousemove, mX, mY, MouseButton)
+    end
+    if __mouseover then
+      __mouseover._mouseover(__mouseover, mX, mY, MouseButton)
+    end
+    if __mousepress then
+      if __mousepress._mousepress then __mousepress._mousepress(__mousepress, mX, mY, MouseButton) end
+      MousePressedOwner = __mousepress
+    end
+    if MousePressed == false and MousePressedOwner then
+      if MousePressedOwner._mouserelease then MousePressedOwner._mouserelease(v, mX, mY) end
+      if MousePressedOwner._hasMouse == true and MousePressedOwner._click then MousePressedOwner._click(MousePressedOwner, mX, mY, MouseButton) end
+      MousePressedOwner = nil
+    end
+
+  end,
+	mousepressed = function(x, y, button)
+		MousePressed = true
+		MouseButton = button
+	end,
+	mousereleased = function(x, y, button)
+		MousePressed = false
+		MouseButton = button
+	end,
+  keypressed = function(key, unicode)
+		KeyPressed = true
+		KeyPressedKey = key
+    KeyPressedUni = unicode
+    KeyPressedCounter = 1
+    if key == "`" and Console then 
+      if Console.disabled == true then
+        Console:stop():animate({y = 400})
+      else
+        Console:stop():animate({y = 600 + 31 / screen_scale})
       end
-      if __mouseover then
-        __mouseover._mouseover(__mouseover, mX, mY, MouseButton)
-      end
-      if __mousepress then
-        if __mousepress._mousepress then __mousepress._mousepress(__mousepress, mX, mY, MouseButton) end
-        MousePressedOwner = __mousepress
-      end
-      if MousePressed == false and MousePressedOwner then
-        if MousePressedOwner._mouserelease then MousePressedOwner._mouserelease(v, mX, mY) end
-        if MousePressedOwner._hasMouse == true and MousePressedOwner._click then MousePressedOwner._click(MousePressedOwner, mX, mY, MouseButton) end
-        MousePressedOwner = nil
-      end
-      if love.draw then love.draw() end
-      G.present()
-    end --if G
-  end
-end
+      Console.disabled = not Console.disabled
+    end
+	end,
+  keyreleased = function()
+		KeyPressed = false
+	end,
+}
