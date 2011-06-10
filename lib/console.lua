@@ -10,7 +10,7 @@ table.insert(lquery_hooks, function()
 	end
 end)
 local small = Fonts["Pt Sans"][8]
-small:select()
+
 function table.findindex(arr, needle)
   local i = 1, m
   local l = needle:len()
@@ -70,30 +70,54 @@ debug_keypressed = function(key, unicode)
     s.cursor = s.input:len()
     s.tabupdate(s)
   elseif key == "tab" then
-    local needle = s.tabstr:gsub(".*[ {}()\%[=+*/#-]", "")
+    --~ local needle = s.tabstr:gsub(".*[ {}()\%[=+*/#-]", "")
+    --~ local arr = _G
+
+    --~ local buf = needle:split2("[.]")
+    --~ local k, v
+    --~ for k,v in ipairs(buf or {}) do
+      --~ if k + 0 == #buf then needle = v
+      --~ else if arr[v] then arr = arr[v] else return end
+      --~ end
+    --~ end
+    --~ buf = needle:split2(":")
+    --~ if #buf == 2 then
+      --~ if arr[buf[1]] then
+        --~ local t = getmetatable(arr[buf[1]])
+        --~ if t and t.__index then
+          --~ arr = t.__index
+          --~ needle = buf[2]
+        --~ end
+      --~ end
+    --~ end
     local arr = _G
-    local buf = needle:split2("[.]")
-    local k, v
-    for k,v in ipairs(buf or {}) do
-      if k + 0 == #buf then needle = v
-      else if arr[v] then arr = arr[v] else return end
+    local needle = s.tabstr
+    local pos = s.tabstr:find("[.:][^.:]*$") -- last . or :
+    if pos then
+      local str = "return " .. s.tabstr:sub(1, pos - 1)
+      local stat, res = pcall(loadstring(str))
+      if stat == true and res then
+        arr = res
+        needle = s.tabstr:sub(pos+1, s.tabstr:len())
       end
     end
-    buf = needle:split2(":")
-    if #buf == 2 then
-      if arr[buf[1]] then
-        local t = getmetatable(arr[buf[1]])
-        if t and t.__index then
-          arr = t.__index
-          needle = buf[2]
+
+    local k, v = table.findindex(arr, needle)
+    if k then
+      local buf = 0
+      local buf2 = 0
+      if type(v) == 'function' then 
+        k = k .. '()' buf = 1 
+      elseif type(k) == 'number' then 
+        k = '[' .. k .. ']'
+        buf2 = 1
+      elseif type(k) == 'string' then 
+        if not k:find("^[a-zA-Z_][a-zA-Z_0-9]*$") then
+          k = '["' .. k .. '"]'
+          buf2 = 1
         end
       end
-    end
-    k, v = table.findindex(arr, needle)
-    if k then
-      buf = 0
-      if type(v) == 'function' then k = k .. '()' buf = 1 end
-      local buf2 = s.tabstr:sub(1, s.tabstr:len() - needle:len()) .. k
+      local buf2 = s.tabstr:sub(1, s.tabstr:len() - needle:len() - buf2) .. k
       s.input = buf2 .. s.tabstr2
       s.history[#s.history] = s.input
       s.cursor = buf2:len() - buf
@@ -168,25 +192,26 @@ Console = E:new()
   local sh = small:height()
   local off2 = (sh*2 + 2) / screen_scale
   local off3 = (sh + 1) / screen_scale
+  sh = sh / screen_scale
   G.rectangle(x, y, w, h, true)
-  G.rectangle(w - off1, y - off2, off1, off2, true)
+  G.rectangle(w - off1 - 2, y - off2, off1, off2, true)
   G.setColor(128,128,128,255)
   G.rectangle(x, y, w, h)
   G.rectangle(w - off1 - 2, y - off2, off1 + 2, off2)
   small:select()
   G.setColor(255,255,255,255)
   G.line(x, y + 200 - off3, w, y + 200 - off3)
-  scrupp.print('fps: '..scrupp.fps() .. '\nMemory: ' .. gcinfo(), w - off1, y - off2)
-  scrupp.print('> ' .. s.input,x,y + 200 - sh - 1)
+  Gprint('fps: '..scrupp.fps() .. '\nMemory: ' .. gcinfo(), w - off1, y - off2)
+  Gprint('> ' .. s.input,x,y + 200 - sh - 1)
   local lines = math.ceil(180 * screen_scale / sh)
   local lx = (small:width('> ') + small:width(string.sub(s.input, 0, s.cursor))) / screen_scale
   local ly = y + 200
   if math.sin(time*6) > 0 then
-    scrupp.line(lx, ly - sh, lx, ly)
+    S.line(lx, ly - sh, lx, ly)
   end
   local c, i = 0, 0
   for i = math.max(#s.lines - lines + 1, 1), #s.lines do
-    scrupp.print(s.lines[i], x, y + c * sh / screen_scale)
+    Gprint(s.lines[i], x, y + c * sh / screen_scale)
     c = c + 1
   end
 end)

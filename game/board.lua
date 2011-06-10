@@ -213,8 +213,7 @@ end
 
 --ф-я рендеринга казны и шанса
 draw.chance = function(s)
-  fnt_big:select()
-  fnt_big:scale(10/35)
+  fnt_small:select()
   local x, y = get_xy(s.pos, s.side)
   rules_company_images[s.num]:draw(x + offset_chest[s.side].x, y + offset_chest[s.side].y, 0, offset_chest[s.side].w)
   G.setColor(offset_rent_color[1], offset_rent_color[2], offset_rent_color[3], 255)
@@ -339,7 +338,7 @@ money_transfer = function(money, from, to)
   end
   player:delay({speed = 0, cb = function() 
     if lquery_fx == true then
-      --~ A.play(sound_coin)
+      sound_coin:play()
     end
     coins:stop():move(from.x + 3, from.y):show()
     coins.a = 255

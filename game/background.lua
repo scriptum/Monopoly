@@ -14,13 +14,13 @@ getScale = function()
 end
 
 screen_scale, x_screen_scale, y_screen_scale = getScale()
-print(getScale())
+
 screen:draw(function()
   --screen_scale, x_screen_scale, y_screen_scale = getScale()
   S.scale(screen_scale)
   S.translate(x_screen_scale, y_screen_scale)
 end)
-fnt_small = Fonts["Pt Sans Caption bold"][8]
+fnt_small = Fonts["Liberation Sans bold"][12]
 fnt_big = Fonts["PT Sans Caption"][35]
 getMouseXY = function()
   return S.getMouseX()/screen_scale - x_screen_scale, S.getMouseY()/screen_scale - y_screen_scale

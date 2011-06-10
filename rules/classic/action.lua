@@ -101,7 +101,7 @@ action_jail = function(pl)
   local x, y = getplayerxy(13, pl.k)
   pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
   player:delay(1)
-  if lquery_fx == true then A.play(sound_jail) end
+  if lquery_fx == true then sound_jail:play() end
   rnd_txt(reason_jail)
 end
 

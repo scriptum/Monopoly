@@ -389,15 +389,15 @@ gogo = function()
   else
     current_player = __i
     if lquery_fx == true then 
-      buf:delay({queue = 'roll', speed = 0.5}) --пауза между ходами
+      --buf:delay({queue = 'roll', speed = 0.5}) --пауза между ходами
       --звук костей
       local i = math.random(1,6)
       --~ sound_dice[i]:setPitch(0.8 + math.random()/3)
-      --~ A.play(sound_dice[i])
-      --~ local j = i 
-      --~ while i == j do j = math.random(1,6) end
+      sound_dice[i]:play()
+      local j = i 
+      while i == j do j = math.random(1,6) end
       --~ sound_dice[j]:setPitch(0.8 + math.random()/3)
-      --~ A.play(sound_dice[j])
+      sound_dice[j]:play()
       for i = 1, 19 do
 	buf:delay({queue = 'roll', speed = i/200, callback = roll})
       end
