@@ -1,29 +1,30 @@
 getScale = function()
-  --~ local aspect = G.getWidth()/G.getHeight()
-  --~ local s = 1
-  --~ local x = 0
-  --~ local y = 0
-  --~ if(aspect > 4/3) then
-    --~ s = G.getHeight()/600
-    --~ x = math.floor((G.getWidth()/s-800)/2)
-  --~ else
-    --~ s = G.getWidth()/800
-    --~ y = math.floor((G.getHeight()/s-600)/2)
-  --~ end
-  --~ return s, x, y
+  local aspect = S.getWidth()/S.getHeight()
+  local s = 1
+  local x = 0
+  local y = 0
+  if(aspect > 4/3) then
+    s = S.getHeight()/600
+    x = math.floor((S.getWidth()/s-800)/2)
+  else
+    s = S.getWidth()/800
+    y = math.floor((S.getHeight()/s-600)/2)
+  end
+  return s, x, y
 end
-screen_scale = 1
---~ screen_scale, x_screen_scale, y_screen_scale = getScale()
+
+screen_scale, x_screen_scale, y_screen_scale = getScale()
+print(getScale())
 screen:draw(function()
   --screen_scale, x_screen_scale, y_screen_scale = getScale()
-  --~ G.scale(screen_scale)
-  --~ G.translate(x_screen_scale, y_screen_scale)
+  S.scale(screen_scale)
+  S.translate(x_screen_scale, y_screen_scale)
 end)
-small = Fonts["Pt Sans Caption"][8]
-big = Fonts["Pt Sans Caption"][13]
---~ getMouseXY = function()
-  --~ return love.mouse.getX()/screen_scale - x_screen_scale, love.mouse.getY()/screen_scale - y_screen_scale
---~ end
+fnt_small = Fonts["Pt Sans Caption bold"][8]
+fnt_big = Fonts["PT Sans Caption"][35]
+getMouseXY = function()
+  return S.getMouseX()/screen_scale - x_screen_scale, S.getMouseY()/screen_scale - y_screen_scale
+end
 
 --Entity:new(screen):image(board_background):set({sx = 800/1024, sy = 600/1024})
 

@@ -1,10 +1,9 @@
 --определяем язык
 lang = 'en'
 if arg[1] then lang = arg[1] end
-scrupp.init('Test', 800, 600, 32, false, false, false)
+scrupp.init('Test', 1280, 960, 32, false, false, false)
 scrupp.setDelta(0)
 require('lib')
-table.print(arg)
 require('game.start')
 --~ loadscreen = love.graphics.newImage('data/gfx/load.png')
 --~ love.graphics.draw(loadscreen, 0, 0, 0, love.graphics:getWidth()/loadscreen:getWidth(), love.graphics:getHeight()/loadscreen:getHeight())

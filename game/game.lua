@@ -888,7 +888,7 @@ click_manuauction_button = function(s, temp_money)
   end
 end
 
-function love.keyreleased( key, unicode )
+board:keypress(function( key, unicode )
    if key == "f" then 
      lquery_fx = not lquery_fx 
    end
@@ -918,4 +918,4 @@ function love.keyreleased( key, unicode )
      end
      board_gui:toggle()
    end
-end
+end)

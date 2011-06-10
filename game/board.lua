@@ -8,7 +8,7 @@ cell_padding = 2 --отступ внутри €чейки
 font_size = 10
 board = E:new(screen) --игрова€ доска
 --центральный пр€моугольник
---~ burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - ch*2+10,h=600 - ch*2 +10, blendMode = 'subtractive'}):move(ch - 5,ch - 5):color(255,246,208,199)
+burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - ch*2+10,h=600 - ch*2 +10, blendMode = 'subtractive'}):move(ch - 5,ch - 5):color(255,246,208,100)
 companys = E:new(board) --компании
 
 local alpha = 30 --альфа канал дл€ разделител€
@@ -33,8 +33,7 @@ local sep_draw_hor = function(x, y, sx) --рисует разделитель (горизонтальный)
 end
 
 local sep_draw = function(s) --рисует разделители
-  small:select()
-  local sx = 1--800/G.getWidth()
+  local sx = 1/screen_scale
   for i = 1, field_width + 1 do --верх и низ
     sep_draw_ver(ch-cw+cw*i,sep_padding, sx)
     sep_draw_ver(ch-cw+cw*i,600+sep_padding-ch, sx)
@@ -109,7 +108,7 @@ end
 
 --ф-€ рендеринга дл€ нормальной компании
 draw.company = function(s)
-  
+  fnt_small:select()
   local i = s.pos
   x, y = get_xy(i, s.side)
   local _x, _y = x, y
@@ -142,7 +141,7 @@ draw.company = function(s)
     if s.side == 3 then y = 600 - cw end
     if com.level == 0 then 
       G.setColor(255,255,255,255 - s.all_alpha)
-      G.draw(lock, x - 4, y, 0, cw/128) 
+      lock:draw(x - 4, y, 0, cw) 
     end
   elseif com.level and com.level > 2 then
     G.setColor(255,255,255)
@@ -203,8 +202,7 @@ draw.company = function(s)
       txt = money(com.money[com.level])
     end
   end
-  local w = offset_rent[s.side].w
-  if txt then Gprintf(txt, x + offset_rent[s.side].x + (w - small:width(txt)) / 2, y + offset_rent[s.side].y, offset_rent[s.side].w, 'center') end
+  if txt then Gprintf(txt, x + offset_rent[s.side].x , y + offset_rent[s.side].y, offset_rent[s.side].w, 'center') end
 end
 
 --ф-€ рендеринга дл€ больших спецклеток по углам
@@ -215,16 +213,19 @@ end
 
 --ф-€ рендеринга казны и шанса
 draw.chance = function(s)
+  fnt_big:select()
+  fnt_big:scale(10/35)
   local x, y = get_xy(s.pos, s.side)
   rules_company_images[s.num]:draw(x + offset_chest[s.side].x, y + offset_chest[s.side].y, 0, offset_chest[s.side].w)
   G.setColor(offset_rent_color[1], offset_rent_color[2], offset_rent_color[3], 255)
   --~ G.setFont(console)
   G.fontSize = offset_chest_text[s.side].size
-  Gprintf(rules_company[s.num].name, x + offset_chest_text[s.side].x, y + offset_chest_text[s.side].y, offset_chest_text[s.side].w, 'center')
+  Gprintf(rules_company[s.num].name, x, y + offset_chest_text[s.side].y, offset_chest_text[s.side].w, 'center')
 end
 
 --ф-€ рендеринга налога
 draw.nalog = function(s)
+  fnt_small:select()
   local x, y = get_xy(s.pos, s.side)
   rules_company_images[s.num]:draw(x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w)
   G.setColor(offset_rent_color)
@@ -287,12 +288,13 @@ board_gui = E:new(board)
 
 --функци€ рендеринга игрока
 player_draw = function(s)
-  if s.ingame == true then 
+  if s.ingame == true then  
+    fnt_big:select()
+    fnt_big:scale(0.4)
     sx = 30
     rules_player_images[s.k]:draw(s.x, s.y, 0, sx) 
-    if gamemenu._visible == false then 
-      G.fontSize = 20
-      Gprint(money(s.cash), ch+45, ch+55 + s.k*36)
+    if gamemenu._visible == false then
+      S.print(money(s.cash), ch+45, ch+55 + s.k*36)
       rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx)
     end
     if s.k == current_player then
@@ -314,15 +316,15 @@ end
 
 --кости
 dice_draw = function(s)
-  dice[ds1 or 1]:draw(s.x, s.y, 0, 0.5)
-  dice[ds2 or 1]:draw(s.x + 66, s.y, 0, 0.5)
+  dice[ds1 or 1]:draw(s.x, s.y, 0, 64)
+  dice[ds2 or 1]:draw(s.x + 66, s.y, 0, 64)
 end
 
 E:new(board_gui):draw(dice_draw):move(ch + 10, ch + 10)
 gui_text = E:new(board_gui):draw(function(s)
-  big:select()
+  fnt_big:select()
+  fnt_big:scale(14/35)
   Gprintf(s.text, ch + 158, ch + 20, 800 - ch * 2 - 168)
-  small:select()
 end)
 gui_text.text = ''
 --анимаци€ передачи денех

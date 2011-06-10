@@ -175,5 +175,5 @@ for k, v in pairs(rules_player_img) do
 end
 
 --акции
-action = G.newImage('rules/classic/icons/document.png')
-all_actions = G.newImage('rules/classic/icons/briefcase.png')
+action = G.newImage('rules/classic/icons/document.dds')
+all_actions = G.newImage('rules/classic/icons/briefcase.dds')

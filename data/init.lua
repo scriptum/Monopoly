@@ -1,7 +1,10 @@
-require 'data/font'
+require 'data/fonts/font'
+require 'data/fonts/tahoma'
+require 'data/fonts/ptsmall'
+require 'data/fonts/ptbold'
 Fonts['Pt Sans Caption'][8]:select()
 
-board_background = G.newImage('data/gfx/background.dds')
+board_background = G.newImage('data/gfx/background.dds', true)
 sep = G.newImage('data/gfx/separator.png')
 lock = G.newImage('data/gfx/Lock-icon.png')
 fuzzy = G.newImage('data/gfx/fuzzy.png')

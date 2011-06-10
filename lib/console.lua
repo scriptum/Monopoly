@@ -1,5 +1,4 @@
 gameoptions = {}
-screen_scale = 1
 table.insert(lquery_hooks, function()
 	if KeyPressed == true and Console and Console.disabled == false and 
 			(KeyPressedCounter == 1 or 

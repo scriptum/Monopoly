@@ -268,11 +268,11 @@ local image_draw = function(s)
   s.image:draw(s)
 end
 local image_draw_quad = function(s)
-  s.image:drawQuad(s)
+  s.image:drawq(s)
 end
-function Entity:image(image, isQuad)
+function Entity:image(image, isQuad, isRepeat)
  if image then
-    if type(image) == 'string' then image = G.newImage(image) end
+    if type(image) == 'string' then image = G.newImage(image, isRepeat) end
     self.image = image
     self.w = image:getWidth()
     self.h = image:getHeight()
@@ -291,53 +291,62 @@ function Entity:image(image, isQuad)
 end
 
 --border-image
---~ local border_image_draw = function(s)
-  --~ local b = s.border
-  --~ local i = s.image
-  --~ local x = s.x
-  --~ local y = s.y
-  --~ G.drawq(i, s.img_tl, x, y)
-  --~ G.drawq(i, s.img_tc, x + b.left, y, 0, (s.w - b.left - b.right)/(s.orig_w - b.left - b.right), 1)
-  --~ G.drawq(i, s.img_tr, x + s.w - b.right, y)
-  --~ G.drawq(i, s.img_cl, x, y + b.top, 0, 1, (s.h - b.top - b.bottom)/(s.orig_h - b.top - b.bottom))
-  --~ G.drawq(i, s.img_cc, x + b.left, y + b.top, 0, (s.w - b.left - b.right)/(s.orig_w - b.left - b.right), (s.h - b.top - b.bottom)/(s.orig_h - b.top - b.bottom))
-  --~ G.drawq(i, s.img_cr, x + s.w - b.right, y + b.top, 0, 1, (s.h - b.top - b.bottom)/(s.orig_h - b.top - b.bottom))
-  --~ G.drawq(i, s.img_bl, x, y + s.h - b.bottom)
-  --~ G.drawq(i, s.img_bc, x + b.left, y + s.h - b.bottom, 0, (s.w - b.left - b.right)/(s.orig_w - b.left - b.right), 1)
-  --~ G.drawq(i, s.img_br, x + s.w - b.right, y + s.h - b.bottom)
---~ end
---~ function Entity:border_image(image, top, right, bottom, left)
- --~ if image then
-    --~ if type(image) == 'string' then image = G.newImage(image) end
-    --~ self.image = image
-    --~ self._draw = border_image_draw
-    --~ w = image:getWidth()
-    --~ h = image:getHeight()
-    --~ self.w = w
-    --~ self.h = h
-    --~ self.orig_w = w
-    --~ self.orig_h = h
-    --~ 
-    --~ self.img_tl = G.newQuad(0, 0, left, top, w, h)
-    --~ self.img_tc = G.newQuad(left, 0, w - left - right, top, w, h)
-    --~ self.img_tr = G.newQuad(w - right, 0, right, top, w, h)
-    --~ 
+local border_image_draw = function(s)
+  local i = s.image
+  local x = s.x
+  local w = s.orig_w
+  local h = s.orig_h
+  local y = s.y
+  local t = s.top
+  local r = s.right
+  local b = s.bottom
+  local l = s.left
+  i:drawq(x,            y,            0, l,            t,           0,     0,       l,         t)
+  i:drawq(x + l,        y,            0, s.w - l - r,  t,           l,     0,       w - l - r, t)
+  i:drawq(x + s.w - r,  y,            0, r,            t,           w - r, 0,       r,         t)
+  
+  i:drawq(x,            y + t,        0, l,            s.h - t - b, 0,     t,       l,         h - t - b)
+  i:drawq(x + l,        y + t,        0, s.w - l - r,  s.h - t - b, l,     t,       w - l - r, h - t - b)
+  i:drawq(x + s.w - r,  y + t,        0, r,            s.h - t - b, w - r, t,       r,         h - t - b)
+  
+  i:drawq(x,            y + s.h - b,  0, l,            b,           0,     h - b,   l,         b)
+  i:drawq(x + l,        y + s.h - b,  0, s.w - l - r,  b,           l,     h - b,   w - l - r, b)
+  i:drawq(x + s.w - r,  y + s.h - b,  0, r,            b,           w - r, h - b,   r,         b)
+end
+function Entity:border_image(image, top, right, bottom, left, stretch)
+ if image then
+    if type(image) == 'string' then image = G.newImage(image) end
+    self.image = image
+    self._draw = border_image_draw
+    w = image:getWidth()
+    h = image:getHeight()
+    self.w = w
+    self.h = h
+    self.orig_w = w
+    self.orig_h = h
+    self.top = top
+    self.right = right
+    self.bottom = bottom
+    self.left= left
+    
+
+    
     --~ self.img_cl = G.newQuad(0, top, left, h - top - bottom, w, h)
     --~ self.img_cc = G.newQuad(left, top, w - left - right, h - top - bottom, w, h)
     --~ self.img_cr = G.newQuad(w - right, top, right, h - top - bottom, w, h)
-    --~ 
+    
     --~ self.img_bl = G.newQuad(0, h - bottom, left, bottom, w, h)
     --~ self.img_bc = G.newQuad(left, h - bottom, w - left - right, bottom, w, h)
     --~ self.img_br = G.newQuad(w - right, h - bottom, right, bottom, w, h)
     --~ 
     --~ self.border = {top = top, right = right, bottom = bottom, left = left}
-    --~ 
-    --~ self.angle = 0
-    --~ self.sx = 1
-    --~ self.sy = 1
-  --~ end
-  --~ return self
---~ end
+    
+    self.angle = 0
+    self.sx = 1
+    self.sy = 1
+  end
+  return self
+end
 
 
 --screen - parent entity for all entities. Drawing function recursively process all entities from it.

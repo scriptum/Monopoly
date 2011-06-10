@@ -85,6 +85,21 @@ MousePressedOwner = nil
 MouseButton = nil
 --some mouse events
 local function events(v)
+  if KeyPressed == true then 
+    if v._keypress then
+      if not v._key or v._key == false then
+        v._keypress(KeyPressedKey, KeyPressedUni)
+      end
+    end
+    v._key = true
+  else
+    if v._keyrelease then
+      if v._key and v._key == true then
+        v._keyrelease(KeyPressedKey, KeyPressedUni)
+      end
+    end
+    v._key = false
+  end
   if v._bound and v._bound(v, mX, mY) then
     if v._mousemove then 
       __mousemove = v
@@ -111,13 +126,14 @@ local function process_entities(ent)
     if ent._animQueue then 
       animate(ent) 
     end
-    if ent._control then --if mouse controlled
+    if ent._control then --if controlled
       events(ent)
     end
     if ent._draw then 
       S.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
-      if ent.blendMode then S.setBlendMode(ent.blendMode) else S.setBlendMode('alpha') end
-      ent._draw(ent) 
+      if ent.blendMode then S.setBlendMode(ent.blendMode) end
+      ent._draw(ent)
+      if ent.blendMode then S.setBlendMode('alpha') end
     end
     if ent._child then 
       for k, v in pairs(ent._child) do
@@ -128,21 +144,21 @@ local function process_entities(ent)
 end
 
 
-lasttimer = 0
+--~ lasttimer = 0
 
 
 main ={
 	render = function()
     --if love.load then love.load(arg) end
-    time = 0
+    --time = 0
     -- Main loop time.
     --while true do
-      mX, mY = getMouseXY()
+    mX, mY = getMouseXY()
 
     time = scrupp.getTicks() / 1000
-    if lasttimer + 1 < time then
-      lasttimer = time
-    end
+    --~ if lasttimer + 1 < time then
+      --~ lasttimer = time
+    --~ end
     
     for _, v in pairs(lquery_hooks) do
       v()
