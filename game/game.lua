@@ -888,7 +888,7 @@ click_manuauction_button = function(s, temp_money)
   end
 end
 
-board:keypress(function( key, unicode )
+board:keypress(function( s, key, unicode )
    if key == "f" then 
      lquery_fx = not lquery_fx 
    end

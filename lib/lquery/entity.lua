@@ -155,7 +155,7 @@ end
 
 --до сих пор охреневаю как я это сделал. Куча методов в пяти строчках кода
 --callbacks
-for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout', 'mousewheel', 'mousemove', 'keypress', 'keyrelease'}) do
+for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout', 'mousewheel', 'mousemove', 'keypress', 'keyrelease', 'keyrepeat'}) do
   Entity[v] = function (self, callback)
     if callback then
       if not self._bound then self._bound = Entity.bounds.rectangle end

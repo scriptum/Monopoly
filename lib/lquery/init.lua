@@ -83,19 +83,29 @@ end
 MousePressed = false
 MousePressedOwner = nil
 MouseButton = nil
---some mouse events
+--some events
 local function events(v)
   if KeyPressed == true then 
     if v._keypress then
       if not v._key or v._key == false then
-        v._keypress(KeyPressedKey, KeyPressedUni)
+        v._keypress(v, KeyPressedKey, KeyPressedUni)
       end
+    end
+    if not v._key or v._key == false then
+      v._KeyPressedCounter = 1
+    end
+    if v._keyrepeat and (v._KeyPressedCounter == 1 or 
+         v._KeyPressedCounter == 2 and time - KeyPressedTime > 0.3 or
+         v._KeyPressedCounter > 2 and time - KeyPressedTime > 0.05) then 
+      KeyPressedTime = time
+      v._KeyPressedCounter = v._KeyPressedCounter + 1
+      v._keyrepeat(v, KeyPressedKey, KeyPressedUni)
     end
     v._key = true
   else
     if v._keyrelease then
       if v._key and v._key == true then
-        v._keyrelease(KeyPressedKey, KeyPressedUni)
+        v._keyrelease(v, KeyPressedKey, KeyPressedUni)
       end
     end
     v._key = false
@@ -149,16 +159,28 @@ end
 
 main ={
 	render = function()
-    --if love.load then love.load(arg) end
-    --time = 0
-    -- Main loop time.
-    --while true do
     mX, mY = getMouseXY()
 
     time = scrupp.getTicks() / 1000
-    --~ if lasttimer + 1 < time then
-      --~ lasttimer = time
-    --~ end
+    local e, a, b, c = scrupp.poll()
+    if e then
+      if e == "mp" then
+        MousePressed = true
+        MouseButton = c
+      elseif e == "mr" then 
+        MousePressed = false
+        MouseButton = c
+      elseif e == "kp" then
+        KeyPressed = true
+        KeyPressedKey = a
+        KeyPressedUni = b
+        KeyPressedCounter = 1
+      elseif e == "kr" then
+        KeyPressed = false
+        --~ KeyPressedKey = ""
+        --~ KeyPressedUni = 0
+      end
+    end
     
     for _, v in pairs(lquery_hooks) do
       v()
@@ -186,31 +208,5 @@ main ={
       if MousePressedOwner._hasMouse == true and MousePressedOwner._click then MousePressedOwner._click(MousePressedOwner, mX, mY, MouseButton) end
       MousePressedOwner = nil
     end
-
-  end,
-	mousepressed = function(x, y, button)
-		MousePressed = true
-		MouseButton = button
-	end,
-	mousereleased = function(x, y, button)
-		MousePressed = false
-		MouseButton = button
-	end,
-  keypressed = function(key, unicode)
-		KeyPressed = true
-		KeyPressedKey = key
-    KeyPressedUni = unicode
-    KeyPressedCounter = 1
-    if key == "`" and Console then 
-      if Console.disabled == true then
-        Console:stop():animate({y = 400})
-      else
-        Console:stop():animate({y = 600 + 31 / screen_scale})
-      end
-      Console.disabled = not Console.disabled
-    end
-	end,
-  keyreleased = function()
-		KeyPressed = false
-	end,
+  end
 }
