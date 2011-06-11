@@ -8,32 +8,32 @@ cell_padding = 2 --отступ внутри ячейки
 font_size = 10
 board = E:new(screen) --игровая доска
 --центральный прямоугольник
-burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - ch*2+10,h=600 - ch*2 +10, blendMode = 'subtractive'}):move(ch - 5,ch - 5):color(255,246,208,199)
+burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - ch*2+10,h=600 - ch*2 +10, blendMode = 'subtractive'}):move(ch - 5,ch - 5):color(255,246,208,100)
 companys = E:new(board) --компании
 
 local alpha = 30 --альфа канал для разделителя
 local sep_padding = 5 --отступы для разделителя
-scaley = (ch-sep_padding*2)/16 -- масштаб для разделителя
+scaley = (ch-sep_padding*2) -- масштаб для разделителя
 local sep_draw_ver = function(x, y, sx) --рисует разделитель (вертикальный)
   G.setBlendMode('additive')
   G.setColor(255,255,255,alpha)
-  G.draw(sep, x, y, 0, sx, scaley)
+  sep:draw(x, y, 0, sx, scaley)
   G.setBlendMode('multiplicative')
   G.setColor(0,0,0,alpha*2)
-  G.draw(sep, x - sx, y, 0, sx, scaley)
+  sep:draw(x - sx, y, 0, sx, scaley)
 end
 
 local sep_draw_hor = function(x, y, sx) --рисует разделитель (горизонтальный)
   G.setBlendMode('additive')
   G.setColor(255,255,255,alpha)
-  G.draw(sep, x, y, math.pi/2, sx, scaley)
+  sep:draw(x, y, 90, sx, scaley)
   G.setBlendMode('multiplicative')
   G.setColor(0,0,0,alpha*2)
-  G.draw(sep, x, y - sx, math.pi/2, sx, scaley)
+  sep:draw(x, y - sx, 90, sx, scaley)
 end
 
 local sep_draw = function(s) --рисует разделители
-  local sx = 800/G.getWidth()
+  local sx = 1/screen_scale
   for i = 1, field_width + 1 do --верх и низ
     sep_draw_ver(ch-cw+cw*i,sep_padding, sx)
     sep_draw_ver(ch-cw+cw*i,600+sep_padding-ch, sx)
@@ -79,12 +79,12 @@ get_xy = function(i, side)
 end
 
 --грузим массивы смещений внутри клетки
-require('rules/classic/offsets.lua')
+require('rules/classic/offsets')
 
 --грузим функцию форматирования денег
-require('rules/classic/money.lua')
+require('rules/classic/money')
 
-render = {} --массив с функциями рендеринга клеток, для каждого типа своя
+draw = {} --массив с функциями рендеринга клеток, для каждого типа своя
 
 --рисование полупрозрачного прямоугольника, означающего что клетка куплена
 local draw_fuzzy = function(x, y, sx, sy, side)
@@ -93,21 +93,22 @@ local draw_fuzzy = function(x, y, sx, sy, side)
   local sx2 = (cw + a)/16
   if side == 1 then 
     x = x - cell_padding
-    G.draw(fuzzy, x, y, 0, sx, sy)
+    fuzzy:draw(x, y, 0, cw, ch)
   elseif side == 2 then
-    G.draw(fuzzy, x + ch + cell_padding*2, y - cell_padding, math.pi/2, sx2, sy)
+    fuzzy:draw(x + ch + cell_padding*2, y - cell_padding, 90, cw + a, ch)
   elseif side == 3 then 
     x = x - cell_padding
     y = 600 - ch
-    G.draw(fuzzy, x, y, 0, sx, sy)
+    fuzzy:draw(x, y, 0, cw, ch)
   elseif side == 4 then 
     x = x + cell_padding*2
-    G.draw(fuzzy, x - cell_padding*3 + ch, y - cell_padding, math.pi/2, sx2, sy)
+    fuzzy:draw(x - cell_padding*3 + ch, y - cell_padding, 90, cw + a, ch)
   end
 end
 
 --ф-я рендеринга для нормальной компании
-render.company = function(s)
+draw.company = function(s)
+  fnt_small:select()
   local i = s.pos
   x, y = get_xy(i, s.side)
   local _x, _y = x, y
@@ -125,11 +126,11 @@ render.company = function(s)
   G.setBlendMode('additive')
   draw_fuzzy(x, y, sx, sy, s.side)
   G.setBlendMode('alpha')
-  G.setColor(255, 255, 255)
+  G.setColor(255, 255, 255, 255)
   --отрисовка картинки компании
-  G.draw(rules_company_images[s.num], x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w / rules_company_images[s.num]:getWidth())
+  rules_company_images[s.num]:draw(x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w)
   --отрисовка группы
-  if com.group then G.draw(rules_group_images[com.group], x + offset_group[s.side].x, y + offset_group[s.side].y, 0, offset_group[s.side].w / rules_group_images[com.group]:getWidth()) end
+  if com.group then rules_group_images[com.group]:draw(x + offset_group[s.side].x, y + offset_group[s.side].y, 0, offset_group[s.side].w) end
   
   G.setColor(0,0,0,185*math.max(s.mortgage_alpha, s.all_alpha)/255)
   draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
@@ -140,7 +141,7 @@ render.company = function(s)
     if s.side == 3 then y = 600 - cw end
     if com.level == 0 then 
       G.setColor(255,255,255,255 - s.all_alpha)
-      G.draw(lock, x - 4, y, 0, cw/128) 
+      lock:draw(x - 4, y, 0, cw) 
     end
   elseif com.level and com.level > 2 then
     G.setColor(255,255,255)
@@ -148,23 +149,23 @@ render.company = function(s)
     local lvl = com.level - 2
     local img = action
     local offset_y = 0
-    sx = 16/32
+    sx = 16
     if lvl == 5 then 
       img = all_actions
       lvl = 1
-      sx = 16/32
+      sx = 16
       offset_y = -2
     end
     offset = cw/2 - cell_padding - 10 - lvl*10/2 - 3
     for i = 1, lvl do 
       if s.side == 1 then
-        G.draw(img, x + offset + i*10, y + ch - 8 + offset_y, 0, sx)
+        img:draw(x + offset + i*10, y + ch - 8 + offset_y, 0, sx)
       elseif s.side == 2 then
-        G.draw(img, x + cw - ch - 8, y + offset + i*10 + 8, 0, sx)
+        img:draw(x + cw - ch - 8, y + offset + i*10 + 8, 0, sx)
       elseif s.side == 3 then
-        G.draw(img, x + offset + i*10, 600 - ch - 8, 0, sx)
+        img:draw(x + offset + i*10, 600 - ch - 8, 0, sx)
       elseif s.side == 4 then
-        G.draw(img, x + ch - 12, y + offset + i*10 + 8 , 0, sx)
+        img:draw(x + ch - 12, y + offset + i*10 + 8 , 0, sx)
       end
       
     end
@@ -172,8 +173,8 @@ render.company = function(s)
   
     --цена
   G.setColor(offset_rent_color)
-  G.setFont(console)
-  G.fontSize = offset_rent[s.side].size
+  --~ G.setFont(console)
+  --~ G.fontSize = offset_rent[s.side].size
   local txt = nil
   if gui_mortgage_done._visible == true and com.owner and com.owner.k == current_player and com.level > 0 then
     txt = money(com.money[1]/2)
@@ -201,31 +202,33 @@ render.company = function(s)
       txt = money(com.money[com.level])
     end
   end
-  if txt then Gprintf(txt, x + offset_rent[s.side].x, y + offset_rent[s.side].y, offset_rent[s.side].w, 'center') end
+  if txt then Gprintf(txt, x + offset_rent[s.side].x , y + offset_rent[s.side].y, offset_rent[s.side].w, 'center') end
 end
 
 --ф-я рендеринга для больших спецклеток по углам
-render.big_cell = function(s)
+draw.big_cell = function(s)
   local x, y = get_xy(s.pos, s.side)
-  G.draw(rules_company_images[s.num], x + cell_padding, y + cell_padding, 0, (ch - cell_padding * 4) / rules_company_images[s.num]:getWidth())
+  rules_company_images[s.num]:draw(x + cell_padding, y + cell_padding, 0, (ch - cell_padding * 4))
 end
 
 --ф-я рендеринга казны и шанса
-render.chance = function(s)
+draw.chance = function(s)
+  fnt_small:select()
   local x, y = get_xy(s.pos, s.side)
-  G.draw(rules_company_images[s.num], x + offset_chest[s.side].x, y + offset_chest[s.side].y, 0, offset_chest[s.side].w / rules_company_images[s.num]:getWidth())
-  G.setColor(offset_rent_color)
-  G.setFont(console)
+  rules_company_images[s.num]:draw(x + offset_chest[s.side].x, y + offset_chest[s.side].y, 0, offset_chest[s.side].w)
+  G.setColor(offset_rent_color[1], offset_rent_color[2], offset_rent_color[3], 255)
+  --~ G.setFont(console)
   G.fontSize = offset_chest_text[s.side].size
-  Gprintf(rules_company[s.num].name, x + offset_chest_text[s.side].x, y + offset_chest_text[s.side].y, offset_chest_text[s.side].w, 'center')
+  Gprintf(rules_company[s.num].name, x, y + offset_chest_text[s.side].y, offset_chest_text[s.side].w, 'center')
 end
 
 --ф-я рендеринга налога
-render.nalog = function(s)
+draw.nalog = function(s)
+  fnt_small:select()
   local x, y = get_xy(s.pos, s.side)
-  G.draw(rules_company_images[s.num], x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w / rules_company_images[s.num]:getWidth())
+  rules_company_images[s.num]:draw(x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w)
   G.setColor(offset_rent_color)
-  G.setFont(console)
+  --~ G.setFont(console)
   G.fontSize = offset_chest_text[s.side].size
   Gprintf(money(rules_company[s.num].money), x + offset_rent[s.side].x, y + offset_rent[s.side].y, offset_rent[s.side].w, 'center')
 end
@@ -242,7 +245,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
      i == 4 + field_width * 2 + field_height then
        E:new(companys)
       :set({pos = big_cell, num = i})
-      :draw(render[rules_group[rules_company[i].group].draw])
+      :draw(draw[rules_group[rules_company[i].group].draw])
       big_cell = big_cell + 1
   else
     --хитрая расстановка сторон для каждой клетки
@@ -264,7 +267,7 @@ for i = 1, field_width*2 + field_height*2 + 4 do
     end
     E:new(companys)
     :set({pos = c, side = side, num = i, mortgage_alpha = 0, all_alpha = 0, x = x, y = y, w = w, h = h, logo_hover = 0})
-    :draw(render[rules_group[rules_company[i].group].draw])
+    :draw(draw[rules_group[rules_company[i].group].draw])
     c = c + 1
   end
 end
@@ -284,25 +287,26 @@ board_gui = E:new(board)
 
 --функция рендеринга игрока
 player_draw = function(s)
-  if s.ingame == true then 
-    sx = 30/64
-    G.draw(rules_player_images[s.k], s.x, s.y, 0, sx) 
-    if gamemenu._visible == false then 
-      G.fontSize = 20
-      Gprint(money(s.cash), ch+45, ch+55 + s.k*36)
-      G.draw(rules_player_images[s.k], ch+10, ch+55 + s.k*36, 0, sx)
+  if s.ingame == true then  
+    fnt_big:select()
+    fnt_big:scale(0.4)
+    sx = 30
+    rules_player_images[s.k]:draw(s.x, s.y, 0, sx) 
+    if gamemenu._visible == false then
+      S.print(money(s.cash), ch+45, ch+55 + s.k*36)
+      rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx)
     end
     if s.k == current_player then
       G.setBlendMode('additive')
       G.setColor(255,255,255,(math.sin(time*7)+1)*90)
-      G.draw(rules_player_images[s.k], s.x, s.y, 0, sx)
-      if gamemenu._visible == false then G.draw(rules_player_images[s.k], ch+10, ch+55 + s.k*36, 0, sx) end
+      rules_player_images[s.k]:draw(s.x, s.y, 0, sx)
+      if gamemenu._visible == false then rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx) end
       G.setBlendMode('alpha')
     end
     
     if s.jail > 0 then 
       G.setColor(255,255,255,255)
-      G.draw(player_jail, s.x+2, s.y+2, 0, 26/32)
+      player_jail:draw(s.x+2, s.y+2, 0, 26/32)
     end
   --elseif gamemenu._visible == false then 
     --Gprint('Bankrupt', ch+45, ch+97 + s.k*30)
@@ -311,18 +315,19 @@ end
 
 --кости
 dice_draw = function(s)
-  G.draw(dice[ds1 or 1], s.x, s.y, 0, 0.5)
-  G.draw(dice[ds2 or 1], s.x + 66, s.y, 0, 0.5)
+  dice[ds1 or 1]:draw(s.x, s.y, 0, 64)
+  dice[ds2 or 1]:draw(s.x + 66, s.y, 0, 64)
 end
 
 E:new(board_gui):draw(dice_draw):move(ch + 10, ch + 10)
 gui_text = E:new(board_gui):draw(function(s)
-  G.fontSize = 20
+  fnt_big:select()
+  fnt_big:scale(14/35)
   Gprintf(s.text, ch + 158, ch + 20, 800 - ch * 2 - 168)
 end)
 gui_text.text = ''
 --анимация передачи денех
-coins = E:new(screen):image('data/gfx/gold_coin_single.png'):set({sx=24/64, sy=24/64}):hide()
+coins = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
 money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
 money_transfer = function(money, from, to)
   if to then 
@@ -333,7 +338,7 @@ money_transfer = function(money, from, to)
   end
   player:delay({speed = 0, cb = function() 
     if lquery_fx == true then
-      A.play(sound_coin)
+      sound_coin:play()
     end
     coins:stop():move(from.x + 3, from.y):show()
     coins.a = 255
@@ -355,12 +360,12 @@ end
 
 --[[
 local rag_upd = function(s)
-G.setRenderTarget(s.fb)
+G.setdrawTarget(s.fb)
 G.setFont(console)
 G.fontSize = 10*screen_scale
 G.setColor(255,255,255)
 Gprintf('Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.Текстами рефератов можно пользоваться совершенно бесплатно, однако при транслировании и предоставлении текстов в массовое пользование ссылка на Яндекс.Рефераты обязательна.Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.Текстами рефератов можно пользоваться совершенно бесплатно, однако при транслировании и предоставлении текстов в массовое пользование ссылка на Яндекс.Рефераты обязательна.Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.Текстами рефератов можно пользоваться совершенно бесплатно, однако при транслировании и предоставлении текстов в массовое пользование ссылка на Яндекс.Рефераты обязательна.Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.',0,s.oy,s.w*screen_scale)
-G.setRenderTarget()
+G.setdrawTarget()
 end
 local drag_start = function(s, x, y)
   s._rag_y = y - s.oy

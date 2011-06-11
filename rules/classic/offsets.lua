@@ -78,7 +78,7 @@ offset_chest = offset_logo
 
 offset_chest_text = {
 	{ --top
-		w = cw + 6,
+		w = cw,
 		size = 15,
 		x = 0, 
 		y = cw + 3
@@ -90,7 +90,7 @@ offset_chest_text = {
 		y = cw - 12
 	},
 	{ --bottom
-		w = cw + 6,
+		w = cw,
 		size = 15,
 		x = 0, 
 		y = ch - cw - 15

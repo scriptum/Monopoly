@@ -38,14 +38,14 @@ if iflinux then gamemenu:hide() end
 menuvsettings = E:new(gamemenu):hide()
 
 --меню игры
-local modes = G.getModes()
-table.sort(modes, function(a, b) return a.width < b.width end)
-local display_modes = {}
-for _, v in pairs(modes) do
-	table.insert(display_modes, v.width .. 'x' .. v.height)
-end
+--~ local modes = G.getModes()
+--~ table.sort(modes, function(a, b) return a.width < b.width end)
+--~ local display_modes = {}
+--~ for _, v in pairs(modes) do
+	--~ table.insert(display_modes, v.width .. 'x' .. v.height)
+--~ end
 
-local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, display_modes, display_modes, {'gameoptions', 'mode'})
+--~ local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, display_modes, display_modes, {'gameoptions', 'mode'})
 local screenmode = E:new(menuvsettings):move(200, 200):list(l.screen_mode, {true, false}, {l.fullscreen, l.windowed}, {'gameoptions', 'fullscreen'})
 local apply = E:new(menuvsettings):move(130, 400):button(l.apply, function(s) 
 	local p = screenlist._pos

@@ -38,3 +38,7 @@ function string.split2(str, pat)
   helper((str:gsub("(.-)"..pat, helper)))
   return t
 end
+
+function string.trim(s)
+  return s:gsub("^%s+", ""):gsub("%s+$", "")
+end

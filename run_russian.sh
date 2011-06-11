@@ -1,1 +1,1 @@
-love . ru
+./bin/linux/engine main.lua ru
