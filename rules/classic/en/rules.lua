@@ -21,7 +21,7 @@ rules_players_names = {'Blue', 'Green', 'Red', 'Azure', 'Yellow'}
 rules_group =
 {
   auto = {
-    image = "dashboard.png", --image of the group
+    image = "dashboard.dds", --image of the group
     upgrade = 150,           --upgrade cost
     draw = "company",        --render function
     phrase = {               --phrases to display
@@ -30,7 +30,7 @@ rules_group =
     }
   },
   oil = {
-    image = "drop.png",
+    image = "drop.dds",
     upgrade = 200,
     draw = "company",
     phrase = {
@@ -38,7 +38,7 @@ rules_group =
     }
   },
   food = {
-    image = "coffee.png", 
+    image = "coffee.dds", 
     upgrade = 50,
     draw = "company",
     phrase = {
@@ -46,7 +46,7 @@ rules_group =
     }
   },
   bank = {
-    image = "bank.png",
+    image = "bank.dds",
     upgrade = 200,
     draw = "company",
     phrase = {
@@ -54,7 +54,7 @@ rules_group =
     }
   },
   inet = {
-    image = "web.png",
+    image = "web.dds",
     upgrade = 50,
     draw = "company",
     phrase = {
@@ -62,7 +62,7 @@ rules_group =
     }
   },
   market = {
-    image = "shopping_cart.png",
+    image = "shopping_cart.dds",
     upgrade = 100,
     draw = "company",
     phrase = {
@@ -70,7 +70,7 @@ rules_group =
     }
   },
   it = {
-    image = "computer.png",
+    image = "computer.dds",
     upgrade = 150,
     draw = "company",
     phrase = {
@@ -78,7 +78,7 @@ rules_group =
     }
   },
   mobile = {
-    image = "mobile.png",
+    image = "mobile.dds",
     upgrade = 100,
     draw = "company",
     phrase = {
@@ -86,7 +86,7 @@ rules_group =
     }
   },
   sport = {
-    image = "medal.png",
+    image = "medal.dds",
     upgrade = 100,
     draw = "company",
     phrase = {
@@ -94,7 +94,7 @@ rules_group =
     }
   },
   clock = {
-    image = "clock.png",
+    image = "clock.dds",
     upgrade = 150,
     draw = "company",
     phrase = {
@@ -574,7 +574,7 @@ rules_treasury = {
 rules_company_images = {}
 --load images
 for k, v in pairs(rules_company) do
-  table.insert(rules_company_images, G.newImage('rules/classic/'..lang..'/logos/'..k..'.png'))
+  table.insert(rules_company_images, G.newImage('rules/classic/'..lang..'/logos/'..k..'.dds'))
 end
 
 --предварительная загрузка картинок с группами в память
