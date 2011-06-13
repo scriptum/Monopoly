@@ -1,3 +1,4 @@
+package.cpath = "./?.so;./?.dll;bin/?.so;bin/?.dll"
 local http = require("socket.http")
 local img = http.request("http://scriptumplus.ru/images/scriptum.png")
 scrupp.send(img, "img")

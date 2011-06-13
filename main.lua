@@ -32,9 +32,8 @@ Fonts['Pt Sans'][8]:select()
 	--~ Fonts['Pt Sans'][8]:select()
 	--~ S.printLines(, 100, 100)
 --~ end)
-require 'lib/console'
+require 'console'
 
-S.newThread("th.lua")
 S.newThread("th.lua")
 table.insert(lquery_hooks, function()
 	local msg = S.recv("2")
