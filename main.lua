@@ -9,7 +9,7 @@ require('game.start')
 --~ loadscreen = love.graphics.newImage('data/gfx/load.png')
 --~ love.graphics.draw(loadscreen, 0, 0, 0, love.graphics:getWidth()/loadscreen:getWidth(), love.graphics:getHeight()/loadscreen:getHeight())
 --~ love.graphics.present()
-require('lib.ui')
+require('ui')
 require('lib.ui.button')
 require('lib.ui.list')
 require('lib.ui.slider')
@@ -37,8 +37,11 @@ require 'lib/console'
 ff = S.newThread("th.lua")
 table.insert(lquery_hooks, function()
 	local msg = S.recv("2")
-	while msg do
+	if msg then
 		print(msg)
-		msg = S.recv("2")
+	end
+	local msg = S.recv("img")
+	if msg then
+		E:new(screen):image(S.imageFromString(msg)):draggable():animate({x=200,y=300})
 	end
 end)
