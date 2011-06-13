@@ -69,7 +69,7 @@ menumain = E:new(gamemenu):menu({
 	{text = l.multiplayer, action = nil},
 	--{text = 'Audio settings', action = nil},
 	{text = l.settings, action = mainsettings},
-	{text = l.quit, action = function() love.event.push('q') end}
+	{text = l.quit, action = S.exit}
 })
 
 menusingle = E:new(gamemenu):hide()

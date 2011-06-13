@@ -1,6 +1,6 @@
 --действия при выходе из игры
 
-function love.quit()
+function atexit()
   --table_print(statistics)
-  F.write('options.lua', serialize(gameoptions))
+  S.write('options.lua', serialize(gameoptions))
 end

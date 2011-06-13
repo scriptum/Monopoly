@@ -4,13 +4,9 @@ function Entity:new(parent)  -- constructor
   local object = {
     x = 0,   --x coord
     y = 0,   --y coord
-    _visible = true
-    }
+    _visible = true --visibility
+  }
   setmetatable(object, { __index = Entity })  -- Inheritance
-  --table.insert(Entities,  object)
-  --object._key = #Entities
-  --append this entity to the parent
-  --print(parent)
   if parent then parent:append(object) end
   return object
 end
@@ -155,7 +151,7 @@ end
 
 --до сих пор охреневаю как я это сделал. Куча методов в пяти строчках кода
 --callbacks
-for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout', 'mousewheel', 'mousemove', 'keypress', 'keyrelease', 'keyrepeat'}) do
+for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout', 'mousewheel', 'mousemove', 'keypress', 'keyrelease', 'keyrepeat', 'wheel'}) do
   Entity[v] = function (self, callback)
     if callback then
       if not self._bound then self._bound = Entity.bounds.rectangle end

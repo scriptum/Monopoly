@@ -2,11 +2,11 @@ max = field_width*2 + field_height*2 + 4
 
 
 function osdetect()
-  fh,err = io.popen("uname -o 2>/dev/null","r")
-  if fh then
-    osname = fh:read()
-  end
-  if osname then return true end
+  --~ fh,err = io.popen("uname -o 2>/dev/null","r")
+  --~ if fh then
+    --~ osname = fh:read()
+  --~ end
+  --~ if osname then return true end
   return false
 end
 

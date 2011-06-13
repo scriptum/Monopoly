@@ -88,22 +88,7 @@ draw = {} --массив с функциями рендеринга клеток, для каждого типа своя
 
 --рисование полупрозрачного прямоугольника, означающего что клетка куплена
 local draw_fuzzy = function(x, y, sx, sy, side)
-  local sx = cw/16
-  local sy = ch/16
-  local sx2 = (cw + a)/16
-  if side == 1 then 
-    x = x - cell_padding
-    fuzzy:draw(x, y, 0, cw, ch)
-  elseif side == 2 then
-    fuzzy:draw(x + ch + cell_padding*2, y - cell_padding, 90, cw + a, ch)
-  elseif side == 3 then 
-    x = x - cell_padding
-    y = 600 - ch
-    fuzzy:draw(x, y, 0, cw, ch)
-  elseif side == 4 then 
-    x = x + cell_padding*2
-    fuzzy:draw(x - cell_padding*3 + ch, y - cell_padding, 90, cw + a, ch)
-  end
+  fuzzy:draw(x, y, 0, cw, ch)
 end
 
 --ф-я рендеринга для нормальной компании

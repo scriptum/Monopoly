@@ -81,27 +81,25 @@ local function animate(ent)
 end
 
 MousePressed = false
-MousePressedOwner = nil
-MouseButton = nil
 --some events
 local function events(v)
   if KeyPressed == true then 
     if v._keypress then
-      if not v._key or v._key == false then
+      if not v._key or v._key ~= KeyPressedKey then
         v._keypress(v, KeyPressedKey, KeyPressedUni)
       end
     end
-    if not v._key or v._key == false then
+    if not v._key or v._key ~= KeyPressedKey then
       v._KeyPressedCounter = 1
     end
     if v._keyrepeat and (v._KeyPressedCounter == 1 or 
-         v._KeyPressedCounter == 2 and time - KeyPressedTime > 0.3 or
-         v._KeyPressedCounter > 2 and time - KeyPressedTime > 0.05) then 
-      KeyPressedTime = time
+         v._KeyPressedCounter == 2 and time - v._KeyPressedTime > 0.3 or
+         v._KeyPressedCounter > 2 and time - v._KeyPressedTime > 0.05) then 
+      v._KeyPressedTime = time
       v._KeyPressedCounter = v._KeyPressedCounter + 1
       v._keyrepeat(v, KeyPressedKey, KeyPressedUni)
     end
-    v._key = true
+    v._key = KeyPressedKey
   else
     if v._keyrelease then
       if v._key and v._key == true then
@@ -110,11 +108,22 @@ local function events(v)
     end
     v._key = false
   end
-  if v._bound and v._bound(v, mX, mY) then
+  if v._bound and v._bound(v, mX, mY) then 
+    
     if v._mousemove then 
       __mousemove = v
-    end
-    if MousePressed == true and not MousePressedOwner then
+    end 
+    if MouseButton == "wu" then 
+      if v._wheel then
+        MouseButton = nil
+        v._wheel(v, mX, mY, "u")
+      end
+    elseif MouseButton == "wd" then 
+      if v._wheel then
+        MouseButton = nil
+        v._wheel(v, mX, mY, "d")
+      end
+    elseif MousePressed == true and not MousePressedOwner then
       if v._mousepress or v._click then 
         __mousepress = v
       end
@@ -123,6 +132,7 @@ local function events(v)
       v._hasMouse = true
       if v._mouseover then __mouseover = v end
     end
+    
   else
     if v._hasMouse and v._hasMouse == true then 
       v._hasMouse = false
@@ -179,6 +189,8 @@ main ={
         KeyPressed = false
         --~ KeyPressedKey = ""
         --~ KeyPressedUni = 0
+      elseif e == "q" then
+        if atexit then atexit() end
       end
     end
     
