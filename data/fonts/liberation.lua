@@ -2,7 +2,7 @@ if not Fonts then Fonts = {} end
 if not FontTextures then FontTextures = {} end
 local d
 local t
-t = G.newImage("data/fonts/liberation.png")
+t = G.newImage("data/fonts/liberation.dds")
 table.insert(FontTextures, t)
 if not Fonts["Liberation Sans bold"] then Fonts["Liberation Sans bold"] = {} end
 d = scrupp.addFont(t)

@@ -2,7 +2,7 @@ if not Fonts then Fonts = {} end
 if not FontTextures then FontTextures = {} end
 local d
 local t
-t = G.newImage("data/fonts/ptsmall.png")
+t = G.newImage("data/fonts/ptsmall.dds")
 table.insert(FontTextures, t)
 if not Fonts["Pt Sans Narrow"] then Fonts["Pt Sans Narrow"] = {} end
 d = scrupp.addFont(t)

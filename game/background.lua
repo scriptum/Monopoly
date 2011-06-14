@@ -20,7 +20,7 @@ screen:draw(function()
   S.scale(screen_scale)
   
 end)
-fnt_small = Fonts["Liberation Sans bold"][12]
+fnt_small = Fonts["Liberation Sans bold"][8]
 fnt_big = Fonts["PT Sans Caption"][35]
 getMouseXY = function()
   local x, y = S.getMousePos()
@@ -33,7 +33,7 @@ end
 --~ floorquad = love.graphics.newQuad(0, 0, 800, 600, board_background:getWidth(), board_background:getHeight())
 --~ board_background:setWrap("repeat", "repeat")
 
-Entity:new(screen):image(board_background):set({w=800,h=600,tw=512,th=512})
+Entity:new(screen):image(board_background):set({w=800,h=600})
 
 --~ console = G.newImageFont('data/gfx/font.png', " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#$=[]\"àáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕ×ÖØÙÚÛÜİŞß")
 

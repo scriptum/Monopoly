@@ -8,7 +8,7 @@ table.insert(lquery_hooks, function()
 		debug_keypressed(KeyPressedKey,KeyPressedUni)
 	end
 end)
-local small = Fonts["Pt Sans"][8]
+local small = Fonts["Arial"][9]
 
 table.findindex = function(arr, needle)
   local i = 1, m
