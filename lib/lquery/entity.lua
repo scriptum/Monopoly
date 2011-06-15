@@ -266,13 +266,15 @@ end
 local image_draw_quad = function(s)
   s.image:drawq(s)
 end
-function Entity:image(image, isQuad, isRepeat)
+function Entity:image(image, options)
  if image then
-    if type(image) == 'string' then image = G.newImage(image, isRepeat) end
+    if type(image) == 'string' then 
+      image = G.newImage(image, options)
+    end
     self.image = image
     self.w = image:getWidth()
     self.h = image:getHeight()
-    if isQuad and isQuad == true then 
+    if options and options.quad and options.quad == true then 
       self._draw = image_draw_quad
       self.qx = 0
       self.qy = 0

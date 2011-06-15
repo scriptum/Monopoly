@@ -26,9 +26,9 @@ start_new_game = function()
     end
   end
   not_buy = false
-auction_company = 0
-bid_sum = 0
-gui_text.text = ''
+  auction_company = 0
+  bid_sum = 0
+  gui_text.text = ''
   playermenu_getvisible = false
   manuauction_getvisible = false
   current_player = 1
@@ -474,7 +474,7 @@ for k = 1, 5 do
   :draw(player_draw)
 end
 
-if iflinux then start_new_game() end
+--if iflinux then start_new_game() end
 --gamemenu:show()
 
 -- Обработка клика покупки компании
