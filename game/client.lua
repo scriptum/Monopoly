@@ -1,3 +1,4 @@
+--запускаем наш "сервер"
 S.newThread('game/server.lua')
 print('client')
 local lasttime = 0
@@ -8,8 +9,9 @@ table.insert(lquery_hooks, function()
 		--получаем сообщение с кодом "g"
 		msg = S.recv('g')
 		--только одно сообщение за такт - нужно, чтобы не томозило процесс рендеринга
-		if msg then
-			pcall(loadstring(msg))
+		if msg then 
+			--выполняем полученное сообщение как луа скрипт, игнорируя ошибки
+			xpcall(loadstring(msg), print)
 		end
 		
 	end
