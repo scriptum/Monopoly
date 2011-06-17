@@ -6,7 +6,7 @@ local send = S.send
 local delay = S.delay
 local players = {} --на сервере свои плееры
 local i
-local cell_count = field_width * 2 + field_height * 2
+local cell_count = field_width * 2 + field_height * 2 + 4
 angles = {1, field_width + 2, field_width + field_height + 3, field_width * 2 + field_height + 4}
 
 send('max = '..cell_count, 'g')
@@ -23,7 +23,7 @@ for i = 1, 5 do
 		address = "", --айпишник (ну в теории он будет)
 		uid = 0 --серверу нужно будет как-то понять, от какого игрока пришло сообщение
 	})
-	send('player._child['..i..'].ingame = true move('..i..', 1)', 'g')
+	send('player._child['..i..'].ingame = true', 'g')
 end
 --читсло клеток всего
 

@@ -54,8 +54,9 @@ end
 player = E:new(board)
 
 for k = 1, 5 do
+  local   x, y = getplayerxy(1, k)
   E:new(player)
-  :draw(player_draw):set{k=k, jail=0, pos=1}  
+  :draw(player_draw):set{k=k, jail=0, pos=1, x=x, y=y}  
 end
 
 table.insert(lquery_hooks, function()
