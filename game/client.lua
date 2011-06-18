@@ -31,8 +31,8 @@ local roll = function()
 end
 
 move = function(num, ds1, ds2)
-  pl = player._child[num]
-  current_player = num
+  local pl = player._child[num]
+  current_player = num --это для того, чтобы замигал текущий игрок
   local x = ds1 + ds2
   local i = math.random(1,6)
   sound_dice[i]:play()
@@ -69,6 +69,10 @@ move = function(num, ds1, ds2)
   end
 end
 
+set_cash = function(num, money)
+  local pl = player._child[num]
+  pl:delay({speed = 0, cb = function()pl.cash = money end})
+end
 
 player = E:new(board)
 

@@ -33,7 +33,7 @@ E:new(manuauction):size(w, h):move(sx+(w+10)*3, 400):button('Pass', click_manuau
 
 gamemenu = E:new(screen):show()
 
-if iflinux then gamemenu:hide() end
+if 1 then gamemenu:hide() end
 
 menuvsettings = E:new(gamemenu):hide()
 

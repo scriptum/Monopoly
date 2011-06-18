@@ -68,6 +68,7 @@ local gogo = function()
     end
     --движение игрока и анимация кубиков на клиентах
     msg = msg .. ' move('..__i..','..ds1..','..ds2..')'
+    msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
     send(msg, 'g')
     --пауза пока идет анимация
     delay((ds1+ds2)*200 + 2000)
