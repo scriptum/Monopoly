@@ -1,4 +1,4 @@
---Р·Р°РїСѓСЃРєР°РµРј РЅР°С€ "СЃРµСЂРІРµСЂ"
+--запускаем наш "сервер"
 S.newThread('game/server.lua')
 print('client')
 local lasttime = 0
@@ -25,13 +25,31 @@ getplayerxy = function(n, k)
   return x + cell_padding, y + cell_padding
 end
 
-move = function(num, x)
+local roll = function()
+  dices.ds1 = math.random(1,6)
+  dices.ds2 = math.random(1,6)
+end
+
+move = function(num, ds1, ds2)
   pl = player._child[num]
+  current_player = num
+  local x = ds1 + ds2
+  local i = math.random(1,6)
+  sound_dice[i]:play()
+  local j = i 
+  while i == j do j = math.random(1,6) end
+  sound_dice[j]:play()
+  for i = 1, 19 do
+    pl:delay({speed = i/200, callback = roll})
+  end
+  dices.ds1 = ds1
+  dices.ds2 = ds2
+  pl:delay(0.5)
   if pl.jail == 0 then
     local pl_x, pl_y
     local last_cell = pl.pos
     local last_i = 1
-    -- РґРѕР±Р°РІР»СЏРµРј РІСЃРµ СѓРіР»С‹, РїРѕ РєРѕС‚РѕСЂС‹Рј РїСЂРѕС…РѕРґРёРј
+    -- добавляем все углы, по которым проходим
     for i=1, x do
       pl.pos = pl.pos + 1
       if pl.pos > max then
@@ -51,23 +69,6 @@ move = function(num, x)
   end
 end
 
-local roll = function()
-  dices.ds1 = math.random(1,6)
-  dices.ds2 = math.random(1,6)
-end
-
-throw_dice = function(ds1, ds2)
-  local i = math.random(1,6)
-  sound_dice[i]:play()
-  local j = i 
-  while i == j do j = math.random(1,6) end
-  sound_dice[j]:play()
-  for i = 1, 19 do
-    dices:delay({speed = i/200, callback = roll})
-  end
-  dices.ds1 = ds1
-  dices.ds2 = ds2
-end
 
 player = E:new(board)
 
@@ -78,14 +79,14 @@ for k = 1, 5 do
 end
 
 table.insert(lquery_hooks, function()
-	--РїСЂРѕРІРµСЂРєР° РєР°Р¶РґС‹Р№ 20 РјСЃ - РєР°Рє СЂР°Р· РІСЂРµРјСЏ РЅР°РєРѕРїР»РµРЅРёСЏ СЃС‚РµРєР° РўРЎР 
+	--проверка каждый 20 мс - как раз время накопления стека ТСР
 	if time - lasttime > 0.02 then 
 		lasttime = time
-		--РїРѕР»СѓС‡Р°РµРј СЃРѕРѕР±С‰РµРЅРёРµ СЃ РєРѕРґРѕРј "g"
+		--получаем сообщение с кодом "g"
 		msg = S.recv('g')
-		--С‚РѕР»СЊРєРѕ РѕРґРЅРѕ СЃРѕРѕР±С‰РµРЅРёРµ Р·Р° С‚Р°РєС‚ - РЅСѓР¶РЅРѕ, С‡С‚РѕР±С‹ РЅРµ С‚РѕРјРѕР·РёР»Рѕ РїСЂРѕС†РµСЃСЃ СЂРµРЅРґРµСЂРёРЅРіР°
+		--только одно сообщение за такт - нужно, чтобы не томозило процесс рендеринга
 		if msg then 
-			--РІС‹РїРѕР»РЅСЏРµРј РїРѕР»СѓС‡РµРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РєР°Рє Р»СѓР° СЃРєСЂРёРїС‚, РёРіРЅРѕСЂРёСЂСѓСЏ РѕС€РёР±РєРё
+			--выполняем полученное сообщение как луа скрипт, игнорируя ошибки
 			xpcall(loadstring(msg), print)
 		end
 		

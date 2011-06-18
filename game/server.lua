@@ -1,13 +1,18 @@
 print('server')
-require 'rules.classic.ru.rules' --Р·Р°РіСЂСѓР¶Р°СЋС‚СЃСЏ РїСЂР°РІРёР»Р°
-require 'rules.classic.action' --С‚СѓС‚ СЂР°Р·РјРµСЂ РїРѕР»СЏ, СЌРєС€РЅС‹
+require 'rules.classic.ru.rules' --загружаются правила
+require 'rules.classic.action' --тут размер поля, экшны
 local S = scrupp
 local send = S.send
 local delay = S.delay
-local players = {} --РЅР° СЃРµСЂРІРµСЂРµ СЃРІРѕРё РїР»РµРµСЂС‹
---С‡РёС‚СЃР»Рѕ РєР»РµС‚РѕРє РІСЃРµРіРѕ
+
+--текущие игры
+local games = {}
+games['newgame'] = {}
+local current_game = games['newgame']
+
+current_game.players = {} --на сервере свои плееры
+--читсло клеток всего
 local cell_count = field_width * 2 + field_height * 2 + 4
-local __i = 1
 
 local roll = function()
   local ds1, ds2 = 0
@@ -21,45 +26,59 @@ end
 send('max = '..cell_count .. ' angles = {1, '..field_width..' + 2, '..field_width..' + '..field_height..' + 3, '..field_width..' * 2 + '..field_height..' + 4}', 'g')
 
 local msg = ''
---СЃРѕР·РґР°РµРј РёРіСЂРѕРєРѕРІ
+--создаем игроков
 local i
 for i = 1, 5 do
-	table.insert(players, {
+	table.insert(current_game.players, {
 		pos = 1, 
 		jail = 0, 
 		ingame = true, 
 		cash = 1500, 
-		name = "", --РёРјСЏ
-		address = "", --Р°Р№РїРёС€РЅРёРє (РЅСѓ РІ С‚РµРѕСЂРёРё РѕРЅ Р±СѓРґРµС‚)
-		uid = 0 --СЃРµСЂРІРµСЂСѓ РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ РєР°Рє-С‚Рѕ РїРѕРЅСЏС‚СЊ, РѕС‚ РєР°РєРѕРіРѕ РёРіСЂРѕРєР° РїСЂРёС€Р»Рѕ СЃРѕРѕР±С‰РµРЅРёРµ
+		name = "", --имя
+		address = "", --айпишник (ну в теории он будет)
+		uid = 0 --серверу нужно будет как-то понять, от какого игрока пришло сообщение
 	})
 	msg = msg .. 'player._child['..i..'].ingame = true '
 end
 send(msg, 'g')
 
-
-local companys = {}
+--создаем массив компаний
+current_game.companys = {}
 for i = 1, cell_count do
-	table.insert(companys, {})
+	table.insert(current_game.companys, {})
 end
 
+current_game.double = 1 --число выкинутых дублей в этой игре
+current_game.current_player = 1 --текущий плеер
+local __max = 5 --максимально возможное число игроков на сервере
 local gogo = function()
-  
-  local buf = players[__i]
-  if players[__i].ingame == true then
-    local ds1, ds2 = roll()
-    send('throw_dice('..ds1..','..ds2..') move('..__i..', '..ds1+ds2..')', 'g')
-    --РїР°СѓР·Р° РїРѕРєР° РёРґРµС‚ Р°РЅРёРјР°С†РёСЏ
-    delay((ds1+ds2)*200)
-  end
-  __i = __i + 1
-  if __i > #players then __i = 1 end
-  
+  local __i = current_game.current_player --текущий игрок
+  local buf = current_game.players[__i]
+  if buf.ingame == false or (buf.jail == 4 and current_game.double > 1) then 
+    double = 1
+    current_game.current_player = __i + 1
+    if current_game.current_player > __max then current_game.current_player = 1 end
+    gogo()
+  else
+    local msg = '' --сообщение, которое будет отправлено клиенту
+    local ds1, ds2 = roll() --бросаем кубики
+    --если игрок прошел старт - добавить ему бабла
+    if buf.pos + ds1 + ds2 > cell_count then
+      msg = msg .. ' money_transfer(200, '.. __i ..')'
+    end
+    --движение игрока и анимация кубиков на клиентах
+    msg = msg .. ' move('..__i..','..ds1..','..ds2..')'
+    send(msg, 'g')
+    --пауза пока идет анимация
+    delay((ds1+ds2)*200 + 2000)
+    current_game.current_player = __i + 1
+    if current_game.current_player > __max then current_game.current_player = 1 end
+  end  
 end
 
 local done = false
 while done == false do
 	--send('burn:animate({a = '..math.random(50, 100)..'})', 'g')
 	gogo()
-	delay(20) --РЅРµ С‚РѕСЂРјРѕР·РёРј РєРѕРјРї
+	delay(20) --не тормозим комп
 end
