@@ -72,7 +72,7 @@ end
 set_cash = function(num, money)
   local pl = player._child[num]
   pl:delay({speed = 0, cb = function()
-    pl:stop('money'):animate({cash = money}, {speed = 0.5, queue = 'money'})
+    pl:stop('money'):animate({cash = money}, {speed = 0.7, queue = 'money'})
   end})
 end
 
@@ -81,7 +81,7 @@ player = E:new(board)
 for k = 1, 5 do
   local   x, y = getplayerxy(1, k)
   E:new(player)
-  :draw(player_draw):set{k=k, jail=0, pos=1, x=x, y=y}  
+  :draw(player_draw):set{k=k, jail=0, pos=1, x=x, y=y, cash = 0}  
 end
 
 table.insert(lquery_hooks, function()
