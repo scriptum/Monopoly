@@ -71,7 +71,9 @@ end
 
 set_cash = function(num, money)
   local pl = player._child[num]
-  pl:delay({speed = 0, cb = function()pl.cash = money end})
+  pl:delay({speed = 0, cb = function()
+    pl:stop('money'):animate({cash = money}, {speed = 0.5, queue = 'money'})
+  end})
 end
 
 player = E:new(board)

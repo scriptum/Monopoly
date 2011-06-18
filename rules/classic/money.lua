@@ -2,8 +2,8 @@
 money = function(m)
   if not m then m = 0 end
   if m >= 1000 then
-    return '$' .. m/1000 .. 'M'
+    return '$' .. math.floor(m)/1000 .. 'M'
   else
-    return '$' .. m .. 'K'
+    return '$' .. math.floor(m) .. 'K'
   end
 end
