@@ -44,14 +44,17 @@ for i = 1, cell_count do
 end
 
 local gogo = function()
-  delay(500)
+  
   local buf = players[__i]
   if players[__i].ingame == true then
     local ds1, ds2 = roll()
-    send('move('..__i..', '..ds1+ds2..')', 'g')
+    send('throw_dice('..ds1..','..ds2..') move('..__i..', '..ds1+ds2..')', 'g')
+    --пауза пока идет анимация
+    delay((ds1+ds2)*200)
   end
   __i = __i + 1
   if __i > #players then __i = 1 end
+  
 end
 
 local done = false

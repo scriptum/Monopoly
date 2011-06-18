@@ -304,11 +304,11 @@ end
 
 --кости
 dice_draw = function(s)
-  dice[ds1 or 1]:draw(s.x, s.y, 0, 64)
-  dice[ds2 or 1]:draw(s.x + 66, s.y, 0, 64)
+  dice[s.ds1 or 1]:draw(s.x, s.y, 0, 64)
+  dice[s.ds2 or 1]:draw(s.x + 66, s.y, 0, 64)
 end
 
-E:new(board_gui):draw(dice_draw):move(ch + 10, ch + 10)
+dices = E:new(board_gui):draw(dice_draw):move(ch + 10, ch + 10)
 gui_text = E:new(board_gui):draw(function(s)
   fnt_big:select()
   fnt_big:scale(14/35)

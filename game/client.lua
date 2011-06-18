@@ -51,6 +51,24 @@ move = function(num, x)
   end
 end
 
+local roll = function()
+  dices.ds1 = math.random(1,6)
+  dices.ds2 = math.random(1,6)
+end
+
+throw_dice = function(ds1, ds2)
+  local i = math.random(1,6)
+  sound_dice[i]:play()
+  local j = i 
+  while i == j do j = math.random(1,6) end
+  sound_dice[j]:play()
+  for i = 1, 19 do
+    dices:delay({speed = i/200, callback = roll})
+  end
+  dices.ds1 = ds1
+  dices.ds2 = ds2
+end
+
 player = E:new(board)
 
 for k = 1, 5 do
