@@ -316,16 +316,19 @@ gui_text = E:new(board_gui):draw(function(s)
 end)
 gui_text.text = ''
 --анимация передачи денех
-coins = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
-money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
+local coins = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
+local money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
 money_transfer = function(money, from, to)
-  if to then 
-    from.cash = from.cash - money
-    to.cash = to.cash + money
-  else
-    from.cash = from.cash + money
-  end
-  player:delay({speed = 0, cb = function() 
+  --~ if to then 
+    --~ from.cash = from.cash - money
+    --~ to.cash = to.cash + money
+  --~ else
+    --~ from.cash = from.cash + money
+  --~ end
+  local from = players._child[from]
+  local to = players._child[to]
+  from:delay({speed = 0, cb = function() 
+    
     if lquery_fx == true then
       sound_coin:play()
     end
@@ -342,7 +345,7 @@ money_transfer = function(money, from, to)
       end
     end
   end})
-  if initplayers[current_player] == 'Computer' then player:delay(1) end
+  --~ if initplayers[current_player] == 'Computer' then player:delay(1) end
 end
 
 

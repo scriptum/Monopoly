@@ -38,7 +38,7 @@ for i = 1, 5 do
 		address = "", --айпишник (ну в теории он будет)
 		uid = 0 --серверу нужно будет как-то понять, от какого игрока пришло сообщение
 	})
-	msg = msg .. 'player._child['..i..'].ingame = true '
+	msg = msg .. 'players._child['..i..'].ingame = true '
 end
 send(msg, 'g')
 
@@ -69,6 +69,7 @@ local gogo = function()
     --движение игрока и анимация кубиков на клиентах
     msg = msg .. ' move('..__i..','..ds1..','..ds2..')'
     msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
+    msg = msg .. ' money_transfer('..math.random(-15,15)..','..__i..')'
     send(msg, 'g')
     --пауза пока идет анимация
     delay((ds1+ds2)*200 + 2000)

@@ -31,7 +31,7 @@ local roll = function()
 end
 
 move = function(num, ds1, ds2)
-  local pl = player._child[num]
+  local pl = players._child[num]
   current_player = num --это для того, чтобы замигал текущий игрок
   local x = ds1 + ds2
   local i = math.random(1,6)
@@ -70,17 +70,17 @@ move = function(num, ds1, ds2)
 end
 
 set_cash = function(num, money)
-  local pl = player._child[num]
+  local pl = players._child[num]
   pl:delay({speed = 0, cb = function()
     pl:stop('money'):animate({cash = money}, {speed = 0.7, queue = 'money'})
   end})
 end
 
-player = E:new(board)
+players = E:new(board)
 
 for k = 1, 5 do
   local   x, y = getplayerxy(1, k)
-  E:new(player)
+  E:new(players)
   :draw(player_draw):set{k=k, jail=0, pos=1, x=x, y=y, cash = 0}  
 end
 
