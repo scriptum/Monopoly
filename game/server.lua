@@ -47,7 +47,7 @@ send(msg, 'g')
 --создаем массив компаний
 current_game.companys = {}
 for i = 1, cell_count do
-	table.insert(current_game.companys, {})
+	table.insert(current_game.companys, {level = 1})
 end
 
 current_game.double = 1 --число выкинутых дублей в этой игре
