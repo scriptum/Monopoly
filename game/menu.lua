@@ -38,26 +38,30 @@ if 1 then gamemenu:hide() end
 menuvsettings = E:new(gamemenu):hide()
 
 --меню игры
---~ local modes = G.getModes()
---~ table.sort(modes, function(a, b) return a.width < b.width end)
---~ local display_modes = {}
---~ for _, v in pairs(modes) do
-	--~ table.insert(display_modes, v.width .. 'x' .. v.height)
---~ end
+local modes = S.getModes()
+table.sort(modes, function(a, b) return a.width < b.width end)
+local display_modes = {}
+for _, v in pairs(modes) do
+	table.insert(display_modes, v.width .. 'x' .. v.height)
+end
 
---~ local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, display_modes, display_modes, {'gameoptions', 'mode'})
+local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, display_modes, display_modes, {'gameoptions', 'mode'})
 local screenmode = E:new(menuvsettings):move(200, 200):list(l.screen_mode, {true, false}, {l.fullscreen, l.windowed}, {'gameoptions', 'fullscreen'})
 local apply = E:new(menuvsettings):move(130, 400):button(l.apply, function(s) 
 	local p = screenlist._pos
-	local mode = G.getWidth() .. 'x' .. G.getHeight()
+	local mode = S.getWidth() .. 'x' .. S.getHeight()
 	local full = screenmode._vars[screenmode._pos]
 	if gameoptions.mode ~= mode or gameoptions.fullscreen ~= full then
 		gameoptions.fullscreen = full
-		G.setMode(modes[p].width, modes[p].height, full)
+		S.init('Test', modes[p].width, modes[p].height, 32, full)
 		screen_scale, x_screen_scale, y_screen_scale = getScale() --rescale screen
+		local newsize = math.ceil(8*screen_scale)
+		if newsize > 13 then newsize = 13 end
+		if newsize < 6 then newsize = 6 end
+		fnt_small = Fonts["Liberation Sans bold"][newsize]
 	end
 end)
-E:new(menuvsettings):move(200, 250):slider(l.sound_volume, 0, 100, {'gameoptions', 'volume'}, function(v)A.setVolume(v/100)end)
+E:new(menuvsettings):move(200, 250):slider(l.sound_volume, 0, 128, {'gameoptions', 'volume'}, function(v)S.setVolume(v)end)
 
 
 local function mainsettings() menumain:menutoggle(menuvsettings) end
@@ -80,5 +84,6 @@ for i = 1, 5 do
 end
 E:new(menusingle):move(130, 400):button(l.start, new_game)
 E:new(menusingle):move(414, 400):button(l.back, mainsingle)
+
 
 

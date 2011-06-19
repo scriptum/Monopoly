@@ -349,6 +349,38 @@ money_transfer = function(money, from, to)
 end
 
 
+board:keypress(function( s, key, unicode )
+   if key == "f" then 
+     lquery_fx = not lquery_fx 
+   end
+   if key == "1" and iflinux then
+      player._child[1].cash = player._child[1].cash - 1000
+   end
+   if key == "q" and iflinux then
+      player._child[1].cash = player._child[1].cash + 100
+   end
+   if key == "2" and iflinux then
+      player._child[2].cash = player._child[2].cash - 1500
+   end
+   if key == "w" and iflinux then
+      player._child[2].cash = player._child[2].cash + 100
+   end
+   if key == "3" and iflinux then
+      player._child[3].cash = player._child[3].cash - 1000
+   end
+   if key == "escape" then
+     gamemenu:toggle()
+     if playermenu._visible == true then
+       playermenu:toggle()
+       playermenu_getvisible = true
+     elseif playermenu_getvisible == true then
+       playermenu_getvisible = false
+       playermenu:toggle()
+     end
+     board_gui:toggle()
+   end
+end)
+
 
 --[[
 local rag_upd = function(s)

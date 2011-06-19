@@ -1,6 +1,8 @@
 print('server')
 require 'rules.classic.ru.rules' --загружаются правила
 require 'rules.classic.action' --тут размер поля, экшны
+require 'game.ai' --искусственный интеллект
+require 'game.actions' --действия игрока
 local S = scrupp
 local send = S.send
 local delay = S.delay
