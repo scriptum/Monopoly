@@ -2,10 +2,10 @@ if not Fonts then Fonts = {} end
 if not FontTextures then FontTextures = {} end
 local d
 local t
-t = G.newImage("data/fonts/font.dds")
+t = S.newImage("data/fonts/font.dds")
 table.insert(FontTextures, t)
 if not Fonts["PT Sans Caption"] then Fonts["PT Sans Caption"] = {} end
-d = scrupp.addFont(t)
+d = S.addFont(t)
 Fonts["PT Sans Caption"][35] = d
 d:setGlyph(32,0,0,0,0,13,61,13,61)
 d:setGlyph(97,219,211,24,25,1,23,27,61)

@@ -15,20 +15,20 @@ local alpha = 30 --альфа канал для разделителя
 local sep_padding = 5 --отступы для разделителя
 scaley = (ch-sep_padding*2) -- масштаб для разделителя
 local sep_draw_ver = function(x, y, sx) --рисует разделитель (вертикальный)
-  G.setBlendMode('additive')
-  G.setColor(255,255,255,alpha)
+  S.setBlendMode('additive')
+  S.setColor(255,255,255,alpha)
   sep:draw(x, y, 0, sx, scaley)
-  G.setBlendMode('multiplicative')
-  G.setColor(0,0,0,alpha*2)
+  S.setBlendMode('multiplicative')
+  S.setColor(0,0,0,alpha*2)
   sep:draw(x - sx, y, 0, sx, scaley)
 end
 
 local sep_draw_hor = function(x, y, sx) --рисует разделитель (горизонтальный)
-  G.setBlendMode('additive')
-  G.setColor(255,255,255,alpha)
+  S.setBlendMode('additive')
+  S.setColor(255,255,255,alpha)
   sep:draw(x, y, 90, sx, scaley)
-  G.setBlendMode('multiplicative')
-  G.setColor(0,0,0,alpha*2)
+  S.setBlendMode('multiplicative')
+  S.setColor(0,0,0,alpha*2)
   sep:draw(x, y - sx, 90, sx, scaley)
 end
 
@@ -42,7 +42,7 @@ local sep_draw = function(s) --рисует разделители
     sep_draw_hor(800-sep_padding,ch-cw-a+(cw+a)*i, sx)
     sep_draw_hor(ch-sep_padding,ch-cw-a+(cw+a)*i, sx)
   end
-  G.setBlendMode('alpha')
+  S.setBlendMode('alpha')
 end
 
 --объект - разделители
@@ -108,32 +108,32 @@ draw.company = function(s)
   if com.owner then 
     local c = rules_player_colors[com.owner.k]
     c[4] = s.owner_alpha
-    G.setColor(c)
+    S.setColor(c)
     draw_fuzzy(x, y, sx, sy, s.side)
   end
-  G.setColor(255, 255, 255, s.logo_hover/5)
-  G.setBlendMode('additive')
+  S.setColor(255, 255, 255, s.logo_hover/5)
+  S.setBlendMode('additive')
   draw_fuzzy(x, y, sx, sy, s.side)
-  G.setBlendMode('alpha')
-  G.setColor(255, 255, 255, 255)
+  S.setBlendMode('alpha')
+  S.setColor(255, 255, 255, 255)
   --отрисовка картинки компании
   rules_company_images[s.num]:draw(x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w)
   --отрисовка группы
   if com.group then rules_group_images[com.group]:draw(x + offset_group[s.side].x, y + offset_group[s.side].y, 0, offset_group[s.side].w) end
   
-  G.setColor(0,0,0,185*math.max(s.mortgage_alpha, s.all_alpha)/255)
+  S.setColor(0,0,0,185*math.max(s.mortgage_alpha, s.all_alpha)/255)
   draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
   --заложено?
   if s.mortgage_alpha > 0 then 
     
-    G.setColor(255,255,255,s.mortgage_alpha)
+    S.setColor(255,255,255,s.mortgage_alpha)
     if s.side == 3 then y = 600 - cw end
     if com.level == 0 then 
-      G.setColor(255,255,255,255 - s.all_alpha)
+      S.setColor(255,255,255,255 - s.all_alpha)
       lock:draw(x - 4, y, 0, cw) 
     end
   elseif com.level and com.level > 2 then
-    G.setColor(255,255,255)
+    S.setColor(255,255,255)
     --акции
     local lvl = com.level - 2
     local img = action
@@ -161,9 +161,9 @@ draw.company = function(s)
   end
   
     --цена
-  G.setColor(offset_rent_color)
-  --~ G.setFont(console)
-  --~ G.fontSize = offset_rent[s.side].size
+  S.setColor(offset_rent_color)
+  --~ S.setFont(console)
+  --~ S.fontSize = offset_rent[s.side].size
   local txt = nil
   if gui_mortgage_done._visible == true and com.owner and com.owner.k == current_player and com.level > 0 then
     txt = money(com.money[1]/2)
@@ -171,7 +171,7 @@ draw.company = function(s)
     --~ txt = money(rules_group[com.group].upgrade)
   elseif gui_unmortgage_done._visible == true and com.owner and com.owner.k == current_player and com.level == 0 then
     txt = money(com.money[1])
-    G.setColor(255,255,255)
+    S.setColor(255,255,255)
   elseif com.level > 0 then 
     if not com.owner then 
       txt = money(com.money[1])
@@ -205,9 +205,9 @@ draw.chance = function(s)
   fnt_small:select()
   local x, y = get_xy(s.pos, s.side)
   rules_company_images[s.num]:draw(x + offset_chest[s.side].x, y + offset_chest[s.side].y, 0, offset_chest[s.side].w)
-  G.setColor(offset_rent_color[1], offset_rent_color[2], offset_rent_color[3], 255)
-  --~ G.setFont(console)
-  G.fontSize = offset_chest_text[s.side].size
+  S.setColor(offset_rent_color[1], offset_rent_color[2], offset_rent_color[3], 255)
+  --~ S.setFont(console)
+  S.fontSize = offset_chest_text[s.side].size
   Gprintf(rules_company[s.num].name, x, y + offset_chest_text[s.side].y, offset_chest_text[s.side].w, 'center')
 end
 
@@ -216,9 +216,9 @@ draw.nalog = function(s)
   fnt_small:select()
   local x, y = get_xy(s.pos, s.side)
   rules_company_images[s.num]:draw(x + offset_logo[s.side].x, y + offset_logo[s.side].y, 0, offset_logo[s.side].w)
-  G.setColor(offset_rent_color)
-  --~ G.setFont(console)
-  G.fontSize = offset_chest_text[s.side].size
+  S.setColor(offset_rent_color)
+  --~ S.setFont(console)
+  S.fontSize = offset_chest_text[s.side].size
   Gprintf(money(rules_company[s.num].money), x + offset_rent[s.side].x, y + offset_rent[s.side].y, offset_rent[s.side].w, 'center')
 end
 
@@ -286,15 +286,15 @@ player_draw = function(s)
       rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx)
     end
     if s.k == current_player then
-      G.setBlendMode('additive')
-      G.setColor(255,255,255,(math.sin(time*7)+1)*90)
+      S.setBlendMode('additive')
+      S.setColor(255,255,255,(math.sin(time*7)+1)*90)
       rules_player_images[s.k]:draw(s.x, s.y, 0, sx)
       if gamemenu._visible == false then rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx) end
-      G.setBlendMode('alpha')
+      S.setBlendMode('alpha')
     end
     
     if s.jail > 0 then 
-      G.setColor(255,255,255,255)
+      S.setColor(255,255,255,255)
       player_jail:draw(s.x+2, s.y+2, 0, 26/32)
     end
   --elseif gamemenu._visible == false then 
@@ -384,12 +384,12 @@ end)
 
 --[[
 local rag_upd = function(s)
-G.setdrawTarget(s.fb)
-G.setFont(console)
-G.fontSize = 10*screen_scale
-G.setColor(255,255,255)
+S.setdrawTarget(s.fb)
+S.setFont(console)
+S.fontSize = 10*screen_scale
+S.setColor(255,255,255)
 Gprintf('Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.Текстами рефератов можно пользоваться совершенно бесплатно, однако при транслировании и предоставлении текстов в массовое пользование ссылка на Яндекс.Рефераты обязательна.Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.Текстами рефератов можно пользоваться совершенно бесплатно, однако при транслировании и предоставлении текстов в массовое пользование ссылка на Яндекс.Рефераты обязательна.Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.Текстами рефератов можно пользоваться совершенно бесплатно, однако при транслировании и предоставлении текстов в массовое пользование ссылка на Яндекс.Рефераты обязательна.Служба Яндекс.Рефераты предназначена для студентов и школьников, дизайнеров и журналистов, создателей научных заявок и отчетов — для всех, кто относится к тексту, как к количеству знаков.Нажав на кнопку «Написать реферат» вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.Теперь никто не сможет обвинить вас в плагиате, ибо каждый текст Яндекс.Рефератов неповторим.',0,s.oy,s.w*screen_scale)
-G.setdrawTarget()
+S.setdrawTarget()
 end
 local drag_start = function(s, x, y)
   s._rag_y = y - s.oy
@@ -408,9 +408,9 @@ table.insert(lquery_hooks, function()
 end)
 
 
-frame = E:new(screen):set({x = 300, y = ch, w = 400, h = 600-ch, oy = 0, fb = G.newFramebuffer( 400*screen_scale, (600-ch*2)*screen_scale )})
+frame = E:new(screen):set({x = 300, y = ch, w = 400, h = 600-ch, oy = 0, fb = S.newFramebuffer( 400*screen_scale, (600-ch*2)*screen_scale )})
 :draw(function(s)
-G.draw(s.fb, s.x, s.y, 0, 1/screen_scale)
+S.draw(s.fb, s.x, s.y, 0, 1/screen_scale)
 end):mousepress(drag_start):mouserelease(drag_end)
 rag_upd(frame)
 ]]

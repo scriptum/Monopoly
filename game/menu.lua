@@ -59,6 +59,8 @@ local apply = E:new(menuvsettings):move(130, 400):button(l.apply, function(s)
 		if newsize > 13 then newsize = 13 end
 		if newsize < 6 then newsize = 6 end
 		fnt_small = Fonts["Liberation Sans bold"][newsize]
+		background.qw = 800 * screen_scale
+		background.qh = 600 * screen_scale
 	end
 end)
 E:new(menuvsettings):move(200, 250):slider(l.sound_volume, 0, 128, {'gameoptions', 'volume'}, function(v)S.setVolume(v)end)

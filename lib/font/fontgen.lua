@@ -18,7 +18,7 @@ local ffontname, ffontsize
 for line in io.lines("font.fnt") do
 	if not img then 
 		img = line:match("textures:(.+)")
-		io.write("t = G.newImage(\"" .. img:trim() .. "\")\n")
+		io.write("t = S.newImage(\"" .. img:trim() .. "\")\n")
 		io.write("table.insert(FontTextures, t)\n")
 	end
 	c,x,y,cw,ch,cx,cy,w,h = line:match("([%d]+)%s+([%d]+)%s+([%d]+)%s+([%d]+)%s+([%d]+)%s+([%d]+)%s+([%d]+)%s+([%d]+)%s+([%d]+)")
@@ -28,7 +28,7 @@ for line in io.lines("font.fnt") do
 		io.write("if not Fonts[\""..fontname.."\"] then Fonts[\""..fontname.."\"] = {} end\n")
 		ffontname = fontname
 		ffontsize = fontsize
-		io.write("d = scrupp.addFont(t)\n")
+		io.write("d = S.addFont(t)\n")
 		io.write("Fonts[\""..fontname.."\"]["..fontsize.."] = d\n")
 	elseif w and h then
 		io.write("d:setGlyph("..c..","..x..","..y..","..cw..","..ch..","..cx..","..cy..","..w..","..h..")\n")

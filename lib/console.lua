@@ -1,13 +1,3 @@
-table.insert(lquery_hooks, function()
-	if KeyPressed == true and Console and Console.disabled == false and 
-			(KeyPressedCounter == 1 or 
-			 KeyPressedCounter == 2 and time - KeyPressedTime > 0.3 or
-			 KeyPressedCounter > 2 and time - KeyPressedTime > 0.05) then 
-		KeyPressedTime = time
-		KeyPressedCounter = KeyPressedCounter + 1
-		debug_keypressed(KeyPressedKey,KeyPressedUni)
-	end
-end)
 local small = Fonts["Arial"][9]
 
 table.findindex = function(arr, needle)
@@ -201,21 +191,21 @@ end)
   if(s.y >= 600) then return end
   scrupp.setLineWidth(1/screen_scale)
   scrupp.setSmooth(false)
-  G.setColor(20,20,20,190)
+  S.setColor(20,20,20,190)
   local x, y, w, h = math.floor(s.x), math.floor(s.y), math.floor(s.w), math.floor(s.w)
   local off1 = (w - 700) / screen_scale
   local sh = small:height()
   local off2 = (sh*2 + 2) / screen_scale
   local off3 = (sh + 1) / screen_scale
   sh = sh / screen_scale
-  G.rectangle(x, y, w, h, true)
-  G.rectangle(w - off1 - 2, y - off2, off1, off2, true)
-  G.setColor(128,128,128,255)
-  G.rectangle(x, y, w, h)
-  G.rectangle(w - off1 - 2, y - off2, off1 + 2, off2)
+  S.rectangle(x, y, w, h, true)
+  S.rectangle(w - off1 - 2, y - off2, off1, off2, true)
+  S.setColor(128,128,128,255)
+  S.rectangle(x, y, w, h)
+  S.rectangle(w - off1 - 2, y - off2, off1 + 2, off2)
   small:select()
-  G.setColor(255,255,255,255)
-  G.line(x, y + 200 - off3, w, y + 200 - off3)
+  S.setColor(255,255,255,255)
+  S.line(x, y + 200 - off3, w, y + 200 - off3)
   Gprint('fps: '..scrupp.fps() .. '\nMemory: ' .. gcinfo(), w - off1, y - off2)
   Gprint('> ' .. s.input,x,y + 200 - sh - 1)
   local lines = math.ceil(180 * screen_scale / sh)

@@ -1,3 +1,14 @@
+local easing = require("lib/lquery/easing")
+
+lQuery = {
+  fx = true,
+  hooks = {},
+  addhook = function(hook)
+    table.insert(lQuery.hooks, hook)
+  end
+}
+
+
 Entity = {} --Any object: box, circle, character etc
 E = Entity --short name
 function Entity:new(parent)  -- constructor
@@ -175,7 +186,7 @@ end
 local drag_end = function(s)
   _drag_object = nil
 end
-table.insert(lquery_hooks, function()
+lQuery.addhook(function()
   local s = _drag_object
   if s then
     s.x = mX - s._drag_x
@@ -188,7 +199,7 @@ table.insert(lquery_hooks, function()
       if s.y < a[1] then s.y = a[1] end
     end
     if s._drag_callback then s._drag_callback(s, x, y) end
-    --print(MousePressed, MouseButton)
+    --print(lQuery.MousePressed, lQuery.MouseButton)
   end
 end)
 function Entity:draggable(options)
@@ -202,17 +213,17 @@ end
 --delete object
 --how to remove object correctly and free memory:
 --a = a:delete()
-function Entity:delete()
-  local i = 0
-  for k, v in pairs(self._parent._child) do
-    i = i + 1
-    if v == self then
-      table.remove(self._parent._child, i)
-      return nil
-    end
-  end
-  return nil
-end
+--~ function Entity:delete()
+  --~ local i = 0
+  --~ for k, v in pairs(self._parent._child) do
+    --~ i = i + 1
+    --~ if v == self then
+      --~ table.remove(self._parent._child, i)
+      --~ return nil
+    --~ end
+  --~ end
+  --~ return nil
+--~ end
 
 
 
@@ -249,7 +260,7 @@ local text_draw = function(s)
   --~ else
     --~ Gprint(s.text, s.x, s.y)
   --~ end
-  S.print(s.text, s.x, s.y)
+  S.print(s.text, s.x, s.y, s.w, s.align)
 end
 function Entity:text(text, font, align)
   self.font = font
@@ -269,7 +280,7 @@ end
 function Entity:image(image, options)
  if image then
     if type(image) == 'string' then 
-      image = G.newImage(image, options)
+      image = S.newImage(image, options)
     end
     self.image = image
     self.w = image:getWidth()
@@ -313,7 +324,7 @@ local border_image_draw = function(s)
 end
 function Entity:border_image(image, top, right, bottom, left, stretch)
  if image then
-    if type(image) == 'string' then image = G.newImage(image) end
+    if type(image) == 'string' then image = S.newImage(image) end
     self.image = image
     self._draw = border_image_draw
     w = image:getWidth()
@@ -326,19 +337,7 @@ function Entity:border_image(image, top, right, bottom, left, stretch)
     self.right = right
     self.bottom = bottom
     self.left= left
-    
-
-    
-    --~ self.img_cl = G.newQuad(0, top, left, h - top - bottom, w, h)
-    --~ self.img_cc = G.newQuad(left, top, w - left - right, h - top - bottom, w, h)
-    --~ self.img_cr = G.newQuad(w - right, top, right, h - top - bottom, w, h)
-    
-    --~ self.img_bl = G.newQuad(0, h - bottom, left, bottom, w, h)
-    --~ self.img_bc = G.newQuad(left, h - bottom, w - left - right, bottom, w, h)
-    --~ self.img_br = G.newQuad(w - right, h - bottom, right, bottom, w, h)
-    --~ 
-    --~ self.border = {top = top, right = right, bottom = bottom, left = left}
-    
+        
     self.angle = 0
     self.sx = 1
     self.sy = 1
@@ -349,3 +348,129 @@ end
 
 --screen - parent entity for all entities. Drawing function recursively process all entities from it.
 screen = Entity:new()
+
+getMouseXY = function()
+  return S.getMousePos()
+end
+
+local function animate(ent)
+  for i, j in pairs(ent._animQueue) do
+    if j[1] then 
+      aq = j[1]
+      if not aq._keys then
+        if type(aq.keys) == 'function' then
+          aq._keys = aq.keys()
+        else
+          aq._keys = aq.keys
+        end
+      end
+      if not aq.lasttime then
+        aq.lasttime = time
+        for k, v in pairs(aq._keys) do
+          aq.old[k] = ent[k]
+        end
+      end
+      
+      if aq.lasttime + aq.speed <= time or lquery_fx == false then
+        for k, v in pairs(aq._keys) do
+          ent[k] = v
+        end
+        if aq.loop == true then
+          aq._keys = nil
+          aq.lasttime = nil
+          aq.old = {}
+          table.insert(j, aq) 
+        end
+        table.remove(j, 1)
+        if aq.callback then aq.callback(ent) end
+        animate(ent)
+      else
+        for k, v in pairs(aq._keys) do
+          if ent[k] and type(ent[k]) == 'number' then ent[k] = easing[aq.easing](time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed) end
+        end
+      end --if aq.lasttime + vv.speed <= time
+    end --if j[1]
+  end --for
+end
+
+
+--some events
+local function events(v)
+  if lQuery.KeyPressed == true then 
+    if v._keypress then
+      if not v._key or v._key ~= lQuery.KeyPressedKey then
+        v._keypress(v, lQuery.KeyPressedKey, lQuery.KeyPressedUni)
+      end
+    end
+    if not v._key or v._key ~= lQuery.KeyPressedKey then
+      v._KeyPressedCounter = 1
+    end
+    if v._keyrepeat and (v._KeyPressedCounter == 1 or 
+         v._KeyPressedCounter == 2 and time - v._KeyPressedTime > 0.3 or
+         v._KeyPressedCounter > 2 and time - v._KeyPressedTime > 0.05) then 
+      v._KeyPressedTime = time
+      v._KeyPressedCounter = v._KeyPressedCounter + 1
+      v._keyrepeat(v, lQuery.KeyPressedKey, lQuery.KeyPressedUni)
+    end
+    v._key = lQuery.KeyPressedKey
+  else
+    if v._keyrelease then
+      if v._key and v._key == true then
+        v._keyrelease(v, lQuery.KeyPressedKey, lQuery.KeyPressedUni)
+      end
+    end
+    v._key = false
+  end
+  if v._bound and v._bound(v, mX, mY) then 
+    
+    if v._mousemove then 
+      v._mousemove(v, mX, mY)
+    end 
+    if lQuery.MouseButton == "wu" then 
+      if v._wheel then
+        lQuery.MouseButton = nil
+        v._wheel(v, mX, mY, "u")
+      end
+    elseif lQuery.MouseButton == "wd" then 
+      if v._wheel then
+        lQuery.MouseButton = nil
+        v._wheel(v, mX, mY, "d")
+      end
+    elseif lQuery.MousePressed == true and not lQuery.MousePressedOwner then 
+      lQuery.MousePressedOwner = v
+      if v._mousepress then 
+        v._mousepress(v, mX, mY, lQuery.MouseButton)
+      end
+    end
+    if not v._hasMouse or v._hasMouse == false then
+      v._hasMouse = true
+      if v._mouseover then v._mouseover(v, mX, mY) end
+    end
+    
+  elseif v._hasMouse and v._hasMouse == true then 
+    v._hasMouse = false
+    if v._mouseout then v._mouseout(v, mX, mY) end
+  end
+end
+
+function process_entities(ent)
+  if ent._visible == true then 
+    if ent._animQueue then 
+      animate(ent) 
+    end
+    if ent._control then --if controlled
+      events(ent)
+    end
+    if ent._draw then 
+      S.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
+      if ent.blendMode then S.setBlendMode(ent.blendMode) end
+      ent._draw(ent)
+      if ent.blendMode then S.setBlendMode('alpha') end
+    end
+    if ent._child then 
+      for k, v in pairs(ent._child) do
+        process_entities(v)
+      end
+    end
+  end
+end

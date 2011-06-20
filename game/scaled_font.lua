@@ -1,6 +1,5 @@
 --~ G.oldprintf = G.printf
-G.fontSize = 10
-G.fontSizeOrig = 24
+
 Gprint = function(text, x, y, limit, align)
   local s = 1/screen_scale
   S.scale(s)

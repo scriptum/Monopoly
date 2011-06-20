@@ -26,7 +26,7 @@ offset_group = {
 	{ --top
 		w = w,
 		x = (cw - w - cell_padding * 2) / 2,
-		y = cw + G.fontSize - cell_padding * 2
+		y = cw + fnt_small:height() - cell_padding * 2
 	},
 	{ --right
 		w = w,
@@ -36,7 +36,7 @@ offset_group = {
 	{ --bottom
 		w = w,
 		x = (cw - w - cell_padding * 2) / 2,
-		y = ch - cw - G.fontSize + cell_padding * 2 - w * 0.8
+		y = ch - cw - fnt_small:height() + cell_padding * 2 - w * 0.8
 	},
 	{ --left
 		w = w,

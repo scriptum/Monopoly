@@ -84,7 +84,7 @@ for k = 1, 5 do
   :draw(player_draw):set{k=k, jail=0, pos=1, x=x, y=y, cash = 0}  
 end
 
-table.insert(lquery_hooks, function()
+lQuery.addhook(function()
 	--проверка каждый 20 мс - как раз время накопления стека ТСР
 	if time - lasttime > 0.02 then 
 		lasttime = time

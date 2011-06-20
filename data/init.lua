@@ -1,18 +1,14 @@
 require 'data/fonts/font'
-require 'data/fonts/tahoma'
-require 'data/fonts/ptsmall'
-require 'data/fonts/ptbold'
 require 'data/fonts/liberation'
 
-board_background = G.newImage('data/gfx/background.dds', true)
-sep = G.newImage('data/gfx/separator.png')
-lock = G.newImage('data/gfx/Lock-icon.png')
-fuzzy = G.newImage('data/gfx/fuzzy.png')
-player_jail = G.newImage('data/gfx/player/jail.png')
+sep = S.newImage('data/gfx/separator.png')
+lock = S.newImage('data/gfx/Lock-icon.png')
+fuzzy = S.newImage('data/gfx/fuzzy.png')
+player_jail = S.newImage('data/gfx/player/jail.png')
 
 dice = {}
 for i = 1,6 do
-	dice[i] = G.newImage('data/gfx/dice/'..i..'.png')
+	dice[i] = S.newImage('data/gfx/dice/'..i..'.png')
 end
 
 sound_dice = {}
