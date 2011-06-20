@@ -30,6 +30,18 @@ main ={
       elseif e == "mr" then 
         lQuery.MousePressed = false
         lQuery.MouseButton = c
+        --click handler
+        local v = lQuery.MousePressedOwner
+        if v and v._bound(v, mX, mY) then
+          local v = lQuery.MousePressedOwner
+          if v._mouserelease then 
+            v._mouserelease(v, mX, mY, c)
+          end
+          if v._click then 
+            v._click(v, mX, mY, c)
+          end
+        end
+        lQuery.MousePressedOwner = nil
       elseif e == "kp" then
         lQuery.KeyPressed = true
         lQuery.KeyPressedKey = a

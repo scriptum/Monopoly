@@ -446,10 +446,11 @@ local function events(v)
       v._hasMouse = true
       if v._mouseover then v._mouseover(v, mX, mY) end
     end
-    
-  elseif v._hasMouse and v._hasMouse == true then 
-    v._hasMouse = false
-    if v._mouseout then v._mouseout(v, mX, mY) end
+  else
+    if v._hasMouse and v._hasMouse == true then 
+      v._hasMouse = false
+      if v._mouseout then v._mouseout(v, mX, mY) end
+    end
   end
 end
 
