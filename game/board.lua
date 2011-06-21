@@ -280,22 +280,28 @@ player_draw = function(s)
     fnt_big:select()
     fnt_big:scale(0.4)
     sx = 30
-    rules_player_images[s.k]:draw(s.x, s.y, 0, sx) 
+    player_im1:draw(s.x, s.y, 0, sx)
+    S.setColor(rules_player_colors[s.k])
+    player_im2:draw(s.x+4, s.y+4, 0, sx-8)
+    S.setColor(255,255,255)
     if gamemenu._visible == false then
       S.print(money(s.cash), ch+45, ch+55 + s.k*36)
-      rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx)
+      --~ rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx)
+      player_im1:draw(ch+10, ch+55 + s.k*36, 0, sx)
+      S.setColor(rules_player_colors[s.k])
+      player_im2:draw(ch+10+4, ch+55 + s.k*36+4, 0, sx-8)
     end
     if s.k == current_player then
       S.setBlendMode('additive')
       S.setColor(255,255,255,(math.sin(time*7)+1)*90)
-      rules_player_images[s.k]:draw(s.x, s.y, 0, sx)
-      if gamemenu._visible == false then rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx) end
+      player_im2:draw(s.x+4, s.y+4, 0, sx-8)
+      if gamemenu._visible == false then player_im2:draw(ch+10+4, ch+55 + s.k*36+4, 0, sx-8) end
       S.setBlendMode('alpha')
     end
     
     if s.jail > 0 then 
       S.setColor(255,255,255,255)
-      player_jail:draw(s.x+2, s.y+2, 0, 26/32)
+      player_jail:draw(s.x+2, s.y+2, 0, 26)
     end
   --elseif gamemenu._visible == false then 
     --Gprint('Bankrupt', ch+45, ch+97 + s.k*30)

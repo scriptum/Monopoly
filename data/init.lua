@@ -20,13 +20,16 @@ sound_jail = S.newSound('data/sfx/door_close.ogg')
 sound_jail:setVolume(0.2)
 sound_out = S.newSound('data/sfx/out.ogg')
 sound_out:setVolume(0.3)
---~ local music = {}
---~ for i = 1,6 do
-	--~ table.insert(music, 'data/music/' .. i .. '.ogg')
---~ end
---~ math.randomseed(os.time() + math.random(99999))
---~ table.shuffle(music)
---~ TEsound.playLooping(music, 'music', nil, 0.9)
---~ function love.update()
---~ TEsound.cleanup()
---~ end
+local music = {}
+local mus
+for i = 1,6 do 
+	_G['mus_'..i] = S.newMusic('data/music/' .. i .. '.ogg')
+end
+math.randomseed(os.time() + math.random(99999))
+--table.shuffle(music)
+--mus_1:play()
+mus_m = S.newMusic('data/music/menu.ogg')
+mus_m:play()
+
+player_im1 = S.newImage('data/gfx/player/player.dds')
+player_im2 = S.newImage('data/gfx/player/player2.dds')

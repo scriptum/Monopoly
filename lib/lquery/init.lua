@@ -22,6 +22,7 @@ main ={
     mX, mY = getMouseXY()
 
     time = scrupp.getTicks() / 1000
+    --events
     local e, a, b, c = scrupp.poll()
     if e then
       if e == "mp" then
@@ -57,28 +58,9 @@ main ={
     for _, v in pairs(lQuery.hooks) do
       v()
     end
-
-    --~ __mousepress, __mouseover = nil, nil
     
     if screen then process_entities(screen) end
     if Console then process_entities(Console) end
     
-    --это чтобы исправить косяк, когда множество наложенных друг на друга элементов получает событие клик
-    --если таких элементов было очень много, двиг замирал, обрабатывая множество кликов
-    --~ if __mousemove then
-      --~ __mousemove._mousemove(__mousemove, mX, mY, lQuery.MouseButton)
-    --~ end
-    --~ if __mouseover then
-      --~ __mouseover._mouseover(__mouseover, mX, mY, lQuery.MouseButton)
-    --~ end
-    --~ if __mousepress then
-      --~ if __mousepress._mousepress then __mousepress._mousepress(__mousepress, mX, mY, lQuery.MouseButton) end
-      --~ MousePressedOwner = __mousepress
-    --~ end
-    --~ if MousePressed == false and MousePressedOwner then
-      --~ if MousePressedOwner._mouserelease then MousePressedOwner._mouserelease(v, mX, mY) end
-      --~ if MousePressedOwner._hasMouse == true and MousePressedOwner._click then MousePressedOwner._click(MousePressedOwner, mX, mY, lQuery.MouseButton) end
-      --~ MousePressedOwner = nil
-    --~ end
   end
 }
