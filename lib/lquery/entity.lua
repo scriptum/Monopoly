@@ -5,7 +5,9 @@ lQuery = {
   hooks = {},
   addhook = function(hook)
     table.insert(lQuery.hooks, hook)
-  end
+  end,
+  _MousePressedOwner = false,
+  MousePressed = false
 }
 
 
@@ -225,133 +227,8 @@ end
   --~ return nil
 --~ end
 
-
-
---point
---~ local point_draw = function(s)
-  --~ oldsize = G.getPointSize()
-  --~ G.setPointSize(s.R * 2)
-  --~ G.point(s.x, s.y)
-  --~ G.setPointSize(oldsize)
---~ end
---~ function Entity:point(R)
-  --~ self.R = R or 1
-  --~ self._draw=point_draw
-  --~ self._bound = Entity.bounds.circle
-  --~ return self
---~ end
-
---circle
---~ local circle_draw = function(s)
-  --~ G.circle("fill", s.x, s.y, s.R, 2*s.R)
---~ end
---~ function Entity:circle(radius)
-  --~ self.R = radius or 10
-  --~ self._draw=circle_draw
-  --~ self._bound = Entity.bounds.circle
-  --~ return self
---~ end
-
---text
-local text_draw = function(s)
-  --~ G.fontSize = s.fontSize or 12
-  --~ if s.w then
-    --~ Gprintf(s.text, s.x, s.y, s.w, s.align)
-  --~ else
-    --~ Gprint(s.text, s.x, s.y)
-  --~ end
-  S.print(s.text, s.x, s.y, s.w, s.align)
-end
-function Entity:text(text, font, align)
-  self.font = font
-  self.text = text or ''
-  self.align = align
-  self._draw = text_draw
-  return self
-end
-
---image
-local image_draw = function(s)
-  s.image:draw(s)
-end
-local image_draw_quad = function(s)
-  s.image:drawq(s)
-end
-function Entity:image(image, options)
- if image then
-    if type(image) == 'string' then 
-      image = S.newImage(image, options)
-    end
-    self.image = image
-    self.w = image:getWidth()
-    self.h = image:getHeight()
-    if options and options.quad and options.quad == true then 
-      self._draw = image_draw_quad
-      self.qx = 0
-      self.qy = 0
-      self.qw = self.w
-      self.qh = self.h
-    else
-      self._draw = image_draw
-    end
-    
-  end
-  return self
-end
-
---border-image
-local border_image_draw = function(s)
-  local i = s.image
-  local x = s.x
-  local w = s.orig_w
-  local h = s.orig_h
-  local y = s.y
-  local t = s.top
-  local r = s.right
-  local b = s.bottom
-  local l = s.left
-  i:drawq(x,            y,            0, l,            t,           0,     0,       l,         t)
-  i:drawq(x + l,        y,            0, s.w - l - r,  t,           l,     0,       w - l - r, t)
-  i:drawq(x + s.w - r,  y,            0, r,            t,           w - r, 0,       r,         t)
-  
-  i:drawq(x,            y + t,        0, l,            s.h - t - b, 0,     t,       l,         h - t - b)
-  i:drawq(x + l,        y + t,        0, s.w - l - r,  s.h - t - b, l,     t,       w - l - r, h - t - b)
-  i:drawq(x + s.w - r,  y + t,        0, r,            s.h - t - b, w - r, t,       r,         h - t - b)
-  
-  i:drawq(x,            y + s.h - b,  0, l,            b,           0,     h - b,   l,         b)
-  i:drawq(x + l,        y + s.h - b,  0, s.w - l - r,  b,           l,     h - b,   w - l - r, b)
-  i:drawq(x + s.w - r,  y + s.h - b,  0, r,            b,           w - r, h - b,   r,         b)
-end
-function Entity:border_image(image, top, right, bottom, left, stretch)
- if image then
-    if type(image) == 'string' then image = S.newImage(image) end
-    self.image = image
-    self._draw = border_image_draw
-    w = image:getWidth()
-    h = image:getHeight()
-    self.w = w
-    self.h = h
-    self.orig_w = w
-    self.orig_h = h
-    self.top = top
-    self.right = right
-    self.bottom = bottom
-    self.left= left
-        
-    self.angle = 0
-    self.sx = 1
-    self.sy = 1
-  end
-  return self
-end
-
-
 --screen - parent entity for all entities. Drawing function recursively process all entities from it.
 screen = Entity:new()
-
-getMouseXY = function()
-  return S.getMousePos()
-end
 
 local function animate(ent)
   for i, j in pairs(ent._animQueue) do
@@ -436,25 +313,20 @@ local function events(v)
         lQuery.MouseButton = nil
         v._wheel(v, mX, mY, "d")
       end
-    elseif lQuery.MousePressed == true and not lQuery.MousePressedOwner then 
+    elseif lQuery.MousePressed == true and lQuery._MousePressedOwner == true then 
       lQuery.MousePressedOwner = v
-      if v._mousepress then 
-        v._mousepress(v, mX, mY, lQuery.MouseButton)
-      end
     end
-    if not v._hasMouse or v._hasMouse == false then
-      v._hasMouse = true
-      if v._mouseover then v._mouseover(v, mX, mY) end
-    end
+    if not lQuery.hover then lQuery.hover = v end
   else
-    if v._hasMouse and v._hasMouse == true then 
-      v._hasMouse = false
+    if lQuery._hover == v then 
+      lQuery._hover = nil
+      lQuery.hover = nil
       if v._mouseout then v._mouseout(v, mX, mY) end
     end
   end
 end
 
-function process_entities(ent)
+local function process_entities(ent)
   if ent._visible == true then 
     if ent._animQueue then 
       animate(ent) 
@@ -474,4 +346,59 @@ function process_entities(ent)
       end
     end
   end
+end
+
+lQuery.event = function(e, a, b, c)
+  if e == "mp" then
+    lQuery.MousePressed = true
+    lQuery.MouseButton = c
+    lQuery._MousePressedOwner = true
+  elseif e == "mr" then 
+    lQuery.MousePressed = false
+    lQuery.MouseButton = c
+    --click handler
+    local v = lQuery.MousePressedOwner
+    if v and v._bound and v._bound(v, mX, mY) then
+      local v = lQuery.MousePressedOwner
+      if v._mouserelease then 
+        v._mouserelease(v, mX, mY, c)
+      end
+      if v._click then 
+        v._click(v, mX, mY, c)
+      end
+    end
+    lQuery.MousePressedOwner = nil
+  elseif e == "kp" then
+    lQuery.KeyPressed = true
+    lQuery.KeyPressedKey = a
+    lQuery.KeyPressedUni = b
+    lQuery.KeyPressedCounter = 1
+  elseif e == "kr" then
+    lQuery.KeyPressed = false
+  elseif e == "q" then
+    if atexit then atexit() end
+  end
+end
+
+lQuery.process = function()
+  for _, v in pairs(lQuery.hooks) do
+    v()
+  end
+
+  if screen then process_entities(screen) end
+  
+  --fix mousepress bug
+  local v = lQuery.MousePressedOwner
+  if v and lQuery._MousePressedOwner == true then
+    if v._mousepress then 
+      v._mousepress(v, mX, mY, lQuery.MouseButton)
+    end
+  end
+  
+  local v = lQuery.hover
+  if v and not lQuery._hover then
+    if v._mouseover then v._mouseover(v, mX, mY) end
+    lQuery._hover = v
+  end
+  lQuery._MousePressedOwner = false
 end

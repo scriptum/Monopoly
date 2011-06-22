@@ -14,53 +14,22 @@ var_by_reference = function(var, value)
   end
 end
 S = scrupp
-require("lib/lquery/entity")
+
+require("lib.lquery.entity")
+require("lib.lquery.objects")
+
+getMouseXY = S.getMousePos
 
 lQuery.MousePressed = false
 main ={
 	render = function()
     mX, mY = getMouseXY()
-
     time = scrupp.getTicks() / 1000
     --events
     local e, a, b, c = scrupp.poll()
     if e then
-      if e == "mp" then
-        lQuery.MousePressed = true
-        lQuery.MouseButton = c
-      elseif e == "mr" then 
-        lQuery.MousePressed = false
-        lQuery.MouseButton = c
-        --click handler
-        local v = lQuery.MousePressedOwner
-        if v and v._bound(v, mX, mY) then
-          local v = lQuery.MousePressedOwner
-          if v._mouserelease then 
-            v._mouserelease(v, mX, mY, c)
-          end
-          if v._click then 
-            v._click(v, mX, mY, c)
-          end
-        end
-        lQuery.MousePressedOwner = nil
-      elseif e == "kp" then
-        lQuery.KeyPressed = true
-        lQuery.KeyPressedKey = a
-        lQuery.KeyPressedUni = b
-        lQuery.KeyPressedCounter = 1
-      elseif e == "kr" then
-        lQuery.KeyPressed = false
-      elseif e == "q" then
-        if atexit then atexit() end
-      end
+      lQuery.event (e,a,b,c)
     end
-    
-    for _, v in pairs(lQuery.hooks) do
-      v()
-    end
-    
-    if screen then process_entities(screen) end
-    if Console then process_entities(Console) end
-    
+    lQuery.process()
   end
 }
