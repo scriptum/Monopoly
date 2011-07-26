@@ -53,6 +53,9 @@ end
 current_game.double = 1 --число выкинутых дублей в этой игре
 current_game.current_player = 1 --текущий плеер
 local __max = 5 --максимально возможное число игроков на сервере
+
+--*******************************************GO-GO*******************************************--
+
 local gogo = function()
   local __i = current_game.current_player --текущий игрок
   local buf = current_game.players[__i]
@@ -70,8 +73,9 @@ local gogo = function()
     end
     --движение игрока и анимация кубиков на клиентах
     msg = msg .. ' move('..__i..','..ds1..','..ds2..')'
-    msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
-    msg = msg .. ' money_transfer('..math.random(-15,15)..','..__i..')'
+    ai(buf)
+--    msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
+--    msg = msg .. ' money_transfer('..math.random(-15,15)..','..__i..')'
     send(msg, 'g')
     --пауза пока идет анимация
     delay((ds1+ds2)*200 + 2000)
