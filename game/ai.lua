@@ -31,7 +31,10 @@ ai = function(pl)
 
   -- покупка компании
 
-  if  not rules_company[pl.pos].owner and pl.cash >= rules_company[pl.pos].money[1] then msg = msg..'buy_company('..pl..', '..pl.pos..')' end
+  if rules_company[pl.pos].type == "company" and 
+    not rules_company[pl.pos].owner and 
+      pl.cash >= rules_company[pl.pos].money[1] then 
+	msg = msg..'buy_company('.. pl.k ..', '.. pl.pos ..')' end
 
   if not_buy == false and buy_company(pl, pl.pos) == true then
     ai(pl)

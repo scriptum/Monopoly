@@ -27,11 +27,12 @@ end
 
 send('max = '..cell_count .. ' angles = {1, '..field_width..' + 2, '..field_width..' + '..field_height..' + 3, '..field_width..' * 2 + '..field_height..' + 4}', 'g')
 
-local msg = ''
+msg = ''
 --создаем игроков
 local i
 for i = 1, 5 do
 	table.insert(current_game.players, {
+		k = i,
 		pos = 1, 
 		jail = 0, 
 		ingame = true, 
@@ -68,7 +69,9 @@ local gogo = function()
     local msg = '' --сообщение, которое будет отправлено клиенту
     local ds1, ds2 = roll() --бросаем кубики
     --если игрок прошел старт - добавить ему бабла
-    if buf.pos + ds1 + ds2 > cell_count then
+    buf.pos = buf.pos + ds1 + ds2
+    if buf.pos > cell_count then
+      buf.pos = buf.pos - max
       msg = msg .. ' money_transfer(200, '.. __i ..')'
     end
     --движение игрока и анимация кубиков на клиентах

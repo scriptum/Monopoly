@@ -37,7 +37,8 @@ conversion_monopoly = function(pl, company)
 end
 
 -- покупка компании
-buy_company = function(pl, company, money)
+buy_company = function(plk, company, money)
+  pl = current_game.players[plk]
   if not money and rules_company[company].type == "company" then money = rules_company[company].money[1] end
   if not rules_company[company].owner and rules_company[company].type == "company" and pl.cash >= money then 
     player:delay({speed = 0, cb = function() 
