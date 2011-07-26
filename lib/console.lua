@@ -1,5 +1,5 @@
 local small = Fonts["Arial"][9]
-
+print(small)
 table.findindex = function(arr, needle)
   local i = 1, m
   local l = needle:len()

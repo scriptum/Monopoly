@@ -19,7 +19,7 @@ function Entity:new(parent)  -- constructor
     y = 0,   --y coord
     _visible = true --visibility
   }
-  setmetatable(object, { __index = Entity })  -- Inheritance
+  setmetatable(object, { __index = Entity})  -- Inheritance
   if parent then parent:append(object) end
   return object
 end
@@ -316,7 +316,7 @@ local function events(v)
     elseif lQuery.MousePressed == true and lQuery._MousePressedOwner == true then 
       lQuery.MousePressedOwner = v
     end
-    if not lQuery.hover then lQuery.hover = v end
+    if not lQuery._hover then lQuery.hover = v end
   else
     if lQuery._hover == v then 
       lQuery._hover = nil
@@ -372,7 +372,6 @@ lQuery.event = function(e, a, b, c)
     lQuery.KeyPressed = true
     lQuery.KeyPressedKey = a
     lQuery.KeyPressedUni = b
-    lQuery.KeyPressedCounter = 1
   elseif e == "kr" then
     lQuery.KeyPressed = false
   elseif e == "q" then
@@ -386,6 +385,7 @@ lQuery.process = function()
   end
 
   if screen then process_entities(screen) end
+  if Console then process_entities(Console) end
   
   --fix mousepress bug
   local v = lQuery.MousePressedOwner
