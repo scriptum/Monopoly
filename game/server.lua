@@ -102,7 +102,7 @@ local gogo = function()
 --    msg = msg .. ' money_transfer('..math.random(-15,15)..','..__i..')'
     send(msg, 'g')
     --пауза пока идет анимация
-    delay((ds1+ds2)*200 + 2000)
+    --delay((ds1+ds2)*200 + 2000)
     current_game.current_player = __i + 1
     if current_game.current_player > __max then current_game.current_player = 1 end
   end  
