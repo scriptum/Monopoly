@@ -15,7 +15,7 @@ local delay = S.delay
 --текущие игры
 local games = {}
 games['newgame'] = {}
-local current_game = games['newgame']
+current_game = games['newgame']
 
 current_game.players = {} --на сервере свои плееры
 --читсло клеток всего
@@ -33,7 +33,7 @@ end
 msg = 'max = '..cell_count .. ' angles = {1, '..field_width..' + 2, '..field_width..' + '..field_height..' + 3, '..field_width..' * 2 + '..field_height..' + 4}'
 send()
 
-local msg_add = function(...)
+msg_add = function(...)
   for k, v in ipairs(arg) do
     if k == 1 then 
       msg = msg .. ' ' .. v .. '('

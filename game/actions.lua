@@ -1,35 +1,44 @@
 --Все возможные действия игрока
 
+--Предлагаю ВЕЗДЕ передавать номера а не объекты во избежание путаницы
+
 -- Пересчет монополий
-conversion_monopoly = function(pl, company)
+conversion_monopoly = function(plk, company_k)
+  local rules_com = rules_company[company_k]
+  local com = current_game.companys[company_k]
+  local pl = current_game.players[plk]
   local oils_bank = {}
   local group  = 0
   local comp = {}
     -- если нефтяная компания или банк - считаем количество компаний
-  if company.group == "oil" or company.group == "bank" then
-    for k,v in pairs(rules_company) do
-    if v.owner == pl and company.group == v.group and v.level > 0 then
-	table.insert(oils_bank, v)
+  if rules_com.group == "oil" or rules_com.group == "bank" then
+    for k,v in pairs(current_game.companys) do
+      if v.owner and v.owner == plk and rules_com.group == rules_company[k].group and v.level > 0 then
+	table.insert(oils_bank, k)
       end
     end
-    for k,v in pairs(oils_bank) do
-      v.level = #oils_bank + 2
+    for _, v in pairs(oils_bank) do
+      current_game.companys[v].level = #oils_bank + 2
+      --отправка на клиент новый левел
+      --msg_add('set_level', v, #oils_bank + 2)
     end
-   -- просчет монополий для всех остальных компаний
-    else
-      for k,v in pairs(rules_company) do
-	if company.group == v.group then
-	  group = group + 1
-	  if v.owner == pl and v.level > 0 then
-	    table.insert(comp, v)
-	  end
+  -- просчет монополий для всех остальных компаний
+  else
+    for k,v in pairs(current_game.companys) do
+      if rules_com.group == rules_company[k].group then
+	group = group + 1
+	if v.owner == plk and v.level > 0 then
+	  table.insert(comp, k)
 	end
+      end
     end
     -- если все компании в группе - ставим левел 2 (если левел меньше двух)
     if group == #comp then
-      for k,v in pairs(comp) do
-	if v.level < 2 then
-	  v.level = 2
+      for _, v in pairs(comp) do
+	if current_game.companys[v].level < 2 then
+	  current_game.companys[v].level = 2
+	  --отправка на клиент новый левел
+	  --msg_add('set_level', v, 2)
 	end
       end
     end
@@ -38,15 +47,16 @@ end
 
 -- покупка компании
 buy_company = function(plk, company, money)
-  pl = current_game.players[plk]
+  local pl = current_game.players[plk]
+  local companys = current_game.companys
   if not money and rules_company[company].type == "company" then money = rules_company[company].money[1] end
-  if not rules_company[company].owner and rules_company[company].type == "company" and pl.cash >= money then 
-    player:delay({speed = 0, cb = function() 
-      rules_company[company].owner = pl
-      conversion_monopoly(pl, rules_company[company])
-      companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
-    end})
-    money_transfer(money * (-1), pl)
+  if not companys[company].owner and rules_company[company].type == "company" and pl.cash >= money then
+    companys[company].owner = plk --внимание - присваиваем овнера - число!
+    --отправляем на клиент действие смены владельца компании
+    --msg_add('set_owner', company, plk)
+    conversion_monopoly(plk, company) -- пересчет монополий, оба параметра - числа
+    pl.cash = pl.cash - money --отъем бабла на сервере
+    msg_add('set_cash',plk,pl.cash) --отправлка на клиент новое состояние бабок
     return true
   else
     return false

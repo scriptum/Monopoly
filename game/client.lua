@@ -96,7 +96,6 @@ lQuery.addhook(function()
 		--только одно сообщение за такт - нужно, чтобы не томозило процесс рендеринга
 		if msg then 
 			--выполн€ем полученное сообщение как луа скрипт, игнориру€ ошибки
-			print(msg)
 			xpcall(loadstring(msg), print)
 		end
 		
