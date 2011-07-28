@@ -63,6 +63,7 @@ for i = 1, 5 do
 		uid = 0 --серверу нужно будет как-то понять, от какого игрока пришло сообщение
 	})
 	msg = msg .. 'players._child['..i..'].ingame = true '
+	msg_add('set_money', i, 1500)
 end
 send(msg, 'g')
 
