@@ -1,7 +1,7 @@
 --запускаем наш "сервер"
 S.newThread('game/server.lua')
-print('client')
-local lasttime = 0
+
+----------------------------Вспомогательные функции-----------------------------
 
 getplayerxy = function(n, k)
   side = companys._child[n].side
@@ -29,6 +29,8 @@ local roll = function()
   dices.ds1 = math.random(1,6)
   dices.ds2 = math.random(1,6)
 end
+
+--------------------------Основные действия на клиенте--------------------------
 
 move = function(num, ds1, ds2)
   local pl = players._child[num]
@@ -76,14 +78,15 @@ set_cash = function(num, money)
   end})
 end
 
+--создаем локальные объекты-плееры
 players = E:new(board)
-
 for k = 1, 5 do
   local   x, y = getplayerxy(1, k)
   E:new(players)
   :draw(player_draw):set{k=k, jail=0, pos=1, x=x, y=y, cash = 0}  
 end
 
+local lasttime = 0
 lQuery.addhook(function()
 	--проверка каждый 20 мс - как раз время накопления стека ТСР
 	if time - lasttime > 0.02 then 
@@ -93,6 +96,7 @@ lQuery.addhook(function()
 		--только одно сообщение за такт - нужно, чтобы не томозило процесс рендеринга
 		if msg then 
 			--выполняем полученное сообщение как луа скрипт, игнорируя ошибки
+			print(msg)
 			xpcall(loadstring(msg), print)
 		end
 		

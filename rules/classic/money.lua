@@ -7,3 +7,5 @@ money = function(m)
     return '$' .. math.floor(m) .. 'K'
   end
 end
+--сколько давать бабла за прохождение старта
+money_add = 200

@@ -4,8 +4,13 @@ require 'rules.classic.action' --тут размер поля, экшны
 require 'game.ai' --искусственный интеллект
 require 'game.actions' --действия игрока
 local S = scrupp
-local send = S.send
+local send = function ()
+  S.send(msg, 'g')
+  msg = ''
+end
 local delay = S.delay
+
+
 
 --текущие игры
 local games = {}
@@ -25,9 +30,25 @@ local roll = function()
   return ds1, ds2
 end
 
-send('max = '..cell_count .. ' angles = {1, '..field_width..' + 2, '..field_width..' + '..field_height..' + 3, '..field_width..' * 2 + '..field_height..' + 4}', 'g')
+msg = 'max = '..cell_count .. ' angles = {1, '..field_width..' + 2, '..field_width..' + '..field_height..' + 3, '..field_width..' * 2 + '..field_height..' + 4}'
+send()
 
-msg = ''
+local msg_add = function(...)
+  for k, v in ipairs(arg) do
+    if k == 1 then 
+      msg = msg .. ' ' .. v .. '('
+    else
+      if type(v)  == 'string' then v = "'" .. v .. "'" end
+      if k == 2 then
+	msg = msg .. v
+      else
+	msg = msg .. ',' .. v
+      end
+    end
+  end
+  msg = msg .. ')'
+end
+
 --создаем игроков
 local i
 for i = 1, 5 do
@@ -66,17 +87,17 @@ local gogo = function()
     if current_game.current_player > __max then current_game.current_player = 1 end
     gogo()
   else
-    local msg = '' --сообщение, которое будет отправлено клиенту
     local ds1, ds2 = roll() --бросаем кубики
     --если игрок прошел старт - добавить ему бабла
     buf.pos = buf.pos + ds1 + ds2
     if buf.pos > cell_count then
-      buf.pos = buf.pos - max
-      msg = msg .. ' money_transfer(200, '.. __i ..')'
+      buf.pos = buf.pos - cell_count
+      buf.cash = buf.cash + money_add --добавляем бабла на серверной части
+      msg_add('set_cash', buf.cash, __i) --отправляем новое состояние счёта клиентам
     end
     --движение игрока и анимация кубиков на клиентах
-    msg = msg .. ' move('..__i..','..ds1..','..ds2..')'
-    ai(buf)
+    msg_add('move',__i,ds1,ds2)
+    --ai(buf)
 --    msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
 --    msg = msg .. ' money_transfer('..math.random(-15,15)..','..__i..')'
     send(msg, 'g')
