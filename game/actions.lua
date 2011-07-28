@@ -53,7 +53,7 @@ buy_company = function(plk, company, money)
   if not companys[company].owner and rules_company[company].type == "company" and pl.cash >= money then
     companys[company].owner = plk --внимание - присваиваем овнера - число!
     --отправляем на клиент действие смены владельца компании
-    --msg_add('set_owner', company, plk)
+    msg_add('set_owner', company, plk)
     conversion_monopoly(plk, company) -- пересчет монополий, оба параметра - числа
     pl.cash = pl.cash - money --отъем бабла на сервере
     msg_add('set_cash',plk,pl.cash) --отправлка на клиент новое состояние бабок

@@ -51,7 +51,7 @@ end
 
 --создаем игроков
 local i
-for i = 1, 5 do
+for i = 1, 2 do
 	table.insert(current_game.players, {
 		k = i,
 		pos = 1, 
@@ -62,8 +62,8 @@ for i = 1, 5 do
 		address = "", --айпишник (ну в теории он будет)
 		uid = 0 --серверу нужно будет как-то понять, от какого игрока пришло сообщение
 	})
-	msg = msg .. 'players._child['..i..'].ingame = true '
-	msg_add('set_money', i, 1500)
+	msg = msg .. ' players._child['..i..'].ingame = true'
+	msg_add('set_cash', i, 1500)
 end
 send(msg, 'g')
 
@@ -79,31 +79,38 @@ local __max = 5 --максимально возможное число игроков на сервере
 
 --*******************************************GO-GO*******************************************--
 
-local gogo = function()
+gogo = function()
   local __i = current_game.current_player --текущий игрок
   local buf = current_game.players[__i]
-  if buf.ingame == false or (buf.jail == 4 and current_game.double > 1) then 
+  if not buf or buf.ingame == false or (buf.jail == 4 and current_game.double > 1) then 
     double = 1
     current_game.current_player = __i + 1
     if current_game.current_player > __max then current_game.current_player = 1 end
     gogo()
   else
     local ds1, ds2 = roll() --бросаем кубики
+    local add_money = false
     --если игрок прошел старт - добавить ему бабла
     buf.pos = buf.pos + ds1 + ds2
     if buf.pos > cell_count then
       buf.pos = buf.pos - cell_count
-      buf.cash = buf.cash + 200 --добавляем бабла на серверной части
-      msg_add('set_cash',__i,buf.cash) --отправляем новое состояние счёта клиентам
+      add_money = true
+      
     end
     --движение игрока и анимация кубиков на клиентах
     msg_add('move',__i,ds1,ds2)
+    send()
+    --пауза пока идет анимация
+    delay((ds1+ds2)*200 + 2000)
+    if add_money == true then
+      buf.cash = buf.cash + 200 --добавляем бабла на серверной части
+      msg_add('set_cash',__i,buf.cash) --отправляем новое состояние счёта клиентам
+    end
     ai(buf)
 --    msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
 --    msg = msg .. ' money_transfer('..math.random(-15,15)..','..__i..')'
-    send(msg, 'g')
-    --пауза пока идет анимация
-    delay((ds1+ds2)*200 + 2000)
+    send()
+    
     current_game.current_player = __i + 1
     if current_game.current_player > __max then current_game.current_player = 1 end
   end  
