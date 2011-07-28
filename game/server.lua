@@ -92,8 +92,8 @@ local gogo = function()
     buf.pos = buf.pos + ds1 + ds2
     if buf.pos > cell_count then
       buf.pos = buf.pos - cell_count
-      buf.cash = buf.cash + money_add --добавляем бабла на серверной части
-      msg_add('set_cash', buf.cash, __i) --отправляем новое состояние счёта клиентам
+      buf.cash = buf.cash + 200 --добавляем бабла на серверной части
+      msg_add('set_cash',__i,buf.cash) --отправляем новое состояние счёта клиентам
     end
     --движение игрока и анимация кубиков на клиентах
     msg_add('move',__i,ds1,ds2)
