@@ -1,6 +1,6 @@
 print('server')
-require 'rules.classic.ru.rules' --загружаются правила
 require 'rules.classic.action' --тут размер поля, экшны
+require 'rules.classic.ru.rules' --загружаются правила
 require 'game.ai' --искусственный интеллект
 require 'game.actions' --действия игрока
 local S = scrupp
@@ -95,7 +95,6 @@ gogo = function()
     if buf.pos > cell_count then
       buf.pos = buf.pos - cell_count
       add_money = true
-      
     end
     --движение игрока и анимация кубиков на клиентах
     msg_add('move',__i,ds1,ds2)
@@ -106,7 +105,9 @@ gogo = function()
       buf.cash = buf.cash + 200 --добавляем бабла на серверной части
       msg_add('set_cash',__i,buf.cash) --отправляем новое состояние счёта клиентам
     end
-    ai(buf)
+    local cell = rules_company[buf.pos]
+    if cell.action then cell.action(buf.k) end
+    ai(buf.k)
 --    msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
 --    msg = msg .. ' money_transfer('..math.random(-15,15)..','..__i..')'
     send()

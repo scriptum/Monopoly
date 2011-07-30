@@ -44,6 +44,7 @@ move = function(num, ds1, ds2)
   for i = 1, 19 do
     pl:delay({speed = i/200, callback = roll})
   end
+  print(ds1,ds2)
   dices.ds1 = ds1
   dices.ds2 = ds2
   pl:delay(0.5)
@@ -102,6 +103,7 @@ lQuery.addhook(function()
 		if msg then 
 			--выполн€ем полученное сообщение как луа скрипт, игнориру€ ошибки
 			xpcall(loadstring(msg), print)
+			print(msg)
 		end
 		
 	end

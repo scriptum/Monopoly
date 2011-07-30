@@ -1,5 +1,6 @@
 -- искусственный интеллект
-ai = function(pl)
+ai = function(plk)
+  local pl = current_game.players[plk]
   local companys = current_game.companys
 -- если денег меньше нуля - закладываем компании
   --~ if pl.cash < 0 then

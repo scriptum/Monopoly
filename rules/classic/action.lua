@@ -25,108 +25,130 @@ local rnd_txt = function(a, s)
     gui_text.text = a[math.random(1, #a)]
   end
 end
+
+local m_tr = function(plk, cash, pos)
+  local pl = current_game.players[plk]
+  pl.cash = pl.cash - cash
+  msg_add('set_cash', plk, pl.cash)
+  if pos then
+    local plk2 = current_game.companys[pos].owner
+    local pl2 = current_game.players[plk2]
+    pl2.cash = pl2.cash + cash
+    msg_add('set_cash', plk2, pl2.cash)
+    --msg_add('cash_trans', plk, plk2)
+  end
+end
+
 -- общий экшн компаний
-__action_company = function(player, f)
-	local level = rules_company[player.pos].level
-	local money = rules_company[player.pos].money
-	local cell = rules_company[player.pos]
-	if cell.owner then 
-		if cell.owner == player then
-			gui_text.text = action_phrase.company_my
-		elseif level > 0 then
-			f(level, money, cell)
-		else
-		  gui_text.text = action_phrase.company_mortgage
-		end
-	else
-		gui_text.text = action_phrase.company_free
-	end
+local __action = function(plk, f)
+  local pos = current_game.players[plk].pos
+  local com = current_game.companys[pos]
+  local level = com.level
+  local money = rules_company[pos].money
+  local owner = com.owner
+  if owner then 
+    if owner == plk then
+	    --gui_text.text = action_phrase.company_my
+    elseif level > 0 then
+	    f(plk, level, money, pos)
+    else
+      --gui_text.text = action_phrase.company_mortgage
+    end
+  else
+    --gui_text.text = action_phrase.company_free
+  end
 end
 
 -- Экшн обычных компаний
-action_company = function(player)
-  __action_company (player, function(level, money, cell)
-    local cash
-    if level == 1 then
-	    cash = money[2]
-    elseif level == 2 then
-	    cash = money[2] * 2
-    else
-	    cash = money[level]
-    end  
-    money_transfer(cash, player, cell.owner)
-    rnd_txt(rules_group[cell.group].phrase, cash)
-  end)
+local _action_company = function(plk, level, money, pos)
+  local cash
+  if level == 1 then
+	  cash = money[2]
+  elseif level == 2 then
+	  cash = money[2] * 2
+  else
+	  cash = money[level]
+  end
+  m_tr(plk, cash, pos)
+  --rnd_txt(rules_group[cell.group].phrase, cash)
+end
+action_company = function(plk)
+  __action(plk, _action_company)
 end
 
 -- Налог
-action_nalog = function(player)
-  local m = rules_company[player.pos].money
-  money_transfer(-m, player)
-  rnd_txt(rules_group.nalog.phrase, m)
+action_nalog = function(plk)
+  local pl = current_game.players[plk]
+  local m = rules_company[pl.pos].money
+  m_tr(plk, m)
+  --rnd_txt(rules_group.nalog.phrase, m)
 end
 
 -- Экш нефтяных компаний
-action_oil = function(player)
-  __action_company (player, function(level, money, cell)
-    local cash
-    if level == 3 then
-	    cash = money[2]
-    else
-	    cash = money[2] * 2 ^ (level - 3)
-    end
-    money_transfer(cash, player, cell.owner)
-    rnd_txt(rules_group.oil.phrase, cash)
-  end)
+local _action_oil = function(plk, level, money, pos)
+  local cash
+  if level == 3 then
+    cash = money[2]
+  else
+    cash = money[2] * 2 ^ (level - 3)
+  end
+  m_tr(plk, cash, pos)
+  --rnd_txt(rules_group.oil.phrase, cash)
+end
+action_oil = function(plk)
+  __action(plk, _action_oil)
 end
 
 -- Экш банковских компаний
-action_bank = function(player)
-  __action_company (player, function(level, money, cell)
-    local cash
-    if level == 3 then
-	    cash = (ds1 + ds2) * money[2]
-    else
-	    cash = (ds1 + ds2) * money[3]
-    end
-    money_transfer(cash, player, cell.owner)
-    rnd_txt(rules_group.bank.phrase, cash)
-  end)
+local _action_bank = function(plk, level, money, pos)
+  local cash
+  if level == 3 then
+    cash = (ds1 + ds2) * money[2]
+  else
+    cash = (ds1 + ds2) * money[3]
+  end
+  m_tr(plk, cash, pos)
+  --rnd_txt(rules_group.bank.phrase, cash)
+end
+action_bank = function(plk)
+  __action(plk, _action_bank)
 end
 
 -- Экшн таможни
-action_jail = function(pl)
-  pl.pos = 13
+action_jail = function(plk)
+  local pl = current_game.players[plk]
+  pl.pos = cell_jail
   pl.jail = 4
-  local x, y = getplayerxy(13, pl.k)
-  pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
-  player:delay(1)
-  if lquery_fx == true then sound_jail:play() end
-  rnd_txt(reason_jail)
+  local x, y = getplayerxy(cell_jail, plk)
+  --pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
+  --player:delay(1)
+  --if lquery_fx == true then sound_jail:play() end
+  --rnd_txt(reason_jail)
 end
 
 -- Экшн тюрьмы
-action_jail_value = function(player)
-  if player.jail == 0 and math.random(1, 5) == 1 then 
-    action_jail(player)
-    rnd_txt(reason_jail_2)
-  elseif player.jail == 0 then
-    gui_text.text = action_phrase.jail
+action_jail_value = function(plk)
+  local pl = current_game.players[plk]
+  if pl.jail == 0 and math.random(1, 5) == 1 then 
+    action_jail(pl)
+    --rnd_txt(reason_jail_2)
+  elseif pl.jail == 0 then
+    --gui_text.text = action_phrase.jail
   end
 end
 
 -- Экшн шанса
-cashback_chance = function(player)
-	math.randomseed(os.time() + time + math.random(99999))
-	local chance = math.random(1, #rules_chance)
-	gui_text.text = rules_chance[chance].text
-	rules_chance[chance].action(player, rules_chance[chance])
--- print("Chance: "..rules_chance[chance].money)
+cashback_chance = function(plk)
+  math.randomseed(os.time() + os.clock() + math.random(99999))
+  local chance = math.random(1, #rules_chance)
+  --gui_text.text = rules_chance[chance].text
+  rules_chance[chance].action(plk, rules_chance[chance])
+  -- print("Chance: "..rules_chance[chance].money)
 end
 
 -- Отъем денег. функция для карточек
-cashback = function(player, chance)
-  money_transfer(chance.money, player)
+cashback = function(plk, chance)
+  m_tr(plk, chance.money)
 end
 
 -- День рождения игрока. функция для карточек
@@ -156,7 +178,7 @@ end
 
 -- Экшн казны
 cashback_treasury = function(player)
-	math.randomseed(os.time() + time + math.random(99999))
+	math.randomseed(os.time() + os.clock() + math.random(99999))
 	local treasury = math.random(1, #rules_treasury)
 	gui_text.text = rules_treasury[treasury].text
 	rules_treasury[treasury].action(player, rules_treasury[treasury])
@@ -165,6 +187,6 @@ end
 
 -- Экшн острова
 action_island = function(player)
-	gui_text.text = action_phrase.island
+	--gui_text.text = action_phrase.island
 end
 
