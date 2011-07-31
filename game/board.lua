@@ -321,38 +321,38 @@ gui_text = E:new(board_gui):draw(function(s)
   Gprintf(s.text, ch + 158, ch + 20, 800 - ch * 2 - 168)
 end)
 gui_text.text = ''
---анимация передачи денех
-local coins = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
-local money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
-money_transfer = function(money, from, to)
-  --~ if to then 
-    --~ from.cash = from.cash - money
-    --~ to.cash = to.cash + money
-  --~ else
-    --~ from.cash = from.cash + money
-  --~ end
-  local from = players._child[from]
-  local to = players._child[to]
-  from:delay({speed = 0, cb = function() 
-    
-    if lquery_fx == true then
-      sound_coin:play()
-    end
-    coins:stop():move(from.x + 3, from.y):show()
-    coins.a = 255
-    if to then
-      coins:animate({x = to.x + 3, y = to.y}, money_transfer_param)
-    else
-      if money < 0 then
-        coins:animate({y = from.y - 24, a = 30}, money_transfer_param)
-      else
-        coins.y = from.y - 24
-        coins:animate({y = from.y, a = 30}, money_transfer_param)
-      end
-    end
-  end})
-  --~ if initplayers[current_player] == 'Computer' then player:delay(1) end
-end
+--~ --анимация передачи денех
+--~ local coins = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
+--~ local money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
+--~ money_transfer = function(money, from, to)
+  --~ -- if to then 
+    --~ -- from.cash = from.cash - money
+    --~ -- to.cash = to.cash + money
+  --~ -- else
+    --~ -- from.cash = from.cash + money
+  --~ -- end
+  --~ local from = players._child[from]
+  --~ local to = players._child[to]
+  --~ from:delay({speed = 0, cb = function() 
+    --~ 
+    --~ if lquery_fx == true then
+      --~ sound_coin:play()
+    --~ end
+    --~ coins:stop():move(from.x + 3, from.y):show()
+    --~ coins.a = 255
+    --~ if to then
+      --~ coins:animate({x = to.x + 3, y = to.y}, money_transfer_param)
+    --~ else
+      --~ if money < 0 then
+        --~ coins:animate({y = from.y - 24, a = 30}, money_transfer_param)
+      --~ else
+        --~ coins.y = from.y - 24
+        --~ coins:animate({y = from.y, a = 30}, money_transfer_param)
+      --~ end
+    --~ end
+  --~ end})
+  --~ -- if initplayers[current_player] == 'Computer' then player:delay(1) end
+--~ end
 
 
 board:keypress(function( s, key, unicode )

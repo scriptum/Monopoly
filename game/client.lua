@@ -3,6 +3,7 @@ S.newThread('game/server.lua')
 
 ----------------------------Вспомогательные функции-----------------------------
 
+--трансляция позиции игрока на клетке в координаты на экране, весьма непростая задача
 getplayerxy = function(n, k)
   side = companys._child[n].side
   x, y = get_xy(companys._child[n].pos, side)
@@ -25,6 +26,7 @@ getplayerxy = function(n, k)
   return x + cell_padding, y + cell_padding
 end
 
+--бросок кубиков, здесь нужен только для анимации поэтому нет особой рандомизации
 local roll = function()
   dices.ds1 = math.random(1,6)
   dices.ds2 = math.random(1,6)
@@ -32,6 +34,7 @@ end
 
 --------------------------Основные действия на клиенте--------------------------
 
+--движение игрока
 move = function(num, ds1, ds2)
   local pl = players._child[num]
   current_player = num --это для того, чтобы замигал текущий игрок
@@ -72,6 +75,7 @@ move = function(num, ds1, ds2)
   end
 end
 
+--изменение денег игрока
 set_cash = function(num, money)
   local pl = players._child[num]
   pl:delay({speed = 0, cb = function()
@@ -79,10 +83,36 @@ set_cash = function(num, money)
   end})
 end
 
+--движение монетки и вообще анимация передачи денег
+local coin = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
+local money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
+cash_trans = function(from, to)
+  local pl1 = players._child[from]
+  coin:stop():move(pl1.x + 3, pl1.y):show()
+  coin.a = 255
+  if to then
+    local pl2 = players._child[to]
+    coin:animate({x = pl2.x + 3, y = pl2.y}, money_transfer_param)
+  else
+    if money < 0 then
+      coin:animate({y = pl1.y - 24, a = 30}, money_transfer_param)
+    else
+      coin.y = pl1.y - 24
+      coin:animate({y = pl1.y, a = 30}, money_transfer_param)
+    end
+  end
+  if lquery_fx == true then
+    sound_coin:play()
+  end
+end
+
+--изменение владельца компании
 set_owner = function(company, player)
   rules_company[company].owner = players._child[player]
   companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
 end
+
+------------------------Подготовительная часть клиента--------------------------
 
 --создаем локальные объекты-плееры
 players = E:new(board)
@@ -92,6 +122,8 @@ for k = 1, 5 do
   :draw(player_draw):set{k=k, jail=0, pos=1, x=x, y=y, cash = 0}  
 end
 
+--добавляем ловушку, функции в ловушке должны быть глобальными, 
+--так как их вызов будет происходить в другом месте
 local lasttime = 0
 lQuery.addhook(function()
 	--проверка каждый 20 мс - как раз время накопления стека ТСР

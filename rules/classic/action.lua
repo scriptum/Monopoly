@@ -26,18 +26,27 @@ local rnd_txt = function(a, s)
   end
 end
 
-local m_tr = function(plk, cash, pos)
-  local pl = current_game.players[plk]
+local money_transfer = function(money, from, to)
+  local pl = current_game.players[from]
   pl.cash = pl.cash - cash
-  msg_add('set_cash', plk, pl.cash)
-  if pos then
-    local plk2 = current_game.companys[pos].owner
-    local pl2 = current_game.players[plk2]
+  msg_add('set_cash', from, pl.cash)
+  if to then
+    local pl2 = current_game.players[to]
     pl2.cash = pl2.cash + cash
-    msg_add('set_cash', plk2, pl2.cash)
-    --msg_add('cash_trans', plk, plk2)
+    msg_add('set_cash', to, pl2.cash)
   end
+  msg_add('cash_trans', from, to)
 end
+
+local m_tr = function(plk, cash, pos)
+  local to = nil
+  if pos then
+    to = current_game.companys[pos].owner
+  end
+  money_transfer(cash, plk, to)
+end
+
+
 
 -- общий экшн компаний
 local __action = function(plk, f)
@@ -152,36 +161,37 @@ cashback = function(plk, chance)
 end
 
 -- День рождения игрока. функция для карточек
-action_birthday = function(pl, card)
+action_birthday = function(plk, card)
   local m = card.money
+  local players = current_game.players
   for i = 1, __max do
-    if player._child[i].ingame == true and player._child[i] ~= pl then
-      money_transfer(m, player._child[i], pl)
+    if players[i].ingame == true and players[i].k ~= plk then
+      money_transfer(m, players[i].k, plk)
     end
   end
 end
 
 -- Оплата каждой акции. функция для карточек
-tax_on_shares = function(pl, card)
-  local company
+tax_on_shares = function(plk, card)
+  local rules_com, com
   local number_of_shares = 0
   for i = 1, max do
-    company = rules_company[i]
-    if company.type == "company" and company.owner == pl and company.group ~= "bank" and company.group ~= "oil" and company.level > 2 then
-      number_of_shares = number_of_shares + company.level - 2
+    rules_com, com = rules_company[i], current_game.companys[i]
+    if rules_com.type == "company" and com.owner == plk and rules_com.group ~= "bank" and rules_com.group ~= "oil" and com.level > 2 then
+      number_of_shares = number_of_shares + com.level - 2
     end
   end
   if number_of_shares > 0 then
-    money_transfer(-card.money * number_of_shares, pl)
+    money_transfer(card.money * number_of_shares, plk)
   end
 end
 
 -- Экшн казны
-cashback_treasury = function(player)
-	math.randomseed(os.time() + os.clock() + math.random(99999))
-	local treasury = math.random(1, #rules_treasury)
-	gui_text.text = rules_treasury[treasury].text
-	rules_treasury[treasury].action(player, rules_treasury[treasury])
+cashback_treasury = function(plk)
+  math.randomseed(os.time() + os.clock() + math.random(99999))
+  local treasury = math.random(1, #rules_treasury)
+  --gui_text.text = rules_treasury[treasury].text
+  rules_treasury[treasury].action(plk, rules_treasury[treasury])
 -- print("Treasury: "..rules_chance[treasury].money)
 end
 
