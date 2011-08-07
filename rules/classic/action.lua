@@ -28,14 +28,14 @@ end
 
 local money_transfer = function(money, from, to)
   local pl = current_game.players[from]
-  pl.cash = pl.cash - cash
+  pl.cash = pl.cash - money
   msg_add('set_cash', from, pl.cash)
   if to then
     local pl2 = current_game.players[to]
-    pl2.cash = pl2.cash + cash
+    pl2.cash = pl2.cash + money
     msg_add('set_cash', to, pl2.cash)
   end
-  msg_add('cash_trans', from, to)
+  msg_add('cash_trans', money, from, to)
 end
 
 local m_tr = function(plk, cash, pos)
@@ -112,9 +112,9 @@ end
 local _action_bank = function(plk, level, money, pos)
   local cash
   if level == 3 then
-    cash = (ds1 + ds2) * money[2]
+    cash = (dice1 + dice2) * money[2]
   else
-    cash = (ds1 + ds2) * money[3]
+    cash = (dice1 + dice2) * money[3]
   end
   m_tr(plk, cash, pos)
   --rnd_txt(rules_group.bank.phrase, cash)
@@ -126,9 +126,10 @@ end
 -- Ёкшн таможни
 action_jail = function(plk)
   local pl = current_game.players[plk]
-  pl.pos = cell_jail
-  pl.jail = 4
-  local x, y = getplayerxy(cell_jail, plk)
+  --кака€то хрень посто€нно тут вылетает
+  --pl.pos = cell_jail
+  --pl.jail = 4
+  --local x, y = getplayerxy(cell_jail, plk)
   --pl:animate({x=x}, {speed=0.5}):animate({y=y}, {speed=0.5})
   --player:delay(1)
   --if lquery_fx == true then sound_jail:play() end

@@ -21,13 +21,15 @@ current_game.players = {} --на сервере свои плееры
 --читсло клеток всего
 local cell_count = field_width * 2 + field_height * 2 + 4
 
+--цифры на кубиках
+dice1, dice2 = 1, 1
 local roll = function()
-  local ds1, ds2 = 0
+  --local ds1, ds2 = 0
   math.randomseed(os.time() + math.random(99999))
-  ds1 = math.random(1, 6)
+  dice1 = math.random(1, 6)
   math.randomseed(os.time() + math.random(99999))
-  ds2 = math.random(1, 6)
-  return ds1, ds2
+  dice2 = math.random(1, 6)
+  --return ds1, ds2
 end
 
 msg = 'max = '..cell_count .. ' angles = {1, '..field_width..' + 2, '..field_width..' + '..field_height..' + 3, '..field_width..' * 2 + '..field_height..' + 4}'
@@ -88,19 +90,19 @@ gogo = function()
     if current_game.current_player > __max then current_game.current_player = 1 end
     gogo()
   else
-    local ds1, ds2 = roll() --бросаем кубики
+    roll() --бросаем кубики
     local add_money = false
     --если игрок прошел старт - добавить ему бабла
-    buf.pos = buf.pos + ds1 + ds2
+    buf.pos = buf.pos + dice1 + dice2
     if buf.pos > cell_count then
       buf.pos = buf.pos - cell_count
       add_money = true
     end
     --движение игрока и анимация кубиков на клиентах
-    msg_add('move',__i,ds1,ds2)
+    msg_add('move',__i,dice1,dice2)
     send()
     --пауза пока идет анимация
-    delay((ds1+ds2)*200 + 2000)
+    delay((dice1+dice2)*200 + 2000)
     if add_money == true then
       buf.cash = buf.cash + 200 --добавляем бабла на серверной части
       msg_add('set_cash',__i,buf.cash) --отправляем новое состояние счёта клиентам

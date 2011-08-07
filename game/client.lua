@@ -27,7 +27,7 @@ getplayerxy = function(n, k)
 end
 
 --бросок кубиков, здесь нужен только для анимации поэтому нет особой рандомизации
-local roll = function()
+local roll = function(a, b)
   dices.ds1 = math.random(1,6)
   dices.ds2 = math.random(1,6)
 end
@@ -44,12 +44,13 @@ move = function(num, ds1, ds2)
   local j = i 
   while i == j do j = math.random(1,6) end
   sound_dice[j]:play()
+  --анимация броска кубиков
   for i = 1, 19 do
     pl:delay({speed = i/200, callback = roll})
   end
-  print(ds1,ds2)
-  dices.ds1 = ds1
-  dices.ds2 = ds2
+  pl:delay({speed = 0.05, callback = function()
+	dices.ds1, dices.ds2 = ds1, ds2
+  end})
   pl:delay(0.5)
   if pl.jail == 0 then
     local pl_x, pl_y
@@ -86,7 +87,7 @@ end
 --движение монетки и вообще анимация передачи денег
 local coin = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
 local money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
-cash_trans = function(from, to)
+cash_trans = function(money, from, to)
   local pl1 = players._child[from]
   coin:stop():move(pl1.x + 3, pl1.y):show()
   coin.a = 255
@@ -94,7 +95,7 @@ cash_trans = function(from, to)
     local pl2 = players._child[to]
     coin:animate({x = pl2.x + 3, y = pl2.y}, money_transfer_param)
   else
-    if money < 0 then
+    if money > 0 then
       coin:animate({y = pl1.y - 24, a = 30}, money_transfer_param)
     else
       coin.y = pl1.y - 24
@@ -135,7 +136,7 @@ lQuery.addhook(function()
 		if msg then 
 			--выполняем полученное сообщение как луа скрипт, игнорируя ошибки
 			xpcall(loadstring(msg), print)
-			print(msg)
+			--print(msg)
 		end
 		
 	end
