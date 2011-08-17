@@ -11,7 +11,7 @@ rules_player_img = {
 }
 
 rules_player_colors = {
-	{50,70,255},
+	{0,0,255},
 	{0,255,0},
 	{255,0,0},
 	{0,255,255},
@@ -176,7 +176,7 @@ end
 tax_on_shares = function(plk, card)
   local rules_com, com
   local number_of_shares = 0
-  for i = 1, max do
+  for i = 1, cell_count do
     rules_com, com = rules_company[i], current_game.companys[i]
     if rules_com.type == "company" and com.owner == plk and rules_com.group ~= "bank" and rules_com.group ~= "oil" and com.level > 2 then
       number_of_shares = number_of_shares + com.level - 2

@@ -48,25 +48,26 @@ move = function(num, ds1, ds2)
   for i = 1, 19 do
     pl:delay({speed = i/200, callback = roll})
   end
+  --после анимации устанавливаем истинное значние, присланное нам с сервера
   pl:delay({speed = 0.05, callback = function()
 	dices.ds1, dices.ds2 = ds1, ds2
   end})
   pl:delay(0.5)
-  if pl.jail == 0 then
+  if pl.jail == 0 then --не знаю, нужно ли на клиенте проверять, сидит ли он в тюрьме? По теории это нужно в сервер
     local pl_x, pl_y
     local last_cell = pl.pos
     local last_i = 1
-    -- добавляем все углы, по которым проходим
+    --это хитрый цикл, который "прокручивая" всё поле считает кол-во скошенных углов, а на основе кол-ва этих углов формирует траекторию движения игрока
     for i=1, x do
       pl.pos = pl.pos + 1
       if pl.pos > max then
-	pl.pos = pl.pos-max
+		pl.pos = pl.pos-max
       end
       if table.find(angles, pl.pos) > 0 then
-	pl_x, pl_y = getplayerxy(pl.pos, pl.k)
-	pl:animate({x=pl_x, y=pl_y},{speed=(i + 1 - last_i)/5})
-	last_cell = pl.pos
-	last_i = i
+		pl_x, pl_y = getplayerxy(pl.pos, pl.k)
+		pl:animate({x=pl_x, y=pl_y},{speed=(i + 1 - last_i)/5})
+		last_cell = pl.pos
+		last_i = i
       end
     end
     if pl.pos ~= last_cell then
@@ -110,7 +111,7 @@ end
 --изменение владельца компании
 set_owner = function(company, player)
   rules_company[company].owner = players._child[player]
-  companys._child[company]:set({owner_alpha = 0}):delay(0.1):animate({owner_alpha = 90})
+  companys._child[company]:set({owner_alpha = 0}):animate({owner_alpha = 150})
 end
 
 ------------------------Подготовительная часть клиента--------------------------

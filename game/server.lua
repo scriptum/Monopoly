@@ -19,7 +19,7 @@ current_game = games['newgame']
 
 current_game.players = {} --на сервере свои плееры
 --читсло клеток всего
-local cell_count = field_width * 2 + field_height * 2 + 4
+cell_count = field_width * 2 + field_height * 2 + 4
 
 --цифры на кубиках
 dice1, dice2 = 1, 1
@@ -35,11 +35,12 @@ end
 msg = 'max = '..cell_count .. ' angles = {1, '..field_width..' + 2, '..field_width..' + '..field_height..' + 3, '..field_width..' * 2 + '..field_height..' + 4}'
 send()
 
-msg_add = function(...)
+msg_add = function(a,b,c,d,e,f,g)
+  local arg={a,b,c,d,e,f,g}
   for k, v in ipairs(arg) do
     if k == 1 then 
       msg = msg .. ' ' .. v .. '('
-    else
+    elseif v then
       if type(v)  == 'string' then v = "'" .. v .. "'" end
       if k == 2 then
 	msg = msg .. v
@@ -77,7 +78,7 @@ end
 
 current_game.double = 1 --число выкинутых дублей в этой игре
 current_game.current_player = 1 --текущий плеер
-local __max = 5 --максимально возможное число игроков на сервере
+__max = 5 --максимально возможное число игроков на сервере
 
 --*******************************************GO-GO*******************************************--
 

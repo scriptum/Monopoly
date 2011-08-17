@@ -91,7 +91,7 @@ local draw_fuzzy = function(x, y, sx, sy, side)
   if side == 1 or side == 3 then
     fuzzy:draw(x, y, 0, cw, ch)
   else
-    fuzzy:draw(x, y, 0, ch, cw)
+    fuzzy:draw(x + ch, y, 90, cw + a, ch)
   end
 end
 
@@ -109,6 +109,7 @@ draw.company = function(s)
     local c = rules_player_colors[com.owner.k]
     c[4] = s.owner_alpha
     S.setColor(c)
+    c[4] = 255
     draw_fuzzy(x, y, sx, sy, s.side)
   end
   S.setColor(255, 255, 255, s.logo_hover/5)
@@ -280,6 +281,7 @@ player_draw = function(s)
     fnt_big:select()
     fnt_big:scale(0.4)
     sx = 30
+    S.setColor(255,255,255)
     player_im1:draw(s.x, s.y, 0, sx)
     S.setColor(rules_player_colors[s.k])
     player_im2:draw(s.x+4, s.y+4, 0, sx-8)
