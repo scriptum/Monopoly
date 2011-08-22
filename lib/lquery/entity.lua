@@ -1,93 +1,107 @@
 local easing = require("lib/lquery/easing")
 
 lQuery = {
-  fx = true,
-  hooks = {},
-  addhook = function(hook)
-    table.insert(lQuery.hooks, hook)
-  end,
-  _MousePressedOwner = false,
-  MousePressed = false
+	fx = true,
+	hooks = {},
+	addhook = function(hook)
+		table.insert(lQuery.hooks, hook)
+	end,
+	_MousePressedOwner = false,
+	MousePressed = false
 }
 
 
 Entity = {} --Any object: box, circle, character etc
 E = Entity --short name
+local EntityMeta = {
+	__index = Entity
+}
+--special metatable for objects that have update callbacks
+local EntityMetaUpdate = {
+	__index = function(t, k)
+		if t.__data[k] then return t.__data[k] end
+		if Entity[k] then return Entity[k] end
+	end,
+	__newindex = function(t, k, v)
+		rawset(t.__data, k, v)
+		if t.upd[k] then t.upd[k](t, v) end
+	end
+}
 function Entity:new(parent)  -- constructor
-  local object = {
-    x = 0,   --x coord
-    y = 0,   --y coord
-    _visible = true --visibility
-  }
-  setmetatable(object, { __index = Entity})  -- Inheritance
-  if parent then parent:append(object) end
-  return object
+	local object = {
+		x = 0,   --x coord
+		y = 0,   --y coord
+		_visible = true --visibility
+	}
+	setmetatable(object, EntityMeta)  -- Inheritance
+	if parent then parent:append(object) end
+	return object
 end
 
 --Sets vars of entity
 function Entity:set(vars)
-  for k, v in pairs(vars) do
-    self[k] = v
-  end
-  return self --so we can chain methods
+	for k, v in pairs(vars) do
+		self[k] = v
+	end
+	return self --so we can chain methods
 end
 --Sets x and y position of entity
 function Entity:move(x, y)
-  self.x = x or self.x or 0
-  self.y = y or self.y or 0
-  return self --so we can chain methods
+	self.x = x or self.x or 0
+	self.y = y or self.y or 0
+	return self --so we can chain methods
 end
 --Sets x scale and y scale
 function Entity:scale(sx, sy)
-  self.sx = sx or 1
-  self.sy = sy or 1
-  return self --so we can chain methods
+	self.sx = sx or 1
+	self.sy = sy or 1
+	return self --so we can chain methods
 end
 --Sets radius of entity
 function Entity:radius(R)
-  self.R = R or self.R or 0
-  return self --so we can chain methods
+	self.R = R or self.R or 0
+	return self --so we can chain methods
 end
 --Sets width and height of entity
 function Entity:size(w, h)
-  self.w = w or self.w or 0
-  self.h = h or self.h or 0
-  return self --so we can chain methods
+	self.w = w or self.w or 0
+	self.h = h or self.h or 0
+	return self --so we can chain methods
 end
 --Sets angle (rotation) of entity
 function Entity:rotate(angle)
-  self.angle = angle or self.angle or 0
-  return self --so we can chain methods
+	self.angle = angle or self.angle or 0
+	return self --so we can chain methods
 end
 --Sets color of entity
 function Entity:color(r, g, b, a)
-  self.r = r or self.r or 255
-  self.g = g or self.g or 255
-  self.b = b or self.b or 255
-  self.a = a or self.a or 255
-  return self --so we can chain methods
+	self.r = r or self.r or 255
+	self.g = g or self.g or 255
+	self.b = b or self.b or 255
+	self.a = a or self.a or 255
+	return self --so we can chain methods
 end
 --hide entity (stop processing events and drawing) children will be hidden too
 function Entity:hide()
-  self._visible = false
-  return self --so we can chain methods
+	self._visible = false
+	return self --so we can chain methods
 end
 --show hidden entity
 function Entity:show()
-  self._visible = true
-  return self --so we can chain methods
+	self._visible = true
+	return self --so we can chain methods
 end
 --toggle entity
 function Entity:toggle()
-  self._visible = not self._visible
-  return self --so we can chain methods
+	self._visible = not self._visible
+	return self --so we can chain methods
 end
 --append child
 function Entity:append(child)
-  if not self._child then self._child = {} end
-  table.insert(self._child, child)
-  child._parent = self
-  return self --so we can chain methods
+	if not self._child then self._child = {} end
+	table.insert(self._child, child)
+	child._parent = self
+	return self --so we can chain methods
 end
 
 --Animates all values of entity to the given values in keys with the given speed
@@ -95,11 +109,13 @@ end
 --ent:animate({x=100,y=100}, 0.3) - move entity to 100, 100 for 300 msecs
 --ent:animate({r=0,g=0,b=0,a=0}, {speed=0.3, easing='linear'}) - fade down with given easing function
 --ent:animate({value=29, frame=53}, 2) - animate specific parameters of entity
+local emptyArray={}
 function Entity:animate(keys, options)
   if keys then
     if not self._animQueue then self._animQueue = {} end
     if not options then 
-      options = {}
+      options = emptyArray
+    --each option has different type
     elseif type(options) == "number" then
       options = {speed = options}
     elseif type(options) == "function" then
@@ -109,16 +125,18 @@ function Entity:animate(keys, options)
     elseif type(options) == "boolean" then
       options = {loop = options}
     end
-    local queue = options.queue or "main" --you can manage with some queues
+    local queue = options.queue or "main" --you can manage queues
     if not self._animQueue[queue] then self._animQueue[queue] = {} end
     table.insert(self._animQueue[queue], {
       keys = keys,
       old = {},
-      speed = (options.speed or 0.3),
+      speed = options.speed or 0.3,
       lasttime = nil, 
-      easing = options.easing or 'swing', --swing or linear
+      easing = easing[options.easing] or easing.swing,
       loop = options.loop or false,
-      callback = options.callback or options.cb
+      callback = options.callback or options.cb,
+      a = options.a,
+      b = options.b
     })
   end
   return self --so we can chain methods
@@ -175,9 +193,39 @@ for k, v in pairs({'click', 'mousepress', 'mouserelease', 'mouseover', 'mouseout
   end
 end
 
+--special event: calls when parameter key was changed
+function Entity:update(key, func)
+	if type(func) == 'function' then
+		if not self.__data then
+			local data = {}
+			setmetatable(self, nil)
+			for k, v in pairs(self) do
+				data[k] = v
+				self[k] = nil
+			end
+			self.__data = data
+			self.upd = {}
+			setmetatable(self, EntityMetaUpdate)
+		end
+		if type(key) == 'table' then
+			for _, v in ipairs(key) do self.upd[v] = func end
+		else
+			self.upd[key] = func
+		end
+	end
+	return self --so we can chain methods
+end
+
 function Entity:draw(callback)
-  if callback then self._draw = callback end
-  return self --so we can chain methods
+	if type(callback) == 'function' then
+		if not self._draw then
+			self._draw = callback
+		else
+			if type(self._draw) ~= 'table' then self._draw = {self._draw} end
+			table.insert(self._draw, callback)
+		end
+	end
+	return self --so we can chain methods
 end
 
 local drag_start = function(s, x, y)
@@ -201,7 +249,6 @@ lQuery.addhook(function()
       if s.y < a[1] then s.y = a[1] end
     end
     if s._drag_callback then s._drag_callback(s, x, y) end
-    --print(lQuery.MousePressed, lQuery.MouseButton)
   end
 end)
 function Entity:draggable(options)
@@ -263,7 +310,7 @@ local function animate(ent)
         animate(ent)
       else
         for k, v in pairs(aq._keys) do
-          if ent[k] and type(ent[k]) == 'number' then ent[k] = easing[aq.easing](time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed) end
+          if ent[k] and type(ent[k]) == 'number' then ent[k] = aq.easing(time - aq.lasttime, aq.old[k], v - aq.old[k], aq.speed, aq.a, aq.b) end
         end
       end --if aq.lasttime + vv.speed <= time
     end --if j[1]
@@ -316,36 +363,41 @@ local function events(v)
     elseif lQuery.MousePressed == true and lQuery._MousePressedOwner == true then 
       lQuery.MousePressedOwner = v
     end
-    if not lQuery._hover then lQuery.hover = v end
+    lQuery.hover = v
   else
     if lQuery._hover == v then 
       lQuery._hover = nil
       lQuery.hover = nil
       if v._mouseout then v._mouseout(v, mX, mY) end
+      --if v == lQuery.MousePressedOwner then lQuery.MousePressedOwner = nil end
     end
   end
 end
 
 local function process_entities(ent)
-  if ent._visible == true then 
-    if ent._animQueue then 
-      animate(ent) 
-    end
-    if ent._control then --if controlled
-      events(ent)
-    end
-    if ent._draw then 
-      S.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
-      if ent.blendMode then S.setBlendMode(ent.blendMode) end
-      ent._draw(ent)
-      if ent.blendMode then S.setBlendMode('alpha') end
-    end
-    if ent._child then 
-      for k, v in pairs(ent._child) do
-        process_entities(v)
-      end
-    end
-  end
+	if ent._visible == true then 
+		if ent._animQueue then 
+			animate(ent) 
+		end
+		if ent._control then --if controlled
+			events(ent)
+		end
+		if ent._draw then
+			G.setColor(ent.r or 255, ent.g or 255, ent.b or 255, ent.a or 255)
+			if ent.blendMode then G.setBlendMode(ent.blendMode) end
+			if type(ent._draw) == 'function' then
+				ent._draw(ent)
+			else
+				for _, v in ipairs(ent._draw) do v(ent) end
+			end
+			if ent.blendMode then G.setBlendMode('alpha') end
+		end
+		if ent._child then 
+			for k, v in pairs(ent._child) do
+				process_entities(v)
+			end
+		end
+	end
 end
 
 lQuery.event = function(e, a, b, c)
@@ -358,12 +410,12 @@ lQuery.event = function(e, a, b, c)
     lQuery.MouseButton = c
     --click handler
     local v = lQuery.MousePressedOwner
-    if v and v._bound and v._bound(v, mX, mY) then
+    if v --[[and v._bound and v._bound(v, mX, mY)]] then
       local v = lQuery.MousePressedOwner
       if v._mouserelease then 
         v._mouserelease(v, mX, mY, c)
       end
-      if v._click then 
+      if v._click and v._bound and v._bound(v, mX, mY) then 
         v._click(v, mX, mY, c)
       end
     end
@@ -380,9 +432,7 @@ lQuery.event = function(e, a, b, c)
 end
 
 lQuery.process = function()
-  for _, v in pairs(lQuery.hooks) do
-    v()
-  end
+  for _, v in pairs(lQuery.hooks) do v() end
 
   if screen then process_entities(screen) end
   if Console then process_entities(Console) end

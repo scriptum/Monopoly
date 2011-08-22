@@ -166,6 +166,7 @@ action_birthday = function(plk, card)
   local m = card.money
   local players = current_game.players
   for i = 1, __max do
+    print(players, players[i])
     if players[i].ingame == true and players[i].k ~= plk then
       money_transfer(m, players[i].k, plk)
     end

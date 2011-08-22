@@ -72,31 +72,37 @@ end
 
 --border-image
 local border_image_draw = function(s)
-  local i = s.image
+  local i = s._image
   local x = s.x
   local w = s.orig_w
   local h = s.orig_h
+  --~ local sw = math.ceil(s.w)
+  --~ local sw = math.ceil(s.h)
   local y = s.y
   local t = s.top
   local r = s.right
   local b = s.bottom
   local l = s.left
+  if t > 0 then
   i:drawq(x,            y,            0, l,            t,           0,     0,       l,         t)
   i:drawq(x + l,        y,            0, s.w - l - r,  t,           l,     0,       w - l - r, t)
   i:drawq(x + s.w - r,  y,            0, r,            t,           w - r, 0,       r,         t)
+  end
   
   i:drawq(x,            y + t,        0, l,            s.h - t - b, 0,     t,       l,         h - t - b)
   i:drawq(x + l,        y + t,        0, s.w - l - r,  s.h - t - b, l,     t,       w - l - r, h - t - b)
   i:drawq(x + s.w - r,  y + t,        0, r,            s.h - t - b, w - r, t,       r,         h - t - b)
-  
+  if b > 0 then
   i:drawq(x,            y + s.h - b,  0, l,            b,           0,     h - b,   l,         b)
   i:drawq(x + l,        y + s.h - b,  0, s.w - l - r,  b,           l,     h - b,   w - l - r, b)
   i:drawq(x + s.w - r,  y + s.h - b,  0, r,            b,           w - r, h - b,   r,         b)
+  end
 end
-function Entity:border_image(image, top, right, bottom, left, stretch)
+lQuery.border_image_draw = border_image_draw
+function Entity:border_image(image, top, right, bottom, left)
  if image then
     if type(image) == 'string' then image = S.newImage(image) end
-    self.image = image
+    self._image = image
     self._draw = border_image_draw
     w = image:getWidth()
     h = image:getHeight()
@@ -109,9 +115,9 @@ function Entity:border_image(image, top, right, bottom, left, stretch)
     self.bottom = bottom
     self.left= left
         
-    self.angle = 0
-    self.sx = 1
-    self.sy = 1
+    --~ self.angle = 0
+    --~ self.sx = 1
+    --~ self.sy = 1
   end
   return self
 end
