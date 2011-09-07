@@ -114,6 +114,19 @@ set_owner = function(company, player)
   companys._child[company]:set({owner_alpha = 0}):animate({owner_alpha = 150})
 end
 
+--добавляем что-то в общий чат
+message = function(str)
+  local s = scroll
+  s.font:select()
+  local a = S.stringToLines(str, 250*screen_scale)
+  for i = 1, #a do
+    s.lines[#s.lines+1] = a[i]
+  end
+  s.start = #s.lines - math.floor(s.h/s.font:height())
+  if s.start <0 then s.start = 0 end
+  s._child[1].y = s.y + s.h - 50
+end
+
 ------------------------Подготовительная часть клиента--------------------------
 
 --создаем локальные объекты-плееры

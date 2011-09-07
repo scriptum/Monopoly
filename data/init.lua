@@ -28,8 +28,8 @@ end
 math.randomseed(os.time() + math.random(99999))
 --table.shuffle(music)
 --mus_1:play()
-mus_m = S.newMusic('data/music/menu.ogg')
-mus_m:play()
+--~ mus_m = S.newMusic('data/music/menu.ogg')
+--~ mus_m:play()
 
 player_im1 = S.newImage('data/gfx/player/player.dds')
 player_im2 = S.newImage('data/gfx/player/player2.dds')

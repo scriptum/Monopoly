@@ -61,7 +61,7 @@ for i = 1, 2 do
 		jail = 0, 
 		ingame = true, 
 		cash = 1500, 
-		name = "", --имя
+		name = "Игрок " .. i, --имя
 		address = "", --айпишник (ну в теории он будет)
 		uid = 0 --серверу нужно будет как-то понять, от какого игрока пришло сообщение
 	})
@@ -92,6 +92,7 @@ gogo = function()
     gogo()
   else
     roll() --бросаем кубики
+    
     local add_money = false
     --если игрок прошел старт - добавить ему бабла
     buf.pos = buf.pos + dice1 + dice2
@@ -109,6 +110,7 @@ gogo = function()
       msg_add('set_cash',__i,buf.cash) --отправляем новое состояние счёта клиентам
     end
     local cell = rules_company[buf.pos]
+    msg_add('message', buf.name..' выкидывает '..dice1..'-'..dice2..' и попадает на клетку '..cell.name)
     if cell.action then cell.action(buf.k) end
     ai(buf.k)
 --    msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'

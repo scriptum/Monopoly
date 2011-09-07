@@ -34,7 +34,7 @@ end
 --~ board_background:setWrap("repeat", "repeat")
 
 background = Entity:new(screen):image('data/gfx/background.dds', {quad = true})
-:set({w=800, h=600, qw = 800, qh = 600})
+:set({w=800, h=600, qw = 1024, qh = 768})
 
 --~ console = G.newImageFont('data/gfx/font.png', " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#$=[]\"àáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕ×ÖØÙÚÛÜİŞß")
 
