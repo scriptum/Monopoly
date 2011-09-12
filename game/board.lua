@@ -9,8 +9,11 @@ font_size = 10
 board = E:new(screen) --игровая доска
 --центральный прямоугольник
 --burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - ch*2+8,h=600 - ch*2+8, blendMode = 'subtractive'}):move(ch - 4,ch - 4):color(255,246,208,100)
+--доска
 Entity:new(board):image('data/gfx/background.png', {quad = true})
 :set({w=800 - ch*2,h=600 - ch*2,qw=(800 - ch*2)*screen_scale,qh=(600 - ch*2)*screen_scale}):move(ch,ch)
+--имитация света
+light = Entity:new(board):image('data/gfx/light.png'):set({w=800 - ch*2,h=600 - ch*2,a=170,blendMode = 'additive'}):move(ch,ch)
 companys = E:new(board) --компании
 
 
@@ -394,12 +397,13 @@ board:keypress(function( s, key, unicode )
 end)
 
 --делаю простой скролл
-scroll = E:new(screen):move(300,100):size(250, 400)
-:set({lines = {}, start = 0, font=Fonts["Liberation Sans bold"][8]})
+scroll = E:new(screen):move(800-400-ch-25,ch+15):size(400, 235)
+:set({lines = {}, start = 0, font=fnt_small})
 :draw(function(s)
-  S.rectangle(s.x,s.y,s.w+10,s.h)
+  S.rectangle(s.x-5,s.y-5,s.w+15,s.h+10)
+  fnt_small:select()
+  fnt_big:scale(9/35*screen_scale)
   local fh = s.font:height()
-  s.font:select()
   local max_lines = math.floor(s.h/fh)
   local N
   if max_lines > #s.lines then
@@ -435,7 +439,6 @@ callback = function(s)
   local size = math.floor(p.h/p.font:height())
   p.start = math.floor((s.y - p.y)/(p.h-50)*(math.max(#p.lines, size)-size))
 end})
-
 
 --~ local fupd = loadfile('rules/classic/offsets.lua')
 --~ E:new(board_gui):move(200, 400):slider('Cell width', 50, 60, {'cw'}, 

@@ -117,8 +117,8 @@ end
 --добавляем что-то в общий чат
 message = function(str)
   local s = scroll
-  s.font:select()
-  local a = S.stringToLines(str, 250*screen_scale)
+  fnt_small:select()
+  local a = S.stringToLines(str, s.w*screen_scale)
   for i = 1, #a do
     s.lines[#s.lines+1] = a[i]
   end

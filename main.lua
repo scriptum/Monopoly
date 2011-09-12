@@ -1,7 +1,7 @@
 --определяем язык
 lang = 'en'
 if arg[1] then lang = arg[1] end
-scrupp.init('Test', 1024, 768, 32, false, false, false)
+scrupp.init('Test', 1024, 768, 32, false, true, true)
 scrupp.setDelta(0)
 require('lib')
 

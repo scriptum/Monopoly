@@ -3,8 +3,12 @@ local easing = require("lib/lquery/easing")
 lQuery = {
 	fx = true,
 	hooks = {},
+	_onresize = {},
 	addhook = function(hook)
 		table.insert(lQuery.hooks, hook)
+	end,
+	onresize = function(func)
+		table.insert(lQuery._onresize, func)
 	end,
 	_MousePressedOwner = false,
 	MousePressed = false
@@ -426,6 +430,14 @@ lQuery.event = function(e, a, b, c)
     lQuery.KeyPressedUni = b
   elseif e == "kr" then
     lQuery.KeyPressed = false
+  elseif e == "rz" then
+    screen_width = a
+    screen_height = b
+    if lQuery._onresize[1] then
+      for i = 1, #lQuery._onresize do
+	lQuery._onresize[i](a, b)
+      end
+    end
   elseif e == "q" then
     if atexit then atexit() end
   end

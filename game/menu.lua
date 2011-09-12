@@ -19,7 +19,7 @@ gui_mortgage_done = E:new(playermenu):move(272, 360):button(l.done, human_mortga
 gui_unmortgage_done = E:new(playermenu):move(272, 360):button(l.done, human_unmortgage_done):hide()
 
 
-manuauction = E:new(playermenu):hide()
+manuauction = E:new(playermenu)
 gui_auction_text = E:new(manuauction):text('$ 100 K', 30):move(126, 375)
 local w, h, sx = 91, 32, 280
 E:new(manuauction):size(w, h):move(sx, 360):button('+1', click_manuauction_button)

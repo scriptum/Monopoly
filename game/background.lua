@@ -20,7 +20,19 @@ screen:draw(function()
   S.scale(screen_scale)
   
 end)
-fnt_small = Fonts["Liberation Sans bold"][8]
+lQuery.onresize(function()
+  screen_scale, x_screen_scale, y_screen_scale = getScale()
+  background.qw = 800*screen_scale
+  background.qh = 600*screen_scale
+  local newf = math.floor(8*screen_scale)
+  if Fonts["Liberation Sans bold"][newf] then
+    fnt_small = Fonts["Liberation Sans bold"][newf]
+  else
+    fnt_small = fnt_big
+  end
+end)
+
+fnt_small = Fonts["Liberation Sans bold"][math.floor(8*screen_scale)]
 fnt_big = Fonts["PT Sans Caption"][35]
 getMouseXY = function()
   local x, y = S.getMousePos()
