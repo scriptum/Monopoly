@@ -398,12 +398,12 @@ end)
 
 --делаю простой скролл
 scroll = E:new(screen):move(800-400-ch-25,ch+15):size(400, 235)
-:set({lines = {}, start = 0, font=fnt_small})
+:set({lines = {}, start = 0})
 :draw(function(s)
   S.rectangle(s.x-5,s.y-5,s.w+15,s.h+10)
   fnt_small:select()
   fnt_big:scale(9/35*screen_scale)
-  local fh = s.font:height()
+  local fh = fnt_small:height()
   local max_lines = math.floor(s.h/fh)
   local N
   if max_lines > #s.lines then
@@ -418,7 +418,7 @@ end)
 :wheel(function(s,x,y,b)
   if b == "d" then
     s.start = s.start + 1
-    if(s.start+math.floor(s.h/s.font:height()) > #s.lines) then
+    if(s.start+math.floor(s.h/fnt_small:height()) > #s.lines) then
       s.start = s.start -1
     end
   elseif b == "u" then
@@ -427,7 +427,7 @@ end)
       s.start = 0
     end
   end
-  s._child[1].y = s.y + s.start*(s.h-50)/(#s.lines - math.floor(s.h/s.font:height()))
+  s._child[1].y = s.y + s.start*(s.h-50)/(#s.lines - math.floor(s.h/fnt_small:height()))
 end)
 E:new(scroll):draw(function(s)
   S.rectangle(s.x,s.y,s.w,s.h, true)
