@@ -122,7 +122,7 @@ message = function(str)
   for i = 1, #a do
     s.lines[#s.lines+1] = a[i]
   end
-  s.start = #s.lines - math.floor(s.h/s.font:height())
+  s.start = #s.lines - math.floor(s.h/fnt_small:height())
   if s.start <0 then s.start = 0 end
   s._child[1].y = s.y + s.h - 50
 end
