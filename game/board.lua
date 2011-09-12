@@ -436,7 +436,7 @@ end):move(scroll.x+scroll.w,scroll.y):size(10, 50)
 bound={scroll.y, scroll.x+scroll.w, scroll.y+scroll.h-50, scroll.x+scroll.w}, 
 callback = function(s)
   local p = s._parent
-  local size = math.floor(p.h/p.font:height())
+  local size = math.floor(p.h/fnt_small:height())
   p.start = math.floor((s.y - p.y)/(p.h-50)*(math.max(#p.lines, size)-size))
 end})
 
