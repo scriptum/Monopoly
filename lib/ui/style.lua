@@ -21,7 +21,7 @@ return {
         fnt_big:select()
         fnt_big:scale((s.h * 0.75) / 45*0.6)
         S.setColor(255,255,255, s.a*s.a/255/2) 
-        S.print(s.text, s.x+1, 1+s.y+s.h*0.17, s.w, 'center')
+        S.print(s.text, s.x+1/screen_scale, 1/screen_scale+s.y+s.h*0.17, s.w, 'center')
         
         if ui_style.button.font_color then 
           local c = ui_style.button.font_color

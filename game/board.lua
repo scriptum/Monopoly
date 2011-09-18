@@ -451,3 +451,5 @@ end})
 --~ end)
 --~ E:new(board_gui):move(200, 440):slider('Cell padding', 0, 10, {'cell_padding'}, fupd)
 --~ --E:new(screen):move(300, 250):slider('ch', 20, 200, {'ch'}, function(v) a = (600-ch*2)/field_height - cw print(a) end)
+
+loader(5)
