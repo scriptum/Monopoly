@@ -20,13 +20,13 @@ offset_logo = {
 		y = cell_padding - 5
 	}
 }
-
+local fntSmallHeight = 16
 local w = math.min(cw, (ch - cw))
 offset_group = {
 	{ --top
 		w = w,
 		x = (cw - w - cell_padding * 2) / 2,
-		y = cw + fnt_small:height() - cell_padding * 2 - 4
+		y = cw + fntSmallHeight - cell_padding * 2 - 4
 	},
 	{ --right
 		w = w,
@@ -36,7 +36,7 @@ offset_group = {
 	{ --bottom
 		w = w,
 		x = (cw - w - cell_padding * 2) / 2,
-		y = ch - cw - fnt_small:height() + cell_padding * 2 - w * 0.8 + 4
+		y = ch - cw - fntSmallHeight + cell_padding * 2 - w * 0.8 + 4
 	},
 	{ --left
 		w = w,

@@ -1,44 +1,38 @@
+require 'lib.cheetah'
+require 'lib.lquery.init'
+
 --определяем язык
 lang = 'en'
 if arg[1] then lang = arg[1] end
-scrupp.init('Test', 1024, 768, 32, false, true, true)
-require('game.loader')
-scrupp.setDelta(0)
-require('lib')
-loader(0)
+
+local C = cheetah
+--enable windows resizing and disable autoscale to avoid font corruption
+C.init('Monopoly game', '800x600 vsync resizable resloader')
+
 require('game.start')
 --~ loadscreen = love.graphics.newImage('data/gfx/load.png')
 --~ love.graphics.draw(loadscreen, 0, 0, 0, love.graphics:getWidth()/loadscreen:getWidth(), love.graphics:getHeight()/loadscreen:getHeight())
 --~ love.graphics.present()
-require('ui')
-require('lib.ui.button')
-require('lib.ui.list')
-require('lib.ui.slider')
-require('lib.ui.menu')
-require('lib.sound')
+require 'ui.init'
+require 'ui.button'
+require 'ui.list'
+require 'ui.slider'
+require 'ui.menu'
+-- require 'lib.sound')
 require('languages.'..lang)
-loader(1)
+
 --require('lib.scale')
 require('rules.classic.action')
 require('rules.classic.images')
-loader(1)
 require('rules.classic.'..lang..'.rules')
-loader(1)
 require('rules.classic.'..lang..'.images')
 
-require('data')
-require('game')
+require('data.init')
+require('game.init')
 
 
+-- require 'lib.console'
 
---~ E:new(screen):image(FontTextures[2], true):draggable()
---~ E:new(screen):draw(function(s)
-	--~ G.setColor(255,255,255)
-	--~ Fonts['Pt Sans'][8]:select()
-	--~ S.printLines(S.stringToLines("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500Os, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum", 500), 100, 100)
---~ end)
-require 'lib.console'
-loader(100)
 --table.print(S.getModes())
 --~ S.newThread("th.lua")
 --~ table.insert(lquery_hooks, function()
@@ -51,3 +45,4 @@ loader(100)
 		--~ E:new(screen):image(S.imageFromString(msg)):draggable():animate({x=200,y=300})
 	--~ end
 --~ end)
+cheetah.mainLoop()

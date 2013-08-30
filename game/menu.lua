@@ -20,7 +20,7 @@ gui_unmortgage_done = E:new(playermenu):move(272, 360):button(l.done, human_unmo
 
 
 manuauction = E:new(playermenu)
-gui_auction_text = E:new(manuauction):text('$ 100 K', 30):move(126, 375)
+gui_auction_text = E:new(manuauction):text('$ 100 K'):move(126, 375)
 local w, h, sx = 91, 32, 280
 E:new(manuauction):size(w, h):move(sx, 360):button('+1', click_manuauction_button)
 E:new(manuauction):size(w, h):move(sx, 400):button('-1', click_manuauction_button)
@@ -38,31 +38,31 @@ if 1 then gamemenu:hide() end
 menuvsettings = E:new(gamemenu):hide()
 
 --меню игры
-local modes = S.getModes()
-table.sort(modes, function(a, b) return a.width < b.width end)
-local display_modes = {}
-for _, v in pairs(modes) do
-	table.insert(display_modes, v.width .. 'x' .. v.height)
-end
+-- local modes = S.getModes()
+-- table.sort(modes, function(a, b) return a.width < b.width end)
+-- local display_modes = {}
+-- for _, v in pairs(modes) do
+	-- table.insert(display_modes, v.width .. 'x' .. v.height)
+-- end
 
-local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, display_modes, display_modes, {'gameoptions', 'mode'})
-local screenmode = E:new(menuvsettings):move(200, 200):list(l.screen_mode, {true, false}, {l.fullscreen, l.windowed}, {'gameoptions', 'fullscreen'})
-local apply = E:new(menuvsettings):move(130, 400):button(l.apply, function(s) 
-	local p = screenlist._pos
-	local mode = S.getWidth() .. 'x' .. S.getHeight()
-	local full = screenmode._vars[screenmode._pos]
-	if gameoptions.mode ~= mode or gameoptions.fullscreen ~= full then
-		gameoptions.fullscreen = full
-		S.init('Test', modes[p].width, modes[p].height, 32, full)
-		screen_scale, x_screen_scale, y_screen_scale = getScale() --rescale screen
-		local newsize = math.ceil(8*screen_scale)
-		if newsize > 13 then newsize = 13 end
-		if newsize < 6 then newsize = 6 end
-		fnt_small = Fonts["Liberation Sans bold"][newsize]
-		background.qw = 800 * screen_scale
-		background.qh = 600 * screen_scale
-	end
-end)
+-- local screenlist = E:new(menuvsettings):move(200, 150):list(l.screen_resolution, display_modes, display_modes, {'gameoptions', 'mode'})
+-- local screenmode = E:new(menuvsettings):move(200, 200):list(l.screen_mode, {true, false}, {l.fullscreen, l.windowed}, {'gameoptions', 'fullscreen'})
+-- local apply = E:new(menuvsettings):move(130, 400):button(l.apply, function(s) 
+	-- local p = screenlist._pos
+	-- local mode = S.getWidth() .. 'x' .. S.getHeight()
+	-- local full = screenmode._vars[screenmode._pos]
+	-- if gameoptions.mode ~= mode or gameoptions.fullscreen ~= full then
+		-- gameoptions.fullscreen = full
+		-- S.init('Test', modes[p].width, modes[p].height, 32, full)
+		-- screen_scale, x_screen_scale, y_screen_scale = getScale() --rescale screen
+		-- local newsize = math.ceil(8*screen_scale)
+		-- if newsize > 13 then newsize = 13 end
+		-- if newsize < 6 then newsize = 6 end
+		-- fnt_small = Fonts["Liberation Sans bold"][newsize]
+		-- background.qw = 800 * screen_scale
+		-- background.qh = 600 * screen_scale
+	-- end
+-- end)
 E:new(menuvsettings):move(200, 250):slider(l.sound_volume, 0, 128, {'gameoptions', 'volume'}, function(v)S.setVolume(v)end)
 
 
@@ -75,7 +75,7 @@ menumain = E:new(gamemenu):menu({
 	{text = l.multiplayer, action = nil},
 	--{text = 'Audio settings', action = nil},
 	{text = l.settings, action = mainsettings},
-	{text = l.quit, action = S.exit}
+	{text = l.quit, action = cheetah.quit}
 })
 
 menusingle = E:new(gamemenu):hide()
