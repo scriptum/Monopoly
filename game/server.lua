@@ -1,28 +1,33 @@
-print('server')
 require 'lib.cheetah'
-require 'rules.classic.action' --тут размер поля, экшны
-require 'rules.classic.ru.rules' --загружаются правила
-require 'game.ai' --искусственный интеллект
-require 'game.actions' --действия игрока
--- local S = cheetah
+require 'rules.classic.action' --С‚СѓС‚ СЂР°Р·РјРµСЂ РїРѕР»СЏ, СЌРєС€РЅС‹
+require 'rules.classic.ru.rules' --Р·Р°РіСЂСѓР¶Р°СЋС‚СЃСЏ РїСЂР°РІРёР»Р°
+require 'game.ai' --РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Р№ РёРЅС‚РµР»Р»РµРєС‚
+require 'game.actions' --РґРµР№СЃС‚РІРёСЏ РёРіСЂРѕРєР°
+
+--debug.sethook(print, "l")
+-- function trace (event, line)
+	-- local s = debug.getinfo(2).short_src
+	-- local f = debug.getinfo(2).name
+	-- print(s, f, line)
+-- end
+-- 
+-- debug.sethook(trace, "l")
+
 local send = function ()
 	cheetah.threadSend(msg, 'g')
 	msg = ''
 end
-local delay = cheetah.delay
 
-
-
---текущие игры
+--С‚РµРєСѓС‰РёРµ РёРіСЂС‹
 local games = {}
 games['newgame'] = {}
 current_game = games['newgame']
 
-current_game.players = {} --на сервере свои плееры
---читсло клеток всего
-cell_count = field_width * 2 + field_height * 2 + 4
+current_game.players = {} --РЅР° СЃРµСЂРІРµСЂРµ СЃРІРѕРё РїР»РµРµСЂС‹
+--С‡РёС‚СЃР»Рѕ РєР»РµС‚РѕРє РІСЃРµРіРѕ
+local cell_count = field_width * 2 + field_height * 2 + 4
 
---цифры на кубиках
+--С†РёС„СЂС‹ РЅР° РєСѓР±РёРєР°С…
 dice1, dice2 = 1, 1
 local roll = function()
 	--local ds1, ds2 = 0
@@ -53,38 +58,38 @@ msg_add = function(a, b, c, d, e, f, g)
 	msg = msg .. ')'
 end
 
---создаем игроков
+--СЃРѕР·РґР°РµРј РёРіСЂРѕРєРѕРІ
 local i
-for i = 1, 2 do
+for i = 1, 5 do
 	table.insert(current_game.players, {
 		k = i,
 		pos = 1, 
 		jail = 0, 
 		ingame = true, 
 		cash = 1500, 
-		name = "Игрок " .. i, --имя
-		address = "", --айпишник (ну в теории он будет)
-		uid = 0 --серверу нужно будет как-то понять, от какого игрока пришло сообщение
+		name = "РРіСЂРѕРє " .. i, --РёРјСЏ
+		address = "", --Р°Р№РїРёС€РЅРёРє (РЅСѓ РІ С‚РµРѕСЂРёРё РѕРЅ Р±СѓРґРµС‚)
+		uid = 0 --СЃРµСЂРІРµСЂСѓ РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ РєР°Рє-С‚Рѕ РїРѕРЅСЏС‚СЊ, РѕС‚ РєР°РєРѕРіРѕ РёРіСЂРѕРєР° РїСЂРёС€Р»Рѕ СЃРѕРѕР±С‰РµРЅРёРµ
 	})
 	msg = msg .. ' players._child['..i..'].ingame = true'
 	msg_add('set_cash', i, 1500)
 end
 send(msg, 'g')
 
---создаем массив компаний
+--СЃРѕР·РґР°РµРј РјР°СЃСЃРёРІ РєРѕРјРїР°РЅРёР№
 current_game.companys = {}
 for i = 1, cell_count do
 	table.insert(current_game.companys, {level = 1})
 end
 
-current_game.double = 1 --число выкинутых дублей в этой игре
-current_game.current_player = 1 --текущий плеер
-__max = 5 --максимально возможное число игроков на сервере
+current_game.double = 1 --С‡РёСЃР»Рѕ РІС‹РєРёРЅСѓС‚С‹С… РґСѓР±Р»РµР№ РІ СЌС‚РѕР№ РёРіСЂРµ
+current_game.current_player = 1 --С‚РµРєСѓС‰РёР№ РїР»РµРµСЂ
+__max = 5 --РјР°РєСЃРёРјР°Р»СЊРЅРѕ РІРѕР·РјРѕР¶РЅРѕРµ С‡РёСЃР»Рѕ РёРіСЂРѕРєРѕРІ РЅР° СЃРµСЂРІРµСЂРµ
 
 --*******************************************GO-GO*******************************************--
 
 gogo = function()
-	local __i = current_game.current_player --текущий игрок
+	local __i = current_game.current_player --С‚РµРєСѓС‰РёР№ РёРіСЂРѕРє
 	local buf = current_game.players[__i]
 	if not buf or buf.ingame == false or (buf.jail == 4 and current_game.double > 1) then 
 		double = 1
@@ -92,26 +97,26 @@ gogo = function()
 		if current_game.current_player > __max then current_game.current_player = 1 end
 		gogo()
 	else
-		roll() --бросаем кубики
+		roll() --Р±СЂРѕСЃР°РµРј РєСѓР±РёРєРё
 		
 		local add_money = false
-		--если игрок прошел старт - добавить ему бабла
+		--РµСЃР»Рё РёРіСЂРѕРє РїСЂРѕС€РµР» СЃС‚Р°СЂС‚ - РґРѕР±Р°РІРёС‚СЊ РµРјСѓ Р±Р°Р±Р»Р°
 		buf.pos = buf.pos + dice1 + dice2
 		if buf.pos > cell_count then
 			buf.pos = buf.pos - cell_count
 			add_money = true
 		end
-		--движение игрока и анимация кубиков на клиентах
+		--РґРІРёР¶РµРЅРёРµ РёРіСЂРѕРєР° Рё Р°РЅРёРјР°С†РёСЏ РєСѓР±РёРєРѕРІ РЅР° РєР»РёРµРЅС‚Р°С…
 		msg_add('move',__i,dice1,dice2)
 		send()
-		--пауза пока идет анимация
-		delay((dice1+dice2)*200 + 2000)
+		--РїР°СѓР·Р° РїРѕРєР° РёРґРµС‚ Р°РЅРёРјР°С†РёСЏ
+		cheetah.delay((dice1+dice2)*200 + 2000)
 		if add_money == true then
-			buf.cash = buf.cash + 200 --добавляем бабла на серверной части
-			msg_add('set_cash',__i,buf.cash) --отправляем новое состояние счёта клиентам
+			buf.cash = buf.cash + 200 --РґРѕР±Р°РІР»СЏРµРј Р±Р°Р±Р»Р° РЅР° СЃРµСЂРІРµСЂРЅРѕР№ С‡Р°СЃС‚Рё
+			msg_add('set_cash',__i,buf.cash) --РѕС‚РїСЂР°РІР»СЏРµРј РЅРѕРІРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ СЃС‡С‘С‚Р° РєР»РёРµРЅС‚Р°Рј
 		end
 		local cell = rules_company[buf.pos]
-		msg_add('message', buf.name..' выкидывает '..dice1..'-'..dice2..' и попадает на клетку '..cell.name)
+		msg_add('message', buf.name..' РІС‹РєРёРґС‹РІР°РµС‚ '..dice1..'-'..dice2..' Рё РїРѕРїР°РґР°РµС‚ РЅР° РєР»РµС‚РєСѓ '..cell.name)
 		if cell.action then cell.action(buf.k) end
 		ai(buf.k)
 		-- msg = msg .. ' set_cash('..__i..','..math.random(0,1500)..')'
@@ -127,5 +132,5 @@ local done = false
 while done == false do
 	--send('burn:animate({a = '..math.random(50, 100)..'})', 'g')
 	gogo()
-	delay(20) --не тормозим комп
+	cheetah.delay(20) --РЅРµ С‚РѕСЂРјРѕР·РёРј РєРѕРјРї
 end

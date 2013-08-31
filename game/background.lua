@@ -1,2 +1,2 @@
 
-background = Entity:new(screen):image('data/gfx/background.jpg')
+-- background = Entity:new(screen):image('data/gfx/background2.jpg')

@@ -23,9 +23,8 @@ require('languages.'..lang)
 
 --require('lib.scale')
 require('rules.classic.action')
-require('rules.classic.images')
 require('rules.classic.'..lang..'.rules')
-require('rules.classic.'..lang..'.images')
+require('rules.classic.images')
 
 require('data.init')
 require('game.init')

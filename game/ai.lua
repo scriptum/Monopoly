@@ -1,8 +1,8 @@
--- искусственный интеллект
+-- РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Р№ РёРЅС‚РµР»Р»РµРєС‚
 ai = function(plk)
 	local pl = current_game.players[plk]
 	local companys = current_game.companys
--- если денег меньше нуля - закладываем компании
+-- РµСЃР»Рё РґРµРЅРµРі РјРµРЅСЊС€Рµ РЅСѓР»СЏ - Р·Р°РєР»Р°РґС‹РІР°РµРј РєРѕРјРїР°РЅРёРё
 	--~ if pl.cash < 0 then
 		--~ for k,v in pairs(rules_company) do
 			--~ if v.owner == pl and v.level == 1 and mortgage_company(pl, v, k) == true then
@@ -17,7 +17,7 @@ ai = function(plk)
 			--~ end
 		--~ end
 	--~ end
-	--~ -- игрок вылетает
+	--~ -- РёРіСЂРѕРє РІС‹Р»РµС‚Р°РµС‚
 	--~ if pl.cash < 0 then
 		--~ for k,v in pairs(rules_company) do
 			--~ if v.owner == pl then
@@ -31,12 +31,12 @@ ai = function(plk)
 --~ --    sound_out:play()
 	--~ end
 
-	-- покупка компании
+	-- РїРѕРєСѓРїРєР° РєРѕРјРїР°РЅРёРё
 
 	if rules_company[pl.pos].type == "company" and 
 		not companys[pl.pos].owner and 
 			pl.cash >= rules_company[pl.pos].money[1] then 
-	buy_company(pl.k, pl.pos) --покупка компании на сервере
+	buy_company(pl.k, pl.pos) --РїРѕРєСѓРїРєР° РєРѕРјРїР°РЅРёРё РЅР° СЃРµСЂРІРµСЂРµ
 	end
 --~ 
 	--~ if not_buy == false and buy_company(pl, pl.pos) == true then
@@ -47,7 +47,7 @@ ai = function(plk)
 --~ --    player:delay({speed = 0, cb = function() ai(pl) end})
 		--~ return
 	--~ end
---~ -- прокачка компаний
+--~ -- РїСЂРѕРєР°С‡РєР° РєРѕРјРїР°РЅРёР№
 	--~ for k,v in pairs(rules_company) do
 		--~ if v.type == "company" and v.owner == pl and pl.cash >= (rules_group[v.group].upgrade) then
 			--~ if buyshares_company(pl, v) == true then
@@ -56,7 +56,7 @@ ai = function(plk)
 			--~ end
 		--~ end
 	--~ end
-	--~ -- выкуп компаний
+	--~ -- РІС‹РєСѓРї РєРѕРјРїР°РЅРёР№
 	--~ for k,v in pairs(rules_company) do
 		--~ if v.type == "company" and v.owner == pl and pl.cash >= (v.money[1] + 200) then
 			--~ if buyout_company(pl, v, k) == true then

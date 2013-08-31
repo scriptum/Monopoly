@@ -1,22 +1,8 @@
-field_width = 11 --компаний по горизонтали
-field_height = 7 --компаний по вертикали
-cell_jail = 13 --на какой клетке тюрьма
---картинки для игроков
-rules_player_img = {
-	'player_blue.png',
-	'player_green.png',
-	'player_red.png',
-	'player_sea.png',
-	'player_yellow.png'
-}
-
-rules_player_colors = {
-	{0,0,255},
-	{0,255,0},
-	{255,0,0},
-	{0,255,255},
-	{255,255,0}
-}
+field_width = 11 --РєРѕРјРїР°РЅРёР№ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё
+field_height = 7 --РєРѕРјРїР°РЅРёР№ РїРѕ РІРµСЂС‚РёРєР°Р»Рё
+cell_jail = 13 --РЅР° РєР°РєРѕР№ РєР»РµС‚РєРµ С‚СЋСЂСЊРјР°
+--РїРѕРґСЃС‡РёС‚Р°РµРј РѕР±С‰РµРµ С‡РёСЃР»Рѕ РєР»РµС‚РѕРє: РІС‹СЃРѕС‚Р°, С€РёСЂРёРЅР° Рё 4 СѓРіР»РѕРІС‹С…
+cell_count = field_width * 2 + field_height * 2 + 4
 
 local rnd_txt = function(a, s)
 	if s and a then 
@@ -48,7 +34,7 @@ end
 
 
 
--- общий экшн компаний
+-- РѕР±С‰РёР№ СЌРєС€РЅ РєРѕРјРїР°РЅРёР№
 local __action = function(plk, f)
 	local pos = current_game.players[plk].pos
 	local com = current_game.companys[pos]
@@ -68,7 +54,7 @@ local __action = function(plk, f)
 	end
 end
 
--- Экшн обычных компаний
+-- Р­РєС€РЅ РѕР±С‹С‡РЅС‹С… РєРѕРјРїР°РЅРёР№
 local _action_company = function(plk, level, money, pos)
 	local cash
 	if level == 1 then
@@ -85,7 +71,7 @@ action_company = function(plk)
 	__action(plk, _action_company)
 end
 
--- Налог
+-- РќР°Р»РѕРі
 action_nalog = function(plk)
 	local pl = current_game.players[plk]
 	local m = rules_company[pl.pos].money
@@ -93,7 +79,7 @@ action_nalog = function(plk)
 	--rnd_txt(rules_group.nalog.phrase, m)
 end
 
--- Экш нефтяных компаний
+-- Р­РєС€ РЅРµС„С‚СЏРЅС‹С… РєРѕРјРїР°РЅРёР№
 local _action_oil = function(plk, level, money, pos)
 	local cash
 	if level == 3 then
@@ -108,7 +94,7 @@ action_oil = function(plk)
 	__action(plk, _action_oil)
 end
 
--- Экш банковских компаний
+-- Р­РєС€ Р±Р°РЅРєРѕРІСЃРєРёС… РєРѕРјРїР°РЅРёР№
 local _action_bank = function(plk, level, money, pos)
 	local cash
 	if level == 3 then
@@ -123,10 +109,10 @@ action_bank = function(plk)
 	__action(plk, _action_bank)
 end
 
--- Экшн таможни
+-- Р­РєС€РЅ С‚Р°РјРѕР¶РЅРё
 action_jail = function(plk)
 	local pl = current_game.players[plk]
-	--какаято хрень постоянно тут вылетает
+	--РєР°РєР°СЏС‚Рѕ С…СЂРµРЅСЊ РїРѕСЃС‚РѕСЏРЅРЅРѕ С‚СѓС‚ РІС‹Р»РµС‚Р°РµС‚
 	--pl.pos = cell_jail
 	--pl.jail = 4
 	--local x, y = getplayerxy(cell_jail, plk)
@@ -136,7 +122,7 @@ action_jail = function(plk)
 	--rnd_txt(reason_jail)
 end
 
--- Экшн тюрьмы
+-- Р­РєС€РЅ С‚СЋСЂСЊРјС‹
 action_jail_value = function(plk)
 	local pl = current_game.players[plk]
 	if pl.jail == 0 and math.random(1, 5) == 1 then 
@@ -147,7 +133,7 @@ action_jail_value = function(plk)
 	end
 end
 
--- Экшн шанса
+-- Р­РєС€РЅ С€Р°РЅСЃР°
 cashback_chance = function(plk)
 	math.randomseed(os.time() + os.clock() + math.random(99999))
 	local chance = math.random(1, #rules_chance)
@@ -156,12 +142,12 @@ cashback_chance = function(plk)
 	-- print("Chance: "..rules_chance[chance].money)
 end
 
--- Отъем денег. функция для карточек
+-- РћС‚СЉРµРј РґРµРЅРµРі. С„СѓРЅРєС†РёСЏ РґР»СЏ РєР°СЂС‚РѕС‡РµРє
 cashback = function(plk, chance)
 	m_tr(plk, chance.money)
 end
 
--- День рождения игрока. функция для карточек
+-- Р”РµРЅСЊ СЂРѕР¶РґРµРЅРёСЏ РёРіСЂРѕРєР°. С„СѓРЅРєС†РёСЏ РґР»СЏ РєР°СЂС‚РѕС‡РµРє
 action_birthday = function(plk, card)
 	local m = card.money
 	local players = current_game.players
@@ -173,22 +159,26 @@ action_birthday = function(plk, card)
 	end
 end
 
--- Оплата каждой акции. функция для карточек
+local function company_can_upgrade(company_number)
+	local com = rules_company[company_number]
+	return com.type == "company" and com.group ~= "bank" and com.group ~= "oil"
+end
+
+-- РћРїР»Р°С‚Р° РєР°Р¶РґРѕР№ Р°РєС†РёРё. С„СѓРЅРєС†РёСЏ РґР»СЏ РєР°СЂС‚РѕС‡РµРє
 tax_on_shares = function(plk, card)
-	local rules_com, com
-	local number_of_shares = 0
+	local shares = 0
 	for i = 1, cell_count do
-		rules_com, com = rules_company[i], current_game.companys[i]
-		if rules_com.type == "company" and com.owner == plk and rules_com.group ~= "bank" and rules_com.group ~= "oil" and com.level > 2 then
-			number_of_shares = number_of_shares + com.level - 2
+		local com = current_game.companys[i]
+		if company_can_upgrade(i) and com.owner == plk and com.level > 2 then
+			shares = shares + com.level - 2
 		end
 	end
-	if number_of_shares > 0 then
-		money_transfer(card.money * number_of_shares, plk)
+	if shares > 0 then
+		money_transfer(card.money * shares, plk)
 	end
 end
 
--- Экшн казны
+-- Р­РєС€РЅ РєР°Р·РЅС‹
 cashback_treasury = function(plk)
 	math.randomseed(os.time() + os.clock() + math.random(99999))
 	local treasury = math.random(1, #rules_treasury)
@@ -197,7 +187,7 @@ cashback_treasury = function(plk)
 -- print("Treasury: "..rules_chance[treasury].money)
 end
 
--- Экшн острова
+-- Р­РєС€РЅ РѕСЃС‚СЂРѕРІР°
 action_island = function(player)
 	--gui_text.text = action_phrase.island
 end

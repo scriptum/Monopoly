@@ -1,59 +1,59 @@
 
-cw = 56 --расчет ширины клетки компании
-ch = (800-cw*field_width)/2 --расчет высоты клетки компании
-a = (600-ch*2)/field_height - cw --добавочный параметр для высоты боковых компаний
-cell_padding = 2 --отступ внутри ячейки
+cw = 56 --СЂР°СЃС‡РµС‚ С€РёСЂРёРЅС‹ РєР»РµС‚РєРё РєРѕРјРїР°РЅРёРё
+ch = (800-cw*field_width)/2 --СЂР°СЃС‡РµС‚ РІС‹СЃРѕС‚С‹ РєР»РµС‚РєРё РєРѕРјРїР°РЅРёРё
+a = (600-ch*2)/field_height - cw --РґРѕР±Р°РІРѕС‡РЅС‹Р№ РїР°СЂР°РјРµС‚СЂ РґР»СЏ РІС‹СЃРѕС‚С‹ Р±РѕРєРѕРІС‹С… РєРѕРјРїР°РЅРёР№
+cell_padding = 2 --РѕС‚СЃС‚СѓРї РІРЅСѓС‚СЂРё СЏС‡РµР№РєРё
 font_size = 10
-board = E:new(screen) --игровая доска
---центральный прямоугольник
+board = E:new(screen) --РёРіСЂРѕРІР°СЏ РґРѕСЃРєР°
+--С†РµРЅС‚СЂР°Р»СЊРЅС‹Р№ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє
 --burn = E:new(board):border_image('data/gfx/fuzzy2.png', 7, 7, 7, 7):set({w=800 - ch*2+8,h=600 - ch*2+8, blendMode = 'subtractive'}):move(ch - 4,ch - 4):color(255,246,208,100)
---доска
-E:new(board):imageq('data/gfx/background.jpg'):color('white'):size(800,600)
+--РґРѕСЃРєР°
+E:new(board):imageq('data/gfx/background2.jpg'):color('white'):size(800,600)
 -- :set({w=800 - ch*2,h=600 - ch*2,qw=(800 - ch*2),qh=(600 - ch*2)}):move(ch,ch)
---имитация света
+--РёРјРёС‚Р°С†РёСЏ СЃРІРµС‚Р°
 -- light = E:new(board):image('data/gfx/light.png'):set({w=800 - ch*2,h=600 - ch*2,a=170,blendMode = cheetah.blend_additive}):move(ch,ch)
-companys = E:new(board) --компании
+companys = E:new(board) --РєРѕРјРїР°РЅРёРё
 
 
-local alpha = 30 --альфа канал для разделителя
-local sep_padding = 5 --отступы для разделителя
-scaley = (ch-sep_padding*2) -- масштаб для разделителя
-local sep_draw_ver = function(x, y, sx) --рисует разделитель (вертикальный)
-	cheetah.blendMode(cheetah.blend_additive)
-	cheetah.setColor(255, 255, 255, alpha)
-	sep:draw(x, y, sx, scaley)
-	cheetah.blendMode(cheetah.blend_multiplicative)
-	cheetah.setColor(0, 0, 0, alpha * 2)
-	sep:draw(x - sx, y, sx, scaley)
+local alpha = 30 --Р°Р»СЊС„Р° РєР°РЅР°Р» РґР»СЏ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+local sep_padding = 5 --РѕС‚СЃС‚СѓРїС‹ РґР»СЏ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+scaley = (ch-sep_padding*2) -- РјР°СЃС€С‚Р°Р± РґР»СЏ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+local sep_draw_ver = function(x, y, sx) --СЂРёСЃСѓРµС‚ СЂР°Р·РґРµР»РёС‚РµР»СЊ (РІРµСЂС‚РёРєР°Р»СЊРЅС‹Р№)
+	-- cheetah.blendMode(cheetah.blend_additive)
+	-- cheetah.setColor(255, 255, 255, alpha)
+	sep:draw(x-1, y, sx, scaley)
+	-- cheetah.blendMode(cheetah.blend_multiplicative)
+	-- cheetah.setColor(0, 0, 0, alpha * 2)
+	-- sep:draw(x - sx, y, sx, scaley)
 end
 
-local sep_draw_hor = function(x, y, sx) --рисует разделитель (горизонтальный)
-	cheetah.blendMode(cheetah.blend_additive)
-	cheetah.setColor(255, 255, 255, alpha)
-	sep:draw(x, y, sx, scaley, math.rad(90))
-	cheetah.blendMode(cheetah.blend_multiplicative)
-	cheetah.setColor(0, 0, 0, alpha * 2)
-	sep:draw(x, y - sx, sx, scaley, math.rad(90))
+local sep_draw_hor = function(x, y, sx) --СЂРёСЃСѓРµС‚ СЂР°Р·РґРµР»РёС‚РµР»СЊ (РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Р№)
+	-- cheetah.blendMode(cheetah.blend_additive)
+	-- cheetah.setColor(255, 255, 255, alpha)
+	sep:draw(x, y-1, sx, scaley, math.rad(90))
+	-- cheetah.blendMode(cheetah.blend_multiplicative)
+	-- cheetah.setColor(0, 0, 0, alpha * 2)
+	-- sep:draw(x, y - sx, sx, scaley, math.rad(90))
 end
 
-local sep_draw = function(s) --рисует разделители
-	local sx = 1
-	for i = 1, field_width + 1 do --верх и низ
+local sep_draw = function(s) --СЂРёСЃСѓРµС‚ СЂР°Р·РґРµР»РёС‚РµР»Рё
+	local sx = 2
+	for i = 1, field_width + 1 do --РІРµСЂС… Рё РЅРёР·
 		sep_draw_ver(ch-cw+cw*i,sep_padding, sx)
 		sep_draw_ver(ch-cw+cw*i,600+sep_padding-ch, sx)
 	end
-	for i = 1, field_height + 1 do --лево и право
+	for i = 1, field_height + 1 do --Р»РµРІРѕ Рё РїСЂР°РІРѕ
 		sep_draw_hor(800-sep_padding,ch-cw-a+(cw+a)*i, sx)
 		sep_draw_hor(ch-sep_padding,ch-cw-a+(cw+a)*i, sx)
 	end
-	cheetah.blendMode(cheetah.blend_alpha)
+	-- cheetah.blendMode(cheetah.blend_alpha)
 end
 
---объект - разделители
+--РѕР±СЉРµРєС‚ - СЂР°Р·РґРµР»РёС‚РµР»Рё
 E:new(board):draw(sep_draw)
 
 
---получает координаты левого верхнего угла клетки в зависимости от позции компании
+--РїРѕР»СѓС‡Р°РµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ Р»РµРІРѕРіРѕ РІРµСЂС…РЅРµРіРѕ СѓРіР»Р° РєР»РµС‚РєРё РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РїРѕР·С†РёРё РєРѕРјРїР°РЅРёРё
 get_xy = function(i, side)
 	if side == 1 then
 		x = ch - cw + cw * i
@@ -82,15 +82,15 @@ get_xy = function(i, side)
 	return x, y
 end
 
---грузим массивы смещений внутри клетки
+--РіСЂСѓР·РёРј РјР°СЃСЃРёРІС‹ СЃРјРµС‰РµРЅРёР№ РІРЅСѓС‚СЂРё РєР»РµС‚РєРё
 require('rules/classic/offsets')
 
---грузим функцию форматирования денег
+--РіСЂСѓР·РёРј С„СѓРЅРєС†РёСЋ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РґРµРЅРµРі
 require('rules/classic/money')
 
-draw = {} --массив с функциями рендеринга клеток, для каждого типа своя
+draw = {} --РјР°СЃСЃРёРІ СЃ С„СѓРЅРєС†РёСЏРјРё СЂРµРЅРґРµСЂРёРЅРіР° РєР»РµС‚РѕРє, РґР»СЏ РєР°Р¶РґРѕРіРѕ С‚РёРїР° СЃРІРѕСЏ
 
---рисование полупрозрачного прямоугольника, означающего что клетка куплена
+--СЂРёСЃРѕРІР°РЅРёРµ РїРѕР»СѓРїСЂРѕР·СЂР°С‡РЅРѕРіРѕ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РѕР·РЅР°С‡Р°СЋС‰РµРіРѕ С‡С‚Рѕ РєР»РµС‚РєР° РєСѓРїР»РµРЅР°
 local draw_fuzzy = function(x, y, sx, sy, side)
 	if side == 1 or side == 3 then
 		fuzzy:draw(x, y, cw, ch)
@@ -99,7 +99,7 @@ local draw_fuzzy = function(x, y, sx, sy, side)
 	end
 end
 
---ф-я рендеринга для нормальной компании
+--С„-СЏ СЂРµРЅРґРµСЂРёРЅРіР° РґР»СЏ РЅРѕСЂРјР°Р»СЊРЅРѕР№ РєРѕРјРїР°РЅРёРё
 draw.company = function(s)
 	-- fnt_small:select()
 	local i = s.pos
@@ -108,7 +108,7 @@ draw.company = function(s)
 	local sx = (cw - cell_padding*2)/16
 	local sy = (ch - cell_padding*2)/16
 	local com = rules_company[s.num]
-	--закраска клетки владельцем
+	--Р·Р°РєСЂР°СЃРєР° РєР»РµС‚РєРё РІР»Р°РґРµР»СЊС†РµРј
 	if com.owner then 
 		local c = rules_player_colors[com.owner.k]
 		c[4] = s.owner_alpha
@@ -121,16 +121,16 @@ draw.company = function(s)
 	draw_fuzzy(x, y, sx, sy, s.side)
 	cheetah.blendMode(cheetah.blend_alpha)
 	cheetah.setColor(255, 255, 255, 255)
-	--отрисовка картинки компании
+	--РѕС‚СЂРёСЃРѕРІРєР° РєР°СЂС‚РёРЅРєРё РєРѕРјРїР°РЅРёРё
 	local w = offset_logo[s.side].w
 	rules_company_images[s.num]:draw(x + offset_logo[s.side].x, y + offset_logo[s.side].y, w, w)
-	--отрисовка группы
+	--РѕС‚СЂРёСЃРѕРІРєР° РіСЂСѓРїРїС‹
 	w = offset_group[s.side].w
 	if com.group then rules_group_images[com.group]:draw(x + offset_group[s.side].x, y + offset_group[s.side].y, w, w) end
 	
 	cheetah.setColor(0, 0, 0, 185 * math.max(s.mortgage_alpha, s.all_alpha) / 255)
 	draw_fuzzy(_x, _y, (cw - cell_padding*2)/16, sy, s.side)
-	--заложено?
+	--Р·Р°Р»РѕР¶РµРЅРѕ?
 	if s.mortgage_alpha > 0 then 
 		
 		cheetah.setColor(255,255,255,s.mortgage_alpha)
@@ -140,8 +140,8 @@ draw.company = function(s)
 			lock:draw(x - 4, y, cw, cw) 
 		end
 	elseif com.level and com.level > 2 then
-		cheetah.setColor(255,255,255)
-		--акции
+		cheetah.setColor(255, 255, 255, 255)
+		--Р°РєС†РёРё
 		local lvl = com.level - 2
 		local img = action
 		local offset_y = 0
@@ -167,7 +167,7 @@ draw.company = function(s)
 		end
 	end
 	
-		--цена
+		--С†РµРЅР°
 	cheetah.setColor(offset_rent_color)
 	--~ S.setFont(console)
 	--~ S.fontSize = offset_rent[s.side].size
@@ -178,7 +178,7 @@ draw.company = function(s)
 		--~ txt = money(rules_group[com.group].upgrade)
 	elseif gui_unmortgage_done._visible == true and com.owner and com.owner.k == current_player and com.level == 0 then
 		txt = money(com.money[1])
-		cheetah.setColor(255,255,255)
+		cheetah.setColor(255, 255, 255, 255)
 	elseif com.level > 0 then 
 		if not com.owner then 
 			txt = money(com.money[1])
@@ -199,34 +199,35 @@ draw.company = function(s)
 		end
 	end
 	if txt then Gprintf(txt, x + offset_rent[s.side].x , y + offset_rent[s.side].y, offset_rent[s.side].w, 'center') end
+	cheetah.setColor(255, 255, 255, 255)
 end
 
---ф-я рендеринга для больших спецклеток по углам
+--С„-СЏ СЂРµРЅРґРµСЂРёРЅРіР° РґР»СЏ Р±РѕР»СЊС€РёС… СЃРїРµС†РєР»РµС‚РѕРє РїРѕ СѓРіР»Р°Рј
 draw.big_cell = function(s)
 	local x, y = get_xy(s.pos, s.side)
 	local w = (ch - cell_padding * 4)
 	rules_company_images[s.num]:draw(x + cell_padding, y + cell_padding, w, w)
 end
 
---ф-я рендеринга казны и шанса
+--С„-СЏ СЂРµРЅРґРµСЂРёРЅРіР° РєР°Р·РЅС‹ Рё С€Р°РЅСЃР°
 draw.chance = function(s)
 	-- fnt_small:select()
 	local x, y = get_xy(s.pos, s.side)
 	local w = offset_chest[s.side].w
 	rules_company_images[s.num]:draw(x + offset_chest[s.side].x, y + offset_chest[s.side].y, w, w)
-	cheetah.setColor(offset_rent_color[1], offset_rent_color[2], offset_rent_color[3], 255)
+	-- cheetah.setColor(offset_rent_color[1], offset_rent_color[2], offset_rent_color[3], 255)
 	--~ S.setFont(console)
 	-- S.fontSize = offset_chest_text[s.side].size
 	Gprintf(rules_company[s.num].name, x, y + offset_chest_text[s.side].y, offset_chest_text[s.side].w, 'center')
 end
 
---ф-я рендеринга налога
+--С„-СЏ СЂРµРЅРґРµСЂРёРЅРіР° РЅР°Р»РѕРіР°
 draw.nalog = function(s)
 	-- fnt_small:select()
 	local x, y = get_xy(s.pos, s.side)
 	local w = offset_logo[s.side].w
 	rules_company_images[s.num]:draw(x + offset_logo[s.side].x, y + offset_logo[s.side].y, w, w)
-	cheetah.setColor(offset_rent_color)
+	-- cheetah.setColor(offset_rent_color)
 	--~ S.setFont(console)
 	-- S.fontSize = offset_chest_text[s.side].size
 	Gprintf(money(rules_company[s.num].money), x + offset_rent[s.side].x, y + offset_rent[s.side].y, offset_rent[s.side].w, 'center')
@@ -234,10 +235,12 @@ end
 
 local c = 1
 local side = 1
-local big_cell = 1 --старт тюрьма парковка и таможня
---сколько компаний + 4 клетки по углам
+local big_cell = 1 --СЃС‚Р°СЂС‚ С‚СЋСЂСЊРјР° РїР°СЂРєРѕРІРєР° Рё С‚Р°РјРѕР¶РЅСЏ
+--СЃРєРѕР»СЊРєРѕ РєРѕРјРїР°РЅРёР№ + 4 РєР»РµС‚РєРё РїРѕ СѓРіР»Р°Рј
 for i = 1, field_width*2 + field_height*2 + 4 do
- if rules_company[i].type == "company" then rules_company[i].level = 1 end
+	if rules_company[i].type == "company" then
+		rules_company[i].level = 1
+	end
 	if i == 1 or 
 		 i == 2 + field_width or 
 		 i == 3 + field_width + field_height or
@@ -247,11 +250,11 @@ for i = 1, field_width*2 + field_height*2 + 4 do
 			:draw(draw[rules_group[rules_company[i].group].draw])
 			big_cell = big_cell + 1
 	else
-		--хитрая расстановка сторон для каждой клетки
+		--С…РёС‚СЂР°СЏ СЂР°СЃСЃС‚Р°РЅРѕРІРєР° СЃС‚РѕСЂРѕРЅ РґР»СЏ РєР°Р¶РґРѕР№ РєР»РµС‚РєРё
 		--  1
 		--4   2
 		--  3
-		--тут по горизонтали 11 а повертикали 6 штук
+		--С‚СѓС‚ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё 11 Р° РїРѕРІРµСЂС‚РёРєР°Р»Рё 6 С€С‚СѓРє
 		if side % 2 == 1 and c > field_width or side % 2 == 0 and c > field_height then
 			c = 1
 			side = side + 1
@@ -284,36 +287,37 @@ board_gui = E:new(board)
 --~ E:new(screen):move(200,200+32*4):slider('Alpha', 0, 255, {ent, 'a'})
 --~ E:new(screen):move(200,200+32*5):list('Blend', {cheetah.blend_alpha, cheetah.blend_additive, cheetah.blend_multiplicative, 'subtractive'}, {cheetah.blend_alpha, cheetah.blend_additive, cheetah.blend_multiplicative, 'subtractive'}, {ent, 'blendMode'})
 
---функция рендеринга игрока
+--С„СѓРЅРєС†РёСЏ СЂРµРЅРґРµСЂРёРЅРіР° РёРіСЂРѕРєР°
 player_draw = function(s)
 	if s.ingame == true then  
 		-- fnt_big:select()
 		-- fnt_big:scale(0.4)
-		sx = 30
-		cheetah.setColor(255,255,255)
-		player_im1:draw(s.x, s.y, sx, sx)
-		cheetah.setColor(rules_player_colors[s.k])
-		player_im2:draw(s.x + 4, s.y + 4, sx-8, sx-8)
-		cheetah.setColor(255,255,255)
+		local sx = 30
+		cheetah.setColor(255, 255, 255, 255)
+		rules_player_images[s.k]:draw(s.x, s.y, sx, sx)
+		-- player_im1:draw(s.x, s.y, sx, sx)
+		-- cheetah.setColor(rules_player_colors[s.k])
+		-- player_im2:draw(s.x + 4, s.y + 4, sx-8, sx-8)
+		-- cheetah.setColor(255, 255, 255, 255)
 		if gamemenu._visible == false then
-			cheetah.print(money(s.cash), ch+45, ch+55 + s.k*36)
+			-- cheetah.print(money(s.cash), ch+45, ch+55 + s.k*36)
 			--~ rules_player_images[s.k]:draw(ch+10, ch+55 + s.k*36, 0, sx)
-			player_im1:draw(ch+10, ch+55 + s.k*36, sx, sx)
-			cheetah.setColor(rules_player_colors[s.k])
-			player_im2:draw(ch+10+4, ch+55 + s.k*36+4, sx-8, sx-8)
+			-- player_im1:draw(ch+10, ch+55 + s.k*36, sx, sx)
+			-- cheetah.setColor(rules_player_colors[s.k])
+			-- player_im2:draw(ch+10+4, ch+55 + s.k*36+4, sx-8, sx-8)
 		end
 		if s.k == current_player then
 			cheetah.blendMode(cheetah.blend_additive)
 			cheetah.setColor(255,255,255,(math.sin(time*7)+1)*90)
-			player_im2:draw(s.x+4, s.y+4, sx-8, sx-8)
-			if gamemenu._visible == false then
-				player_im2:draw(ch + 10 + 4, ch + 55 + s.k * 36 + 4, sx - 8, sx - 8)
-			end
+			rules_player_images[s.k]:draw(s.x, s.y, sx, sx)
+			-- player_im2:draw(s.x+4, s.y+4, sx-8, sx-8)
+			-- if gamemenu._visible == false then
+				-- player_im2:draw(ch + 10 + 4, ch + 55 + s.k * 36 + 4, sx - 8, sx - 8)
+			-- end
 			cheetah.blendMode(cheetah.blend_alpha)
 		end
-		
+		cheetah.setColor(255,255,255,255)
 		if s.jail > 0 then 
-			cheetah.setColor(255,255,255,255)
 			player_jail:draw(s.x+2, s.y+2, 26, 26)
 		end
 	--elseif gamemenu._visible == false then 
@@ -321,7 +325,7 @@ player_draw = function(s)
 	end
 end
 
---кости
+--РєРѕСЃС‚Рё
 dice_draw = function(s)
 	dice[s.ds1]:draw(s.x, s.y, 64, 64)
 	dice[s.ds2]:draw(s.x + 66, s.y, 64, 64)
@@ -335,7 +339,7 @@ gui_text = E:new(board_gui):draw(function(s)
 	Gprintf(s.text, ch + 158, ch + 20, 800 - ch * 2 - 168)
 end)
 gui_text.text = ''
---~ --анимация передачи денех
+--~ --Р°РЅРёРјР°С†РёСЏ РїРµСЂРµРґР°С‡Рё РґРµРЅРµС…
 --~ local coins = E:new(screen):image('data/gfx/gold_coin_single.png'):size(24,24):hide()
 --~ local money_transfer_param = {speed = 1, cb = function(s) s:hide() end}
 --~ money_transfer = function(money, from, to)
@@ -401,7 +405,7 @@ board:keypress(function( s, key, unicode )
 	 end
 end)
 
---делаю простой скролл
+--РґРµР»Р°СЋ РїСЂРѕСЃС‚РѕР№ СЃРєСЂРѕР»Р»
 -- scroll = E:new(screen):move(800-400-ch-25,ch+15):size(400, 235)
 -- :set({lines = {}, start = 0})
 -- :draw(function(s)

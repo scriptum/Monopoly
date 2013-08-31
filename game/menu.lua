@@ -1,4 +1,4 @@
---меню для игрока
+--РјРµРЅСЋ РґР»СЏ РёРіСЂРѕРєР°
 playermenu = E:new(screen)
 menuplayer = E:new(playermenu):hide()
 
@@ -37,7 +37,7 @@ if 1 then gamemenu:hide() end
 
 menuvsettings = E:new(gamemenu):hide()
 
---меню игры
+--РјРµРЅСЋ РёРіСЂС‹
 -- local modes = S.getModes()
 -- table.sort(modes, function(a, b) return a.width < b.width end)
 -- local display_modes = {}

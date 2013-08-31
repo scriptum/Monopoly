@@ -1,4 +1,4 @@
---перед стартом игры
+--РїРµСЂРµРґ СЃС‚Р°СЂС‚РѕРј РёРіСЂС‹
 --if F.exists('options.lua') then loadstring('gameoptions = ' .. F.read('options.lua'))() end
 if not gameoptions then 
 	gameoptions = {

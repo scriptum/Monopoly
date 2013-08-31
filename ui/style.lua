@@ -30,6 +30,7 @@ return {
 				-- S.print(s.text, s.x, s.y+s.h*0.17, s.w)
 				
 			end
+			cheetah.setColor(255, 255, 255, 255)
 			--~ --S.setColor(255, 255, 255, s.a)
 			--~ --S.rectangle('line', s.x+(s.w - ui_style.button.font:getWidth(s.text))/2, s.y+(s.h - ui_style.button.font:getHeight())/2, ui_style.button.font:getWidth(s.text),ui_style.button.font:getHeight())
 		end,

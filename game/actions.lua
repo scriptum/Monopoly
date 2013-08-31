@@ -1,8 +1,8 @@
---Все возможные действия игрока
+--Р’СЃРµ РІРѕР·РјРѕР¶РЅС‹Рµ РґРµР№СЃС‚РІРёСЏ РёРіСЂРѕРєР°
 
---Предлагаю ВЕЗДЕ передавать номера а не объекты во избежание путаницы
+--РџСЂРµРґР»Р°РіР°СЋ Р’Р•Р—Р”Р• РїРµСЂРµРґР°РІР°С‚СЊ РЅРѕРјРµСЂР° Р° РЅРµ РѕР±СЉРµРєС‚С‹ РІРѕ РёР·Р±РµР¶Р°РЅРёРµ РїСѓС‚Р°РЅРёС†С‹
 
--- Пересчет монополий
+-- РџРµСЂРµСЃС‡РµС‚ РјРѕРЅРѕРїРѕР»РёР№
 conversion_monopoly = function(plk, company_k)
 	local rules_com = rules_company[company_k]
 	local com = current_game.companys[company_k]
@@ -10,7 +10,7 @@ conversion_monopoly = function(plk, company_k)
 	local oils_bank = {}
 	local group  = 0
 	local comp = {}
-		-- если нефтяная компания или банк - считаем количество компаний
+		-- РµСЃР»Рё РЅРµС„С‚СЏРЅР°СЏ РєРѕРјРїР°РЅРёСЏ РёР»Рё Р±Р°РЅРє - СЃС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјРїР°РЅРёР№
 	if rules_com.group == "oil" or rules_com.group == "bank" then
 		for k,v in pairs(current_game.companys) do
 			if v.owner and v.owner == plk and rules_com.group == rules_company[k].group and v.level > 0 then
@@ -19,10 +19,10 @@ conversion_monopoly = function(plk, company_k)
 		end
 		for _, v in pairs(oils_bank) do
 			current_game.companys[v].level = #oils_bank + 2
-			--отправка на клиент новый левел
+			--РѕС‚РїСЂР°РІРєР° РЅР° РєР»РёРµРЅС‚ РЅРѕРІС‹Р№ Р»РµРІРµР»
 			--msg_add('set_level', v, #oils_bank + 2)
 		end
-	-- просчет монополий для всех остальных компаний
+	-- РїСЂРѕСЃС‡РµС‚ РјРѕРЅРѕРїРѕР»РёР№ РґР»СЏ РІСЃРµС… РѕСЃС‚Р°Р»СЊРЅС‹С… РєРѕРјРїР°РЅРёР№
 	else
 		for k,v in pairs(current_game.companys) do
 			if rules_com.group == rules_company[k].group then
@@ -32,12 +32,12 @@ conversion_monopoly = function(plk, company_k)
 	end
 			end
 		end
-		-- если все компании в группе - ставим левел 2 (если левел меньше двух)
+		-- РµСЃР»Рё РІСЃРµ РєРѕРјРїР°РЅРёРё РІ РіСЂСѓРїРїРµ - СЃС‚Р°РІРёРј Р»РµРІРµР» 2 (РµСЃР»Рё Р»РµРІРµР» РјРµРЅСЊС€Рµ РґРІСѓС…)
 		if group == #comp then
 			for _, v in pairs(comp) do
 	if current_game.companys[v].level < 2 then
 		current_game.companys[v].level = 2
-		--отправка на клиент новый левел
+		--РѕС‚РїСЂР°РІРєР° РЅР° РєР»РёРµРЅС‚ РЅРѕРІС‹Р№ Р»РµРІРµР»
 		--msg_add('set_level', v, 2)
 	end
 			end
@@ -45,25 +45,25 @@ conversion_monopoly = function(plk, company_k)
 	end
 end
 
--- покупка компании
+-- РїРѕРєСѓРїРєР° РєРѕРјРїР°РЅРёРё
 buy_company = function(plk, company, money)
 	local pl = current_game.players[plk]
 	local companys = current_game.companys
 	if not money and rules_company[company].type == "company" then money = rules_company[company].money[1] end
 	if not companys[company].owner and rules_company[company].type == "company" and pl.cash >= money then
-		companys[company].owner = plk --внимание - присваиваем овнера - число!
-		--отправляем на клиент действие смены владельца компании
+		companys[company].owner = plk --РІРЅРёРјР°РЅРёРµ - РїСЂРёСЃРІР°РёРІР°РµРј РѕРІРЅРµСЂР° - С‡РёСЃР»Рѕ!
+		--РѕС‚РїСЂР°РІР»СЏРµРј РЅР° РєР»РёРµРЅС‚ РґРµР№СЃС‚РІРёРµ СЃРјРµРЅС‹ РІР»Р°РґРµР»СЊС†Р° РєРѕРјРїР°РЅРёРё
 		msg_add('set_owner', company, plk)
-		conversion_monopoly(plk, company) -- пересчет монополий, оба параметра - числа
-		pl.cash = pl.cash - money --отъем бабла на сервере
-		msg_add('set_cash',plk,pl.cash) --отправлка на клиент новое состояние бабок
+		conversion_monopoly(plk, company) -- РїРµСЂРµСЃС‡РµС‚ РјРѕРЅРѕРїРѕР»РёР№, РѕР±Р° РїР°СЂР°РјРµС‚СЂР° - С‡РёСЃР»Р°
+		pl.cash = pl.cash - money --РѕС‚СЉРµРј Р±Р°Р±Р»Р° РЅР° СЃРµСЂРІРµСЂРµ
+		msg_add('set_cash',plk,pl.cash) --РѕС‚РїСЂР°РІР»РєР° РЅР° РєР»РёРµРЅС‚ РЅРѕРІРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р±Р°Р±РѕРє
 		return true
 	else
 		return false
 	end
 end
 
--- Залог компании
+-- Р—Р°Р»РѕРі РєРѕРјРїР°РЅРёРё
 mortgage_company = function(pl, company, num)
 	local comp = {}
 	local group = 0
@@ -124,7 +124,7 @@ mortgage_company = function(pl, company, num)
 	return false
 end
 
--- Выкуп компаний
+-- Р’С‹РєСѓРї РєРѕРјРїР°РЅРёР№
 buyout_company = function(pl, company, num)
 	if company.owner == pl and company.type == "company" and company.level == 0 and pl.cash > company.money[1] then
 		if initplayers[current_player] == 'Human' then
@@ -144,7 +144,7 @@ buyout_company = function(pl, company, num)
 	return false
 end
 
--- Прокачка компаний
+-- РџСЂРѕРєР°С‡РєР° РєРѕРјРїР°РЅРёР№
 buyshares_company = function(pl, company)
 	if company.owner == pl and company.level >= 2 and company.level < 7 and company.group ~= "oil" and 
 			company.group ~= "bank" and pl.cash >= rules_group[company.group].upgrade then
